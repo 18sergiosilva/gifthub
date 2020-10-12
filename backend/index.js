@@ -11,7 +11,7 @@ app.get('/', function (req, res) {
     res.send('API FUNCIONANDO CORRECTAMENTE');
 });
 
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 5000;
 
 const server = app.listen(port, () => {
     console.log("Iniciando api en el puerto: " + port);
