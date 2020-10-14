@@ -1,0 +1,9 @@
+#!/bin/sh
+gcloud beta compute ssh --zone "us-central1-a" "nodejs" --project "gifthub-ayd1" <<EOF
+ cd ~/gifthub
+ git pull
+ git checkout develop
+ npm install - production
+ pm2 restart all
+ exit
+EOF
