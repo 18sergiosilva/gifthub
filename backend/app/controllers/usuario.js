@@ -61,3 +61,30 @@ exports.actualizar = (req, res) => {
             });
         });
 };
+
+
+// Busca usuario por su username
+exports.findOne = (req, res) => {
+    const username = req.params.username;
+
+    Usuario.findOne({ username: username }, function(err, data) {
+            if (err) {
+                res
+                    .status(500)
+                    .send({ message: `Error al devolver al usuario con username=${username}.` });
+            } else {
+                if (!data) {
+                    res
+                        .status(404)
+                        .send({ message: `Usuario con username=${username} no encontrado.` });
+                } else {
+                    res.json(data);
+                }
+            }
+        })
+        .catch(err => {
+            res
+                .status(500)
+                .send({ message: `Error al devolver el usuario con username=${username}` });
+        });
+};
