@@ -8,7 +8,7 @@ app.use(cors());
 
 //Entry
 app.get('/', function (req, res) {
-    res.send('API FUNCIONANDO CORRECTAMENTE V2');
+    res.send('API FUNCIONANDO CORRECTAMENTE');
 });
 
 const port = process.env.PORT || 5000;
