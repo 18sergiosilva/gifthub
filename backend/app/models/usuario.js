@@ -1,11 +1,11 @@
 module.exports = mongoose => {
     var schema = mongoose.Schema({
-        username: { type: String, required: true },
-        correo: { type: String, required: true },
+        username: { type: String, required: true, unique: true },
+        correo: { type: String, required: true, unique: true },
         contrasena: { type: String, required: true },
         nombres: { type: String, required: true },
         apellidos: { type: String, required: true },
-        dpi: { type: Number, required: true },
+        dpi: { type: Number, required: true, unique: true },
         edad: { type: Number, required: true },
         tarjetas: [],
         transacciones: []

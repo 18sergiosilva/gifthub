@@ -59,7 +59,7 @@ describe('Historia: Registrar Usuarios', () => {
                 .send(IncorrectUserInfo)
                 .end(function(error, result) {
                     expect(result.body).to.be.a("object")
-                    expect(result.body.message).to.equal("Los datos enviados de usuario son incorrectos");
+                    expect(result.body.message).to.equal("Los datos enviados de usuario son incorrectos.");
                     done();
                 });
         });
