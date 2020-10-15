@@ -1,14 +1,26 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const db = require("./app/models");
 
 const app = express();
 
 app.use(cors());
 
-//Entry
+// Conectar a la base de datos
+db.mongoose
+    .connect(process.env.TESTING ? db.testUrl : db.url, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
+    .catch(err => {
+        console.log("No se pudo conectar a la base de datos", err);
+        process.exit();
+    });
+
+// Entry
 app.get('/', function (req, res) {
-    res.send('API FUNCIONANDO CORRECTAMENTE');
+    res.send('API y MongoDB funcionando correctamente');
 });
 
 const port = process.env.PORT || 5000;
