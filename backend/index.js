@@ -7,6 +7,9 @@ const app = express();
 
 app.use(cors());
 
+// parse requests of content-type - application/json
+app.use(bodyParser.json());
+
 // Conectar a la base de datos
 db.mongoose
     .connect(process.env.TESTING ? db.testUrl : db.url, {
@@ -19,9 +22,11 @@ db.mongoose
     });
 
 // Entry
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
     res.send('API y MongoDB funcionando correctamente');
 });
+
+require("./app/routes/usuario")(app);
 
 const port = process.env.PORT || 5000;
 
