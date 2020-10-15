@@ -1,0 +1,1 @@
+# practica2_g6
