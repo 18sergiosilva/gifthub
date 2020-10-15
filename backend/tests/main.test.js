@@ -120,5 +120,15 @@ describe('Historia: Registrar Usuarios', () => {
                     done();
                 });
         });
+        it("Buscar un usuario que no existente", done => {
+            request(app)
+                .get('/usuario/edgar4')
+                .end(function(error, result) {
+                    //expect(res).to.have.status(404);
+                    expect(result.body).to.be.a("object")
+                    expect(result.body.message).to.equal("Usuario con username=edgar4 no encontrado.");
+                    done();
+                });
+        });
     });
 });
