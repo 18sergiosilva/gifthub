@@ -1,4 +1,3 @@
-
 const dbConfig = require("../config/db.config.js");
 
 const mongoose = require("mongoose");
@@ -13,7 +12,7 @@ db.mongoose = mongoose;
 db.url = dbConfig.url;
 db.testUrl = dbConfig.testing;
 
-//db.producto = require("./producto")(mongoose);
+db.usuario = require("./usuario")(mongoose);
 
 // configuracion de la conexion a mongodb
 db.mongoose.set('useNewUrlParser', true);
