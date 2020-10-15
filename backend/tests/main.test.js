@@ -25,6 +25,15 @@ const IncorrectUserInfo = {
     edad: 25,
 };
 
+const UserInfoUpdate = {
+    username: "edgar",
+    correo: "edgar2@usac.com",
+    contrasena: "1234",
+    nombres: "edgar arnoldo",
+    apellidos: "aldana arriola",
+    dpi: 303035343831,
+    edad: 26,
+};
 describe('GET /', function() {
     it('/ responde con API FUNCIONANDO CORRECTAMENTE V2', done => {
         request(app).get('/').end(function(error, result) {
@@ -60,6 +69,18 @@ describe('Historia: Registrar Usuarios', () => {
                 .end(function(error, result) {
                     expect(result.body).to.be.a("object")
                     expect(result.body.message).to.equal("Los datos enviados de usuario son incorrectos.");
+                    done();
+                });
+        });
+    });
+    describe('PUT /', () => {
+        it("Actualiar un usuario existente", done => {
+            request(app)
+                .put('/usuario/edgar')
+                .send(UserInfoUpdate)
+                .end(function(error, result) {
+                    expect(result.body).to.be.a("object")
+                    expect(result.body.message).to.equal("Usuario actualizado correctamente.");
                     done();
                 });
         });
