@@ -26,7 +26,7 @@ exports.crear = (req, res) => {
     usuario
         .save(usuario)
         .then(data => {
-            res.send({ message: "El usuario se creo correctamente", data: data });
+            res.send({ message: "El usuario se creo correctamente.", data: data });
         })
         .catch(err => {
             console.log(err);
