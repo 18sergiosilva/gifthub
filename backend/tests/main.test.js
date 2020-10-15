@@ -53,5 +53,15 @@ describe('Historia: Registrar Usuarios', () => {
                     done();
                 });
         });
+        it("Intentar guardar un usuario con datos incorrectos", done => {
+            request(app)
+                .post('/usuario')
+                .send(IncorrectUserInfo)
+                .end(function(error, result) {
+                    expect(result.body).to.be.a("object")
+                    expect(result.body.message).to.equal("Los datos enviados de usuario son incorrectos");
+                    done();
+                });
+        });
     });
 });
