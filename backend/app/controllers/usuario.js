@@ -38,7 +38,7 @@ exports.crear = (req, res) => {
 
 // Actualizar un usuario encontrado con su username
 exports.actualizar = (req, res) => {
-    if (!req.body) {
+    if (Object.keys(req.body).length === 0) {
         return res.status(400).send({
             message: "Los datos a modificar no deben de esta vacios."
         });

@@ -97,5 +97,15 @@ describe('Historia: Registrar Usuarios', () => {
                     done();
                 });
         });
+        it("Error al actualizar un usuario sin enviar datos para actaulizar", done => {
+            request(app)
+                .put('/usuario/edgar')
+                .end(function(error, result) {
+                    //expect(res).to.have.status(404);
+                    expect(result.body).to.be.a("object")
+                    expect(result.body.message).to.equal("Los datos a modificar no deben de esta vacios.");
+                    done();
+                });
+        });
     });
 });
