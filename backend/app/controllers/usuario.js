@@ -26,7 +26,7 @@ exports.crear = (req, res) => {
     usuario
         .save(usuario)
         .then(data => {
-            res.send({ message: "El usuario se creo correctamente.", data: data });
+            res.status(200).send({ message: "El usuario se creo correctamente.", data: data });
         })
         .catch(err => {
             console.log(err);
@@ -52,7 +52,7 @@ exports.actualizar = (req, res) => {
                 res.status(404).send({
                     message: `¡No se encontro el usuario!`
                 });
-            } else res.send({ message: "Usuario actualizado correctamente." });
+            } else res.status(200).send({ message: "Usuario actualizado correctamente." });
         })
         .catch(err => {
             console.log(err);
