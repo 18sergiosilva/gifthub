@@ -78,7 +78,7 @@ exports.findOne = (req, res) => {
                         .status(404)
                         .send({ message: `Usuario con username=${username} no encontrado.` });
                 } else {
-                    res.json(data);
+                    res.json({ message: "Usuario encontrado.", usuario: data });
                 }
             }
         })
