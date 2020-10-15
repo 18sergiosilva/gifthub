@@ -25,6 +25,15 @@ const IncorrectUserInfo = {
     edad: 25,
 };
 
+const UserInfoUpdate = {
+    username: "edgar",
+    correo: "edgar2@usac.com",
+    contrasena: "1234",
+    nombres: "edgar arnoldo",
+    apellidos: "aldana arriola",
+    dpi: 303035343831,
+    edad: 26,
+};
 describe('GET /', function() {
     it('/ responde con API FUNCIONANDO CORRECTAMENTE V2', done => {
         request(app).get('/').end(function(error, result) {
@@ -40,7 +49,6 @@ describe('GET /', function() {
     });
 });
 
-
 describe('Historia: Registrar Usuarios', () => {
     describe('POST /', () => {
         it("Guardar un usuario con datos correctos", done => {
@@ -48,6 +56,7 @@ describe('Historia: Registrar Usuarios', () => {
                 .post('/usuario')
                 .send(CorrectUserInfo)
                 .end(function(error, result) {
+                    //expect(result).to.have.status(200);
                     expect(result.body).to.be.a("object")
                     expect(result.body.message).to.equal("El usuario se creo correctamente.");
                     done();
@@ -58,8 +67,43 @@ describe('Historia: Registrar Usuarios', () => {
                 .post('/usuario')
                 .send(IncorrectUserInfo)
                 .end(function(error, result) {
+                    //expect(result).to.have.status(500);
                     expect(result.body).to.be.a("object")
-                    expect(result.body.message).to.equal("Los datos enviados de usuario son incorrectos");
+                    expect(result.body.message).to.equal("Los datos enviados de usuario son incorrectos.");
+                    done();
+                });
+        });
+    });
+    describe('PUT /', () => {
+        it("Actualiar un usuario existente", done => {
+            request(app)
+                .put('/usuario/edgar')
+                .send(UserInfoUpdate)
+                .end(function(error, result) {
+                    //expect(res).to.have.status(200);
+                    expect(result.body).to.be.a("object")
+                    expect(result.body.message).to.equal("Usuario actualizado correctamente.");
+                    done();
+                });
+        });
+        it("Error al actualizar un usuario que no existe", done => {
+            request(app)
+                .put('/usuario/edgar2')
+                .send(UserInfoUpdate)
+                .end(function(error, result) {
+                    //expect(res).to.have.status(404);
+                    expect(result.body).to.be.a("object")
+                    expect(result.body.message).to.equal("¡No se encontro el usuario!");
+                    done();
+                });
+        });
+        it("Error al actualizar un usuario sin enviar datos para actaulizar", done => {
+            request(app)
+                .put('/usuario/edgar')
+                .end(function(error, result) {
+                    //expect(res).to.have.status(404);
+                    expect(result.body).to.be.a("object")
+                    expect(result.body.message).to.equal("Los datos a modificar no deben de esta vacios.");
                     done();
                 });
         });
