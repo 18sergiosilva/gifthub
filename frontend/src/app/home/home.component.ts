@@ -13,7 +13,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.cadena = 'Si lees esto no funciono :(';
-    this.http.get('https://localhost:5000')
+    this.http.get('http://localhost:5000')
       .toPromise().then((data: any) => {
         this.cadena = data;
       });
