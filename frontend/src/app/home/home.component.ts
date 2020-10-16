@@ -12,8 +12,7 @@ export class HomeComponent implements OnInit {
   cadena: any;
 
   ngOnInit() {
-    this.cadena = 'Si lees esto no funciono :(';
-    console.log(window.location.hostname);
+    this.cadena = 'No funciono';
 
     this.http.get(`http://${window.location.hostname}:5000/`, { responseType: 'text' })
       .toPromise().then((data: any) => {
