@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit {
     this.cadena = 'Si lees esto no funciono :(';
     console.log(window.location.hostname);
 
-    this.http.get(`:5000/`)
+    this.http.get(`http://${window.location.hostname}:5000/`)
       .toPromise().then((data: any) => {
         this.cadena = data;
       });
