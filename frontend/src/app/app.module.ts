@@ -12,13 +12,15 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { HomeComponent } from './home/home.component';
 import { HttpClientModule } from '@angular/common/http';
+import { RegistrarseComponent } from './registrarse/registrarse.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     SidebarComponent,
-    HomeComponent
+    HomeComponent,
+    RegistrarseComponent
   ],
   imports: [
     BrowserModule,
