@@ -23,7 +23,27 @@ export class RegistrarseComponent implements OnInit {
   edad = null;
 
   agregar() {
-    
+    console.log("username->"+this.username);
+    console.log("correo->"+this.correo);
+    console.log("contrasena->"+this.contrasena);
+    console.log("nombres->"+this.nombres);
+    console.log("apellidos->"+this.apellidos);
+    console.log("dpi->"+this.dpi);
+    console.log("edad->"+this.edad);
+
+    this.http.post('http://35.239.230.8:5000/usuario',
+      {
+        'username': this.username,
+        'correo': this.correo,
+        'contrasena': this.contrasena,
+        'nombres':this.nombres,
+        'apellidos':this.apellidos,
+        'dpi':this.dpi,
+        'edad':this.edad
+      }).toPromise().then((data: any) => {
+        console.log(data);
+        this.cancelar();
+      });
 
   }
 
