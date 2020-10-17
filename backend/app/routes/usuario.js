@@ -6,9 +6,12 @@ module.exports = app => {
 
     // Crear un nuevo usuario
     router.post("/", usuario.crear);
-    // Crear un nuevo usuario
 
+    // Actualiza la informacion del usuario buscado por username
     router.put("/:username", usuario.actualizar);
+
+    // Devuelve la informacion del usuario buscado por username
+    router.get("/:username", usuario.findOne);
 
     // La ruta de la api de usuarios sera url/usuarios
     app.use("/usuario", router);

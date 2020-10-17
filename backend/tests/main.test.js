@@ -108,4 +108,27 @@ describe('Historia: Registrar Usuarios', () => {
                 });
         });
     });
+    describe('Get /', () => {
+        it("Buscar un usuario existente", done => {
+            request(app)
+                .get('/usuario/edgar')
+                .end(function(error, result) {
+                    //expect(res).to.have.status(200);
+                    expect(result.body).to.be.a("object")
+                    expect(result.body.message).to.equal("Usuario encontrado.");
+                    expect(result.body.usuario.username).to.equal("edgar");
+                    done();
+                });
+        });
+        it("Buscar un usuario que no existente", done => {
+            request(app)
+                .get('/usuario/edgar4')
+                .end(function(error, result) {
+                    //expect(res).to.have.status(404);
+                    expect(result.body).to.be.a("object")
+                    expect(result.body.message).to.equal("Usuario con username=edgar4 no encontrado.");
+                    done();
+                });
+        });
+    });
 });
