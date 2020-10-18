@@ -1,3 +1,3 @@
-export class Utils{
-    public static isloggued = false;
+export class Utils {
+    public static routes: any = [];
 }
