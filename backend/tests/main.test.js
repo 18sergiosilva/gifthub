@@ -34,6 +34,7 @@ const UserInfoUpdate = {
     dpi: 303035343831,
     edad: 26,
 };
+
 describe('GET /', function() {
     it('/ responde con API FUNCIONANDO CORRECTAMENTE V2', done => {
         request(app).get('/').end(function(error, result) {
