@@ -1,0 +1,4 @@
+[1017/012520.926:ERROR:process_info.cc(359)] UncheckedAllocate
+[1017/012520.926:ERROR:process_info.cc(359)] UncheckedAllocate
+[1017/012520.974:ERROR:filesystem_win.cc(129)] GetFileAttributes C:\Users\betor\AppData\Local\Temp\karma-22949308\Crashpad\attachments\80ffc69a-8924-4a15-bcd2-06c2dcf1e638: El sistema no puede encontrar la ruta especificada. (0x3)
+[1017/014349.910:ERROR:filesystem_win.cc(129)] GetFileAttributes C:\Users\betor\AppData\Local\Temp\karma-40322947\Crashpad\attachments\49985398-81fc-43e2-a5e3-94999470b82f: El sistema no puede encontrar la ruta especificada. (0x3)
