@@ -5,7 +5,7 @@ module.exports = app => {
     var router = require("express").Router();
 
     // Crear un nuevo usuario
-    router.post("/", usuario.crear);
+    router.post("/", usuario.create);
 
     // Actualiza la informacion del usuario buscado por username
     router.put("/:username", usuario.actualizar);

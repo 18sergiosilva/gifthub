@@ -1,81 +1,127 @@
-const request = require('supertest');
+const chai = require('chai');
+const faker = require('faker');
+const chaiHttp = require('chai-http');
+const sinon = require('sinon');
+
+process.env.TESTING = true;
+
 const api = require('../index');
+const controllerUsuario = require('../app/controllers/usuario');
+const db = require("../app/models");
+const { query } = require('express');
 
-const app = api.app;
+chai.use(chaiHttp);
+faker.setLocale('es_MX');
 
-const usersRoute = "/api/usuario";
+const { expect } = chai;
 
-const { expect } = require('chai');
+const Usuario = db.usuario;
 
+var sandbox;
+beforeEach(function() {
+    sandbox = sinon.createSandbox();
+});
+
+afterEach(function() {
+    sandbox.restore();
+});
+
+const testProduct = {
+    id: "0",
+    nombre: faker.commerce.product(),
+    vendedor: `${faker.name.firstName()} ${faker.name.lastName()}`,
+    precio: faker.random.number({ min: 1000, max: 10000, precision: 2 }) / 100,
+    descripcion: faker.commerce.productDescription()
+};
+
+const nombre = faker.name.firstName()
+const apellido = faker.name.lastName()
 const CorrectUserInfo = {
-    username: "edgar",
-    correo: "edgar@usac.com",
+    username: nombre + apellido,
+    correo: nombre + apellido + "@USAC.com",
     contrasena: "1234",
-    nombres: "edgar arnoldo",
-    apellidos: "aldana arriola",
-    dpi: 303035343831,
-    edad: 25,
+    nombres: `${nombre} ${faker.name.firstName()}`,
+    apellidos: `${apellido} ${faker.name.lastName()}`,
+    dpi: faker.random.number({
+        min: 100000000000,
+        max: 999999999999
+    }),
+    edad: faker.random.number({
+        min: 20,
+        max: 100
+    })
 };
 
-const IncorrectUserInfo = {
-    username: "edgar",
-    correo: "edgar@usac.com",
-    contrasena: "1234",
-    nombres: "edgar arnoldo",
-    edad: 25,
-};
+describe('Validaciones en la BD', () => {
+    it('Mostrar error cuando no se pueda conectar a la base de datos', async() => {
 
-const UserInfoUpdate = {
-    username: "edgar",
-    correo: "edgar2@usac.com",
-    contrasena: "1234",
-    nombres: "edgar arnoldo",
-    apellidos: "aldana arriola",
-    dpi: 303035343831,
-    edad: 26,
-};
+        let processStub = sandbox.stub(process, 'exit');
+        let consoleStub = sandbox.stub(console, 'error');
 
-describe('GET /', function() {
-    it('/ responde con API FUNCIONANDO CORRECTAMENTE V2', done => {
-        request(app).get('/').end(function(error, result) {
-            if (error) {
-                console.log("ERROR: ");
-                console.log(error);
-            }
+        await api.dbConnect(`mongodb://errorURL`);
 
-            expect(result.text).to.equal("API y MongoDB funcionando correctamente");
+        expect(consoleStub.callCount).to.equal(2);
+        expect(consoleStub.firstCall.calledWith('** No se pudo conectar a la base de datos **')).to.be.true;
+        expect(consoleStub.secondCall.args[0].toString()).to.include('MongooseError:');
+
+        expect(processStub.callCount).to.equal(1);
+
+    });
+
+});
+
+describe('Historia: Registrar Usuarios', function() {
+    describe('POST /', function() {
+        it("Guardar un usuario con datos correctos", done => {
+            let res = {
+                send: () => {},
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: "El usuario se creo correctamente."
+            });
+
+            sandbox.stub(controllerUsuario.Usuario, 'create').returns({
+                then: (data) => {
+                        data();
+
+                        mock.verify();
+                    }
+                    //sandbox.stub().callsFake(() => { return { catch: catchStub } }),
+            });
+
+            controllerUsuario.create({ body: CorrectUserInfo }, res);
 
             done();
         });
-    });
-});
-
-describe('Historia: Registrar Usuarios', () => {
-    describe('POST /', () => {
-        it("Guardar un usuario con datos correctos", done => {
-            request(app)
-                .post('/usuario')
-                .send(CorrectUserInfo)
-                .end(function(error, result) {
-                    //expect(result).to.have.status(200);
-                    expect(result.body).to.be.a("object")
-                    expect(result.body.message).to.equal("El usuario se creo correctamente.");
-                    done();
+        /*
+                it("Guardar un usuario con datos correctos1111111111", done => {
+                    request(app)
+                        .post('/usuario')
+                        .send(CorrectUserInfo)
+                        .end(function(error, result) {
+                            //expect(result).to.have.status(200);
+                            expect(result.body).to.be.a("object")
+                            expect(result.body.message).to.equal("El usuario se creo correctamente.");
+                            done();
+                        });
                 });
-        });
-        it("Intentar guardar un usuario con datos incorrectos", done => {
-            request(app)
-                .post('/usuario')
-                .send(IncorrectUserInfo)
-                .end(function(error, result) {
-                    //expect(result).to.have.status(500);
-                    expect(result.body).to.be.a("object")
-                    expect(result.body.message).to.equal("Los datos enviados de usuario son incorrectos.");
-                    done();
-                });
-        });
+                it("Intentar guardar un usuario con datos incorrectos", done => {
+                    request(app)
+                        .post('/usuario')
+                        .send(IncorrectUserInfo)
+                        .end(function(error, result) {
+                            //expect(result).to.have.status(500);
+                            expect(result.body).to.be.a("object")
+                            expect(result.body.message).to.equal("Los datos enviados de usuario son incorrectos.");
+                            done();
+                        });
+                });*/
     });
-    describe('PUT /', () => {
+    /* describe('PUT /', () => {
         it("Actualiar un usuario existente", done => {
             request(app)
                 .put('/usuario/edgar')
@@ -132,4 +178,5 @@ describe('Historia: Registrar Usuarios', () => {
                 });
         });
     });
+*/
 });

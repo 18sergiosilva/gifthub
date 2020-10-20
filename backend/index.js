@@ -2,24 +2,12 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const db = require("./app/models");
-
 const app = express();
 
 app.use(cors());
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
-
-// Conectar a la base de datos
-db.mongoose
-    .connect(process.env.TESTING ? db.testUrl : db.url, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
-    .catch(err => {
-        console.log("No se pudo conectar a la base de datos", err);
-        process.exit();
-    });
 
 // Entry
 app.get('/', function(req, res) {
@@ -28,10 +16,22 @@ app.get('/', function(req, res) {
 
 require("./app/routes/usuario")(app);
 
+const dbConnect = (url) => {
+    db.mongoose
+        .connect(url)
+        .catch(err => {
+            console.error("** No se pudo conectar a la base de datos **");
+            console.error(err);
+            process.exit();
+        });
+};
+
 const port = process.env.PORT || 5000;
 
 const server = app.listen(port, () => {
-    console.log("Iniciando api en el puerto: " + port);
+    api.dbConnect(process.env.TESTING ? db.testUrl : db.url);
 });
 
-module.exports = { server: server, app: app };
+let api = { server: server, app: app, dbConnect: dbConnect };
+
+module.exports = api;

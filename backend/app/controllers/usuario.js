@@ -1,13 +1,15 @@
 const db = require("../models");
 const Usuario = db.usuario;
 
+exports.Usuario = Usuario;
+
 // Crear y guardar un usuario
-exports.crear = (req, res) => {
+exports.create = (req, res) => {
     // Verifica si los parametros existen
     if (!req.body.username || !req.body.correo || !req.body.contrasena ||
         !req.body.nombres || !req.body.apellidos || !req.body.dpi ||
         !req.body.edad) {
-        return res.status(400).json({ message: "Los datos enviados de usuario son incorrectos." });
+        return res.status(400).send({ message: "Los datos enviados de usuario son incorrectos." });
     }
 
     const usuario = new Usuario({
@@ -23,15 +25,15 @@ exports.crear = (req, res) => {
     });
 
     // Guardar usuario en la base de datos
-    usuario
-        .save(usuario)
-        .then(data => {
-            res.status(200).send({ message: "El usuario se creo correctamente.", data: data });
+    Usuario.create(usuario)
+        .then(() => {
+            res.status(200).send({
+                message: "El usuario se creo correctamente."
+            });
         })
-        .catch(err => {
-            console.log(err);
+        .catch(() => {
             res.status(500).send({
-                message: err.message || "Error al crear el Usuario."
+                message: "Error al crear el Usuario."
             });
         });
 };
@@ -86,5 +88,28 @@ exports.findOne = (req, res) => {
             res
                 .status(500)
                 .send({ message: `Error al devolver el usuario con username=${username}` });
+        });
+};
+
+// Elimina un usuario por su username
+exports.delete = (req, res) => {
+    const username = req.params.username;
+
+    Usuario.findOneAndRemove({ username: username })
+        .then(data => {
+            if (!data) {
+                return res.status(404).send({
+                    message: `El Usuario ${username} no existe.`
+                });
+            }
+
+            return res.send({
+                message: `Eliminado`
+            });
+        })
+        .catch(() => {
+            return res.status(500).send({
+                message: `Error al eliminar el usuario ${username}`
+            });
         });
 };
