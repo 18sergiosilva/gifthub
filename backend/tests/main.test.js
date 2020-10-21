@@ -315,7 +315,7 @@ describe('Historia: Registrar Usuarios', function() {
 
             controllerUsuario.findOne({ params: { username: nombre + apellido } }, res);
         });
-        it("Error de la base de datos al intentar buscar un usuarios.", done => {
+        it("Error de la base de datos al intentar eliminar un usuarios.", done => {
             let catchStub = sandbox.stub();
             let stub = sandbox.stub(controllerUsuario.Usuario, 'findOne').returns({
                 then: sandbox.stub().callsFake(() => { return { catch: catchStub } }),
@@ -401,6 +401,36 @@ describe('Historia: Registrar Usuarios', function() {
             });
 
             controllerUsuario.delete({ params: { username: nombre + apellido } }, res);
+        });
+        it("Error de la base de datos al intentar eliminar un usuarios.", done => {
+            let catchStub = sandbox.stub();
+            let stub = sandbox.stub(controllerUsuario.Usuario, 'findOneAndRemove').returns({
+                then: sandbox.stub().callsFake(() => { return { catch: catchStub } }),
+            });
+
+            catchStub.callsFake((cb) => {
+                cb({ message: `Error al eliminar el usuario ${nombre + apellido}` }, {});
+            });
+            let res = {
+                send: () => {},
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: `Error al eliminar el usuario ${nombre + apellido}`
+            });
+
+            controllerUsuario.delete({ params: { username: nombre + apellido } }, res);
+
+            expect(stub.calledOnce).to.be.true;
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.firstCall.calledWithExactly(500)).to.be.true;
+
+            mock.verify();
+
+            done();
         });
     });
 });
