@@ -9,7 +9,9 @@ exports.create = (req, res) => {
     if (!req.body.username || !req.body.correo || !req.body.contrasena ||
         !req.body.nombres || !req.body.apellidos || !req.body.dpi ||
         !req.body.edad) {
-        return res.status(400).send({ message: "Los datos enviados de usuario son incorrectos." });
+        return res.status(400).send({
+            message: "Los datos enviados de usuario son incorrectos."
+        });
     }
 
     const usuario = new Usuario({
@@ -27,12 +29,12 @@ exports.create = (req, res) => {
     // Guardar usuario en la base de datos
     Usuario.create(usuario)
         .then(() => {
-            res.status(200).send({
+            return res.status(200).send({
                 message: "El usuario se creo correctamente."
             });
         })
-        .catch(() => {
-            res.status(500).send({
+        .catch(err => {
+            return res.status(500).send({
                 message: "Error al crear el Usuario."
             });
         });
@@ -49,16 +51,17 @@ exports.actualizar = (req, res) => {
     let username = req.params.username;
 
     Usuario.findOneAndUpdate({ username: username }, req.body)
-        .then(data => {
+        .then((data) => {
             if (!data) {
-                res.status(404).send({
+                return res.status(404).send({
                     message: `¡No se encontro el usuario!`
                 });
-            } else res.status(200).send({ message: "Usuario actualizado correctamente." });
+            } else {
+                return res.status(200).send({ message: "Usuario actualizado correctamente." });
+            }
         })
         .catch(err => {
-            console.log(err);
-            res.status(500).send({
+            return res.status(500).send({
                 message: `Error al actualizar el usuario con username=${username}.`
             });
         });
@@ -69,23 +72,20 @@ exports.actualizar = (req, res) => {
 exports.findOne = (req, res) => {
     const username = req.params.username;
 
-    Usuario.findOne({ username: username }, function(err, data) {
-            if (err) {
-                res
-                    .status(500)
-                    .send({ message: `Error al devolver al usuario con username=${username}.` });
-            } else {
-                if (!data) {
-                    res
-                        .status(404)
-                        .send({ message: `Usuario con username=${username} no encontrado.` });
-                } else {
-                    res.json({ message: "Usuario encontrado.", usuario: data });
-                }
+    Usuario.findOne({ username: username })
+        .then((data) => {
+            if (!data) {
+                return res
+                    .status(404)
+                    .send({ message: `Usuario con username=${username} no encontrado.` });
             }
+            return res
+                .status(200)
+                .send({ message: "Usuario encontrado.", usuario: data });
+
         })
         .catch(err => {
-            res
+            return res
                 .status(500)
                 .send({ message: `Error al devolver el usuario con username=${username}` });
         });
@@ -102,9 +102,8 @@ exports.delete = (req, res) => {
                     message: `El Usuario ${username} no existe.`
                 });
             }
-
-            return res.send({
-                message: `Eliminado`
+            return res.status(200).send({
+                message: `Usuario Eliminado`
             });
         })
         .catch(() => {
