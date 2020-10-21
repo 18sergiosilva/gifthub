@@ -497,7 +497,6 @@ describe('Historia: Conectarse a api externa', function() {
 
     describe('Historia: Conectarse a api externa', function() {})
 });
-
 describe('Historia: Ver catalogo giftcards', function() {
     describe('GET /', () => {
         it("Obtiene las giftcars de la base de datos", done => {
