@@ -494,4 +494,6 @@ describe('Historia: Conectarse a api externa', function() {
             done();
         });
     });
+
+    describe('Historia: Conectarse a api externa', function() {})
 });
