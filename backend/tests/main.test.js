@@ -461,7 +461,7 @@ describe('Historia: Conectarse a api externa', function() {
                     done();
                 }
             });
-            controllerCrds.getAll({ params: {} }, res);
+            controllerCrds.actualizar({ params: {} }, res);
         });
         it("Error al realizar la peticion a la api externa", done => {
             let catchStub = sandbox.stub();
@@ -483,7 +483,7 @@ describe('Historia: Conectarse a api externa', function() {
                 message: `Error al actualizar las giftcards`
             });
 
-            controllerCrds.getAll({ params: {} }, res);
+            controllerCrds.actualizar({ params: {} }, res);
 
             expect(stub.calledOnce).to.be.true;
             expect(res.status.calledOnce).to.be.true;
@@ -496,4 +496,66 @@ describe('Historia: Conectarse a api externa', function() {
     });
 
     describe('Historia: Conectarse a api externa', function() {})
+});
+
+describe('Historia: Ver catalogo giftcards', function() {
+    describe('GET /', () => {
+        it("Obtiene las giftcars de la base de datos", done => {
+            let res = {
+                send: () => {},
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: "Se devolvieron las giftcards.",
+                cards: []
+            });
+
+            sandbox.stub(controllerCrds.Card, 'find').returns({
+                then: (callBack) => {
+                    callBack([]);
+
+                    expect(res.status.calledOnce).to.be.true;
+                    expect(res.status.firstCall.calledWithExactly(200)).to.be.true;
+
+                    mock.verify();
+
+                    done();
+                }
+            });
+            controllerCrds.getAll({ params: {} }, res);
+        });
+        it("Error de la base de datos al obtener las giftcards", done => {
+            let catchStub = sandbox.stub();
+            let stub = sandbox.stub(controllerCrds.Card, 'find').returns({
+                then: sandbox.stub().callsFake(() => { return { catch: catchStub } }),
+            });
+
+            catchStub.callsFake((cb) => {
+                cb({ message: `Error de la base de datos al devolver las giftcards` }, {});
+            });
+            let res = {
+                send: () => {},
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: `Error de la base de datos al devolver las giftcards`
+            });
+
+            controllerCrds.getAll({ params: {} }, res);
+
+            expect(stub.calledOnce).to.be.true;
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.firstCall.calledWithExactly(500)).to.be.true;
+
+            mock.verify();
+
+            done();
+        });
+    });
 });
