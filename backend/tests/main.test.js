@@ -1,135 +1,436 @@
-const request = require('supertest');
+const chai = require('chai');
+const faker = require('faker');
+const chaiHttp = require('chai-http');
+const sinon = require('sinon');
+
+process.env.TESTING = true;
+
 const api = require('../index');
+const controllerUsuario = require('../app/controllers/usuario');
+const db = require("../app/models");
+const { query } = require('express');
 
-const app = api.app;
+chai.use(chaiHttp);
+faker.setLocale('es_MX');
 
-const usersRoute = "/api/usuario";
+const { expect } = chai;
 
-const { expect } = require('chai');
+const Usuario = db.usuario;
+
+var sandbox;
+beforeEach(function() {
+    sandbox = sinon.createSandbox();
+});
+
+afterEach(function() {
+    sandbox.restore();
+});
+
+const nombre = faker.name.firstName()
+const apellido = faker.name.lastName()
 
 const CorrectUserInfo = {
-    username: "edgar",
-    correo: "edgar@usac.com",
+    username: nombre + apellido,
+    correo: nombre + apellido + "@USAC.com",
     contrasena: "1234",
-    nombres: "edgar arnoldo",
-    apellidos: "aldana arriola",
-    dpi: 303035343831,
-    edad: 25,
+    nombres: `${nombre} ${faker.name.firstName()}`,
+    apellidos: `${apellido} ${faker.name.lastName()}`,
+    dpi: faker.random.number({
+        min: 100000000000,
+        max: 999999999999
+    }),
+    edad: faker.random.number({
+        min: 20,
+        max: 100
+    })
 };
 
 const IncorrectUserInfo = {
-    username: "edgar",
-    correo: "edgar@usac.com",
-    contrasena: "1234",
-    nombres: "edgar arnoldo",
-    edad: 25,
+    username: nombre + apellido,
+    correo: nombre + apellido + "@USAC.com",
+    contrasena: "111111",
+    nombres: `${nombre} ${faker.name.firstName()}`,
+    apellidos: `${apellido} ${faker.name.lastName()}`,
 };
 
-const UserInfoUpdate = {
-    username: "edgar",
-    correo: "edgar2@usac.com",
-    contrasena: "1234",
-    nombres: "edgar arnoldo",
-    apellidos: "aldana arriola",
-    dpi: 303035343831,
-    edad: 26,
-};
+describe('Validaciones en la BD', () => {
+    it('Mostrar error cuando no se pueda conectar a la base de datos', async() => {
 
-describe('GET /', function() {
-    it('/ responde con API FUNCIONANDO CORRECTAMENTE V2', done => {
-        request(app).get('/').end(function(error, result) {
-            if (error) {
-                console.log("ERROR: ");
-                console.log(error);
-            }
+        let processStub = sandbox.stub(process, 'exit');
+        let consoleStub = sandbox.stub(console, 'error');
 
-            expect(result.text).to.equal("API y MongoDB funcionando correctamente");
+        await api.dbConnect(`mongodb://errorURL`);
+
+        expect(consoleStub.callCount).to.equal(2);
+        expect(consoleStub.firstCall.calledWith('** No se pudo conectar a la base de datos **')).to.be.true;
+        expect(consoleStub.secondCall.args[0].toString()).to.include('MongooseError:');
+
+        expect(processStub.callCount).to.equal(1);
+
+    });
+
+});
+
+describe('Historia: Registrar Usuarios', function() {
+    describe('POST /', function() {
+        it("Guardar un usuario con datos correctos", done => {
+            let res = {
+                send: () => {},
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: "El usuario se creo correctamente."
+            });
+
+            sandbox.stub(controllerUsuario.Usuario, 'create').returns({
+                then: (callBack) => {
+                    callBack();
+
+                    expect(res.status.calledOnce).to.be.true;
+                    expect(res.status.firstCall.calledWithExactly(200)).to.be.true;
+
+                    mock.verify();
+
+                    done();
+                    //return { catch: () => {} }
+                }
+            });
+
+            controllerUsuario.create({ body: CorrectUserInfo }, res);
+        });
+        it("Intentar guardar un usuario con datos incorrectos", done => {
+            let res = {
+                send: () => {},
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: "Los datos enviados de usuario son incorrectos."
+            });
+
+            controllerUsuario.create({ body: IncorrectUserInfo }, res);
+
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.firstCall.calledWithExactly(400)).to.be.true;
+
+            mock.verify();
+
+            done();
+        });
+        it("Error de la base de datos al intentar insertar usuarios.", done => {
+            let catchStub = sandbox.stub();
+            let stub = sandbox.stub(controllerUsuario.Usuario, 'create').returns({
+                then: sandbox.stub().callsFake(() => { return { catch: catchStub } }),
+            });
+
+            catchStub.callsFake((cb) => {
+                cb({ message: "Error al crear el Usuario." }, {});
+            });
+            let res = {
+                send: () => {},
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: "Error al crear el Usuario."
+            });
+
+            controllerUsuario.create({ body: CorrectUserInfo }, res);
+
+            expect(stub.calledOnce).to.be.true;
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.firstCall.calledWithExactly(500)).to.be.true;
+
+            mock.verify();
 
             done();
         });
     });
-});
-
-describe('Historia: Registrar Usuarios', () => {
-    describe('POST /', () => {
-        it("Guardar un usuario con datos correctos", done => {
-            request(app)
-                .post('/usuario')
-                .send(CorrectUserInfo)
-                .end(function(error, result) {
-                    //expect(result).to.have.status(200);
-                    expect(result.body).to.be.a("object")
-                    expect(result.body.message).to.equal("El usuario se creo correctamente.");
-                    done();
-                });
-        });
-        it("Intentar guardar un usuario con datos incorrectos", done => {
-            request(app)
-                .post('/usuario')
-                .send(IncorrectUserInfo)
-                .end(function(error, result) {
-                    //expect(result).to.have.status(500);
-                    expect(result.body).to.be.a("object")
-                    expect(result.body.message).to.equal("Los datos enviados de usuario son incorrectos.");
-                    done();
-                });
-        });
-    });
     describe('PUT /', () => {
         it("Actualiar un usuario existente", done => {
-            request(app)
-                .put('/usuario/edgar')
-                .send(UserInfoUpdate)
-                .end(function(error, result) {
-                    //expect(res).to.have.status(200);
-                    expect(result.body).to.be.a("object")
-                    expect(result.body.message).to.equal("Usuario actualizado correctamente.");
+            let res = {
+                send: () => {},
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: "Usuario actualizado correctamente."
+            });
+
+            sandbox.stub(controllerUsuario.Usuario, 'findOneAndUpdate').returns({
+                then: (callBack) => {
+                    callBack(true);
+
+                    expect(res.status.calledOnce).to.be.true;
+                    expect(res.status.firstCall.calledWithExactly(200)).to.be.true;
+
+                    mock.verify();
+
                     done();
-                });
+                }
+            });
+
+            controllerUsuario.actualizar({ body: IncorrectUserInfo, params: { username: "EAWLL" } }, res);
         });
-        it("Error al actualizar un usuario que no existe", done => {
-            request(app)
-                .put('/usuario/edgar2')
-                .send(UserInfoUpdate)
-                .end(function(error, result) {
-                    //expect(res).to.have.status(404);
-                    expect(result.body).to.be.a("object")
-                    expect(result.body.message).to.equal("¡No se encontro el usuario!");
+        it("Actualiar un usuario que no existente", done => {
+            let res = {
+                send: () => {},
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: "¡No se encontro el usuario!"
+            });
+
+            sandbox.stub(controllerUsuario.Usuario, 'findOneAndUpdate').returns({
+                then: (callBack) => {
+                    callBack(false);
+
+                    expect(res.status.calledOnce).to.be.true;
+                    expect(res.status.firstCall.calledWithExactly(404)).to.be.true;
+
+                    mock.verify();
+
                     done();
-                });
+                }
+            });
+
+            controllerUsuario.actualizar({ body: IncorrectUserInfo, params: { username: "EAWLL" } }, res);
         });
-        it("Error al actualizar un usuario sin enviar datos para actaulizar", done => {
-            request(app)
-                .put('/usuario/edgar')
-                .end(function(error, result) {
-                    //expect(res).to.have.status(404);
-                    expect(result.body).to.be.a("object")
-                    expect(result.body.message).to.equal("Los datos a modificar no deben de esta vacios.");
-                    done();
-                });
+        it("Intentar actualizar usuario sin enviarle datos", done => {
+            let res = {
+                send: () => {},
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: "Los datos a modificar no deben de esta vacios."
+            });
+
+            controllerUsuario.actualizar({ body: {}, params: { username: "EAWLL" } }, res);
+
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.firstCall.calledWithExactly(400)).to.be.true;
+
+            mock.verify();
+
+            done();
+        });
+        it("Error de la base de datos al intentar actualizar usuarios.", done => {
+            let catchStub = sandbox.stub();
+            let stub = sandbox.stub(controllerUsuario.Usuario, 'findOneAndUpdate').returns({
+                then: sandbox.stub().callsFake(() => { return { catch: catchStub } }),
+            });
+
+            catchStub.callsFake((cb) => {
+                cb({ message: "Error al actualizar el usuario con username=EAWLL." }, {});
+            });
+            let res = {
+                send: () => {},
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: "Error al actualizar el usuario con username=EAWLL."
+            });
+
+            controllerUsuario.actualizar({ body: CorrectUserInfo, params: { username: "EAWLL" } }, res);
+
+            expect(stub.calledOnce).to.be.true;
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.firstCall.calledWithExactly(500)).to.be.true;
+
+            mock.verify();
+
+            done();
         });
     });
-    describe('Get /', () => {
+    describe('GET /', () => {
         it("Buscar un usuario existente", done => {
-            request(app)
-                .get('/usuario/edgar')
-                .end(function(error, result) {
-                    //expect(res).to.have.status(200);
-                    expect(result.body).to.be.a("object")
-                    expect(result.body.message).to.equal("Usuario encontrado.");
-                    expect(result.body.usuario.username).to.equal("edgar");
+            let res = {
+                send: () => {},
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: "Usuario encontrado.",
+                usuario: CorrectUserInfo
+            });
+
+            sandbox.stub(controllerUsuario.Usuario, 'findOne').returns({
+                then: (callBack) => {
+                    callBack(CorrectUserInfo);
+
+                    expect(res.status.calledOnce).to.be.true;
+                    expect(res.status.firstCall.calledWithExactly(200)).to.be.true;
+
+                    mock.verify();
+
                     done();
-                });
+                }
+            });
+            controllerUsuario.findOne({ params: { username: nombre + apellido } }, res);
         });
         it("Buscar un usuario que no existente", done => {
-            request(app)
-                .get('/usuario/edgar4')
-                .end(function(error, result) {
-                    //expect(res).to.have.status(404);
-                    expect(result.body).to.be.a("object")
-                    expect(result.body.message).to.equal("Usuario con username=edgar4 no encontrado.");
+            let res = {
+                send: () => {},
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: `Usuario con username=${nombre + apellido} no encontrado.`,
+            });
+
+            sandbox.stub(controllerUsuario.Usuario, 'findOne').returns({
+                then: (callBack) => {
+                    callBack(undefined);
+
+                    expect(res.status.calledOnce).to.be.true;
+                    expect(res.status.firstCall.calledWithExactly(404)).to.be.true;
+
+                    mock.verify();
+
                     done();
-                });
+                }
+            });
+
+            controllerUsuario.findOne({ params: { username: nombre + apellido } }, res);
+        });
+        it("Error de la base de datos al intentar eliminar un usuarios.", done => {
+            let catchStub = sandbox.stub();
+            let stub = sandbox.stub(controllerUsuario.Usuario, 'findOne').returns({
+                then: sandbox.stub().callsFake(() => { return { catch: catchStub } }),
+            });
+
+            catchStub.callsFake((cb) => {
+                cb({ message: `Error al devolver el usuario con username=${nombre + apellido}` }, {});
+            });
+            let res = {
+                send: () => {},
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: `Error al devolver el usuario con username=${nombre + apellido}`
+            });
+
+            controllerUsuario.findOne({ params: { username: nombre + apellido } }, res);
+
+            expect(stub.calledOnce).to.be.true;
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.firstCall.calledWithExactly(500)).to.be.true;
+
+            mock.verify();
+
+            done();
+        });
+
+    });
+    describe('DELETE /', () => {
+        it("Eliminar un usuario existente", done => {
+            let res = {
+                send: () => {},
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: "Usuario Eliminado",
+            });
+
+            sandbox.stub(controllerUsuario.Usuario, 'findOneAndRemove').returns({
+                then: (callBack) => {
+                    callBack(CorrectUserInfo);
+
+                    expect(res.status.calledOnce).to.be.true;
+                    expect(res.status.firstCall.calledWithExactly(200)).to.be.true;
+
+                    mock.verify();
+
+                    done();
+                }
+            });
+
+            controllerUsuario.delete({ params: { username: nombre + apellido } }, res);
+        });
+        it("Intentar eliminar un usuario que no existente", done => {
+            let res = {
+                send: () => {},
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: `El Usuario ${nombre + apellido} no existe.`,
+            });
+
+            sandbox.stub(controllerUsuario.Usuario, 'findOneAndRemove').returns({
+                then: (callBack) => {
+                    callBack(undefined);
+
+                    expect(res.status.calledOnce).to.be.true;
+                    expect(res.status.firstCall.calledWithExactly(404)).to.be.true;
+
+                    mock.verify();
+
+                    done();
+                }
+            });
+
+            controllerUsuario.delete({ params: { username: nombre + apellido } }, res);
+        });
+        it("Error de la base de datos al intentar eliminar un usuarios.", done => {
+            let catchStub = sandbox.stub();
+            let stub = sandbox.stub(controllerUsuario.Usuario, 'findOneAndRemove').returns({
+                then: sandbox.stub().callsFake(() => { return { catch: catchStub } }),
+            });
+
+            catchStub.callsFake((cb) => {
+                cb({ message: `Error al eliminar el usuario ${nombre + apellido}` }, {});
+            });
+            let res = {
+                send: () => {},
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: `Error al eliminar el usuario ${nombre + apellido}`
+            });
+
+            controllerUsuario.delete({ params: { username: nombre + apellido } }, res);
+
+            expect(stub.calledOnce).to.be.true;
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.firstCall.calledWithExactly(500)).to.be.true;
+
+            mock.verify();
+
+            done();
         });
     });
 });
