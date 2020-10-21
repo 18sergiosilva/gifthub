@@ -13,6 +13,7 @@ db.url = dbConfig.url;
 db.testUrl = dbConfig.testing;
 
 db.usuario = require("./usuario")(mongoose);
+db.card = require("./cards")(mongoose);
 
 // configuracion de la conexion a mongodb
 db.mongoose.set('useNewUrlParser', true);
