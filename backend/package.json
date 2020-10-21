@@ -12,6 +12,7 @@
         "start": "node index"
     },
     "dependencies": {
+        "axios": "^0.20.0",
         "body-parser": "^1.19.0",
         "chai": "^4.2.0",
         "cors": "^2.8.5",
@@ -40,10 +41,14 @@
             "/node_modules/"
         ],
         "reporters": [
-            "default", ["jest-sonar-master", {
-                "outputDirectory": "coverage",
-                "outputName": "test-sonar.xml"
-            }]
+            "default",
+            [
+                "jest-sonar-master",
+                {
+                    "outputDirectory": "coverage",
+                    "outputName": "test-sonar.xml"
+                }
+            ]
         ]
     },
     "jestSonar": {

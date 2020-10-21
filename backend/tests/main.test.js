@@ -7,6 +7,7 @@ process.env.TESTING = true;
 
 const api = require('../index');
 const controllerUsuario = require('../app/controllers/usuario');
+const controllerCrds = require('../app/controllers/cards');
 const db = require("../app/models");
 const { query } = require('express');
 
@@ -433,4 +434,66 @@ describe('Historia: Registrar Usuarios', function() {
             done();
         });
     });
+});
+describe('Historia: Conectarse a api externa', function() {
+    describe('GET /', () => {
+        it("Actualizar las giftcards en la base de datos", done => {
+            let res = {
+                send: () => {},
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: "giftcards actualizadas"
+            });
+
+            sandbox.stub(controllerCrds.axios, 'get').returns({
+                then: (callBack) => {
+                    callBack({ data: [] });
+
+                    expect(res.status.calledOnce).to.be.true;
+                    expect(res.status.firstCall.calledWithExactly(200)).to.be.true;
+
+                    mock.verify();
+
+                    done();
+                }
+            });
+            controllerCrds.getAll({ params: {} }, res);
+        });
+        it("Error al realizar la peticion a la api externa", done => {
+            let catchStub = sandbox.stub();
+            let stub = sandbox.stub(controllerCrds.axios, 'get').returns({
+                then: sandbox.stub().callsFake(() => { return { catch: catchStub } }),
+            });
+
+            catchStub.callsFake((cb) => {
+                cb({ message: `Error al actualizar las giftcards` }, {});
+            });
+            let res = {
+                send: () => {},
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: `Error al actualizar las giftcards`
+            });
+
+            controllerCrds.getAll({ params: {} }, res);
+
+            expect(stub.calledOnce).to.be.true;
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.firstCall.calledWithExactly(500)).to.be.true;
+
+            mock.verify();
+
+            done();
+        });
+    });
+
+    describe('Historia: Conectarse a api externa', function() {})
 });
