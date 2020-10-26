@@ -1,18 +1,18 @@
 const db = require("../models");
 const axios = require('axios');
-const Card = db.card;
+const CardsValueTasaCambio = db.cardsValueTasaCambio;
 
-exports.Card = Card;
-
+exports.Card = CardsValueTasaCambio;
 exports.axios = axios;
 
 // Actualiiza las giftcards en la base de datos
 exports.actualizar = (req, res) => {
-    Card.deleteMany({}, () => {});
-    axios.get('https://my-json-server.typicode.com/CoffeePaw/AyD1API/Card')
+    CardsValueTasaCambio.deleteMany({}, () => { });
+
+    axios.get('https://my-json-server.typicode.com/CoffeePaw/AyD1API/db')
         .then(resp => {
-            Card.insertMany(resp.data)
-                .then(() => {})
+            CardsValueTasaCambio.insertMany(resp.data)
+                .then(() => { })
             return res
                 .status(200)
                 .send({ message: "giftcards actualizadas" });
@@ -21,12 +21,12 @@ exports.actualizar = (req, res) => {
             return res
                 .status(500)
                 .send({ message: `Error al actualizar las giftcards` });
-        });;
+        });
 };
 
 // Obtener todas las giftcards
 exports.getAll = (req, res) => {
-    Card.find({})
+    CardsValueTasaCambio.find({})
         .then((data) => {
             return res
                 .status(200)
