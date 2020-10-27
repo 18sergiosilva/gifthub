@@ -4,6 +4,9 @@ module.exports = app => {
 
     var router = require("express").Router();
 
+    // Devuelve todos los usuarios
+    router.get("/", usuario.getAll);
+
     // Crear un nuevo usuario
     router.post("/", usuario.create);
 
@@ -12,9 +15,6 @@ module.exports = app => {
 
     // Devuelve la informacion del usuario buscado por username
     router.get("/:username", usuario.findOne);
-
-    // Devuelve todos los usuarios
-    router.get("/", usuario.getAll);
 
     // Elimina un usuario buscado por username
     router.delete("/:username", usuario.delete);
