@@ -180,7 +180,7 @@ describe('Historia: Registrar Usuarios', function() {
                 }
             });
 
-            controllerUsuario.actualizar({ body: IncorrectUserInfo, params: { username: "EAWLL" } }, res);
+            controllerUsuario.actualizarUsuario({ body: IncorrectUserInfo, params: { username: "EAWLL" } }, res);
         });
         it("Actualiar un usuario que no existente", done => {
             let res = {
@@ -207,7 +207,7 @@ describe('Historia: Registrar Usuarios', function() {
                 }
             });
 
-            controllerUsuario.actualizar({ body: IncorrectUserInfo, params: { username: "EAWLL" } }, res);
+            controllerUsuario.actualizarUsuario({ body: IncorrectUserInfo, params: { username: "EAWLL" } }, res);
         });
         it("Intentar actualizar usuario sin enviarle datos", done => {
             let res = {
@@ -221,7 +221,7 @@ describe('Historia: Registrar Usuarios', function() {
                 message: "Los datos a modificar no deben de esta vacios."
             });
 
-            controllerUsuario.actualizar({ body: {}, params: { username: "EAWLL" } }, res);
+            controllerUsuario.actualizarUsuario({ body: {}, params: { username: "EAWLL" } }, res);
 
             expect(res.status.calledOnce).to.be.true;
             expect(res.status.firstCall.calledWithExactly(400)).to.be.true;
@@ -250,7 +250,7 @@ describe('Historia: Registrar Usuarios', function() {
                 message: "Error al actualizar el usuario con username=EAWLL."
             });
 
-            controllerUsuario.actualizar({ body: CorrectUserInfo, params: { username: "EAWLL" } }, res);
+            controllerUsuario.actualizarUsuario({ body: CorrectUserInfo, params: { username: "EAWLL" } }, res);
 
             expect(stub.calledOnce).to.be.true;
             expect(res.status.calledOnce).to.be.true;
@@ -270,10 +270,7 @@ describe('Historia: Registrar Usuarios', function() {
 
             const mock = sinon.mock(res);
 
-            mock.expects("send").once().withExactArgs({
-                message: "Usuario encontrado.",
-                usuario: CorrectUserInfo
-            });
+            mock.expects("send").once();
 
             sandbox.stub(controllerUsuario.Usuario, 'findOne').returns({
                 then: (callBack) => {
@@ -287,7 +284,7 @@ describe('Historia: Registrar Usuarios', function() {
                     done();
                 }
             });
-            controllerUsuario.findOne({ params: { username: nombre + apellido } }, res);
+            controllerUsuario.buscarUsuario({ params: { username: nombre + apellido } }, res);
         });
         it("Buscar un usuario que no existente", done => {
             let res = {
@@ -297,9 +294,7 @@ describe('Historia: Registrar Usuarios', function() {
 
             const mock = sinon.mock(res);
 
-            mock.expects("send").once().withExactArgs({
-                message: `Usuario con username=${nombre + apellido} no encontrado.`,
-            });
+            mock.expects("send").once();
 
             sandbox.stub(controllerUsuario.Usuario, 'findOne').returns({
                 then: (callBack) => {
@@ -314,7 +309,7 @@ describe('Historia: Registrar Usuarios', function() {
                 }
             });
 
-            controllerUsuario.findOne({ params: { username: nombre + apellido } }, res);
+            controllerUsuario.buscarUsuario({ params: { username: nombre + apellido } }, res);
         });
         it("Error de la base de datos al intentar eliminar un usuarios.", done => {
             let catchStub = sandbox.stub();
@@ -336,7 +331,7 @@ describe('Historia: Registrar Usuarios', function() {
                 message: `Error al devolver el usuario con username=${nombre + apellido}`
             });
 
-            controllerUsuario.findOne({ params: { username: nombre + apellido } }, res);
+            controllerUsuario.buscarUsuario({ params: { username: nombre + apellido } }, res);
 
             expect(stub.calledOnce).to.be.true;
             expect(res.status.calledOnce).to.be.true;
@@ -346,7 +341,64 @@ describe('Historia: Registrar Usuarios', function() {
 
             done();
         });
+        it("Obtener usuarios", done => {
+            let res = {
+                send: () => {},
+                status: sinon.stub().returnsThis()
+            };
 
+            const mock = sinon.mock(res)
+
+            mock.expects("send").once().withExactArgs({
+                message: "Usuarios devueltos.",
+                usuarios: {}
+            });
+
+            sandbox.stub(controllerUsuario.Usuario, 'find').returns({
+                then: (callBack) => {
+                    callBack({});
+
+                    expect(res.status.calledOnce).to.be.true;
+                    expect(res.status.firstCall.calledWithExactly(200)).to.be.true;
+
+                    mock.verify();
+
+                    done();
+                }
+            });
+            controllerUsuario.getAll({ }, res);
+        });
+        it("Error de la base de datos al intentar obtener todos los usuarios.", done => {
+            let catchStub = sandbox.stub();
+            let stub = sandbox.stub(controllerUsuario.Usuario, 'find').returns({
+                then: sandbox.stub().callsFake(() => { return { catch: catchStub } }),
+            });
+
+            catchStub.callsFake((cb) => {
+                cb({ message: `Error al devolver los usuarios.` }, {});
+            });
+            let res = {
+                send: () => {},
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: `Error al devolver los usuarios.`
+            });
+
+            controllerUsuario.getAll({}, res);
+
+            expect(stub.calledOnce).to.be.true;
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.firstCall.calledWithExactly(500)).to.be.true;
+
+            mock.verify();
+
+            done();
+        });
+       
     });
     describe('DELETE /', () => {
         it("Eliminar un usuario existente", done => {
