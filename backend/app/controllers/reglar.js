@@ -31,7 +31,7 @@ async function modificarInventarioTrjetasUsuario1(usuario, tarjetas) {
         for (let i = 0; i < usuario.tarjetas.length; i++) {
             if (usuario.tarjetas[i].id == tarjetas[j].id) {
                 existe = false;
-                usuario.tarjetas[i].cantidad += tarjetas[j].cantidad
+                usuario.tarjetas[i].cantidad -= tarjetas[j].cantidad
                 if (usuario.tarjetas[i].cantidad < 0) {
                     return { message: `No se cuenta con la cantidad suficiente tarjetas para regalar.` };
                 }
