@@ -29,7 +29,7 @@ function obtenerDatos(res){
         .then((data) => {
             return res
                 .status(200)
-                .send({ message: "Se devolvieron las giftcards.", cards: data[0] });
+                .send({ message: "Se devolvieron las giftcards.", cards: data[0] || [] });
         })
         .catch(err => {
             return res

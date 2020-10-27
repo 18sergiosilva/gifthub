@@ -55,21 +55,20 @@ const IncorrectUserInfo = {
 };
 
 describe('Validaciones en la BD', () => {
-    it('Mostrar error cuando no se pueda conectar a la base de datos', async() => {
+    it('Mostrar error cuando no se pueda conectar a la base de datos', (done) => {
 
         let processStub = sandbox.stub(process, 'exit');
         let consoleStub = sandbox.stub(console, 'error');
 
-        await api.dbConnect(`mongodb://errorURL`);
+        api.dbConnect(`mongodb+srv://ayd:incorrect@gifthubdata.frnw3.gcp.mongodb.net/gifthub?retryWrites=true&w=majority`, () => {
+            expect(consoleStub.callCount).to.equal(4);
+            expect(consoleStub.firstCall.calledWith('** No se pudo conectar a la base de datos **')).to.be.true;
+            expect(consoleStub.secondCall.args[0].toString()).to.include('MongooseError:');
+            expect(processStub.callCount).to.equal(1);
 
-        expect(consoleStub.callCount).to.equal(2);
-        expect(consoleStub.firstCall.calledWith('** No se pudo conectar a la base de datos **')).to.be.true;
-        expect(consoleStub.secondCall.args[0].toString()).to.include('MongooseError:');
-
-        expect(processStub.callCount).to.equal(1);
-
+            done();
+        });
     });
-
 });
 
 describe('Historia: Registrar Usuarios', function() {
@@ -85,6 +84,8 @@ describe('Historia: Registrar Usuarios', function() {
             mock.expects("send").once().withExactArgs({
                 message: "El usuario se creo correctamente."
             });
+            
+            let catchObj = { catch: () => { done(); } };
 
             sandbox.stub(controllerUsuario.Usuario, 'create').returns({
                 then: (callBack) => {
@@ -96,12 +97,15 @@ describe('Historia: Registrar Usuarios', function() {
                     mock.verify();
 
                     done();
-                    //return { catch: () => {} }
-                }
+                    
+                    return catchObj;
+                },
+                ...catchObj
             });
 
             controllerUsuario.create({ body: CorrectUserInfo }, res);
         });
+
         it("Intentar guardar un usuario con datos incorrectos", done => {
             let res = {
                 send: () => {},
@@ -123,6 +127,7 @@ describe('Historia: Registrar Usuarios', function() {
 
             done();
         });
+        
         it("Error de la base de datos al intentar insertar usuarios.", done => {
             let catchStub = sandbox.stub();
             let stub = sandbox.stub(controllerUsuario.Usuario, 'create').returns({
@@ -154,6 +159,7 @@ describe('Historia: Registrar Usuarios', function() {
             done();
         });
     });
+
     describe('PUT /', () => {
         it("Actualiar un usuario existente", done => {
             let res = {
@@ -177,6 +183,8 @@ describe('Historia: Registrar Usuarios', function() {
                     mock.verify();
 
                     done();
+
+                    return { catch: () => {} };
                 }
             });
 
@@ -204,11 +212,14 @@ describe('Historia: Registrar Usuarios', function() {
                     mock.verify();
 
                     done();
+
+                    return { catch: () => {} };
                 }
             });
 
             controllerUsuario.actualizarUsuario({ body: IncorrectUserInfo, params: { username: "EAWLL" } }, res);
         });
+
         it("Intentar actualizar usuario sin enviarle datos", done => {
             let res = {
                 send: () => {},
@@ -230,6 +241,7 @@ describe('Historia: Registrar Usuarios', function() {
 
             done();
         });
+
         it("Error de la base de datos al intentar actualizar usuarios.", done => {
             let catchStub = sandbox.stub();
             let stub = sandbox.stub(controllerUsuario.Usuario, 'findOneAndUpdate').returns({
@@ -282,11 +294,14 @@ describe('Historia: Registrar Usuarios', function() {
                     mock.verify();
 
                     done();
+
+                    return { catch: () => {} };
                 }
             });
             controllerUsuario.buscarUsuario({ params: { username: nombre + apellido } }, res);
         });
-        it("Buscar un usuario que no existente", done => {
+
+        it("Buscar un usuario que no existe", done => {
             let res = {
                 send: () => {},
                 status: sinon.stub().returnsThis()
@@ -306,11 +321,14 @@ describe('Historia: Registrar Usuarios', function() {
                     mock.verify();
 
                     done();
+
+                    return { catch: () => {} };
                 }
             });
 
             controllerUsuario.buscarUsuario({ params: { username: nombre + apellido } }, res);
         });
+
         it("Error de la base de datos al intentar eliminar un usuarios.", done => {
             let catchStub = sandbox.stub();
             let stub = sandbox.stub(controllerUsuario.Usuario, 'findOne').returns({
@@ -341,6 +359,7 @@ describe('Historia: Registrar Usuarios', function() {
 
             done();
         });
+
         it("Obtener usuarios", done => {
             let res = {
                 send: () => {},
@@ -364,10 +383,13 @@ describe('Historia: Registrar Usuarios', function() {
                     mock.verify();
 
                     done();
+
+                    return { catch: () => {} };
                 }
             });
             controllerUsuario.getAll({ }, res);
         });
+
         it("Error de la base de datos al intentar obtener todos los usuarios.", done => {
             let catchStub = sandbox.stub();
             let stub = sandbox.stub(controllerUsuario.Usuario, 'find').returns({
@@ -423,11 +445,14 @@ describe('Historia: Registrar Usuarios', function() {
                     mock.verify();
 
                     done();
+
+                    return { catch: () => {} };
                 }
             });
 
             controllerUsuario.delete({ params: { username: nombre + apellido } }, res);
         });
+
         it("Intentar eliminar un usuario que no existente", done => {
             let res = {
                 send: () => {},
@@ -450,11 +475,14 @@ describe('Historia: Registrar Usuarios', function() {
                     mock.verify();
 
                     done();
+
+                    return { catch: () => {} };
                 }
             });
 
             controllerUsuario.delete({ params: { username: nombre + apellido } }, res);
         });
+
         it("Error de la base de datos al intentar eliminar un usuarios.", done => {
             let catchStub = sandbox.stub();
             let stub = sandbox.stub(controllerUsuario.Usuario, 'findOneAndRemove').returns({
@@ -511,10 +539,13 @@ describe('Historia: Conectarse a api externa', function() {
                     mock.verify();
 
                     done();
+
+                    return { catch: () => {} };
                 }
             });
             controllerCrds.actualizar({ params: {} }, res);
         });
+
         it("Error al realizar la peticion a la api externa", done => {
             let catchStub = sandbox.stub();
             let stub = sandbox.stub(controllerCrds.axios, 'get').returns({
@@ -549,6 +580,7 @@ describe('Historia: Conectarse a api externa', function() {
 
     describe('Historia: Conectarse a api externa', function() {})
 });
+
 describe('Historia: Ver catalogo giftcards', function() {
     describe('GET /', () => {
         it("Obtiene las giftcars de la base de datos", done => {
@@ -574,6 +606,8 @@ describe('Historia: Ver catalogo giftcards', function() {
                     mock.verify();
 
                     done();
+
+                    return { catch: () => {} }
                 }
             });
             controllerCrds.getAll({ params: {} }, res);
@@ -585,7 +619,7 @@ describe('Historia: Ver catalogo giftcards', function() {
             });
 
             catchStub.callsFake((cb) => {
-                cb({ message: `Error de la base de datos al devolver las giftcards` }, {});
+                cb({ message: `Error de la base de datos al devolver las giftcards.` }, {});
             });
             let res = {
                 send: () => {},
@@ -595,7 +629,7 @@ describe('Historia: Ver catalogo giftcards', function() {
             const mock = sinon.mock(res);
 
             mock.expects("send").once().withExactArgs({
-                message: `Error de la base de datos al devolver las giftcards`
+                message: `Error de la base de datos al devolver las giftcards.`
             });
 
             controllerCrds.getAll({ params: {} }, res);
