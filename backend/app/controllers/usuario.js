@@ -77,7 +77,6 @@ function buscarUsuario(req, res) {
     const username = req.params.username;
 
     return Usuario.findOne({ username: username })
-        .populate()
         .then((data) => {
             if (!data) {
                 return res
@@ -104,18 +103,16 @@ exports.findOne = (req, res) => {
 // Devolver todos los usuarios
 exports.getAll = (req, res) => {
     return Usuario.find({})
-        .populate()
         .then((data) => {
-            console.log(data)
             return res
                 .status(200)
-                .send({ message: "Usuarios devueltos", usuarios: data });
+                .send({ message: "Usuarios devueltos.", usuarios: data });
 
         })
         .catch(err => {
             return res
                 .status(500)
-                .send({ message: `Error al devolver los usuarios` });
+                .send({ message: `Error al devolver los usuarios.` });
         });
 }
 
