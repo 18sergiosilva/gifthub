@@ -8,7 +8,7 @@ module.exports = app => {
 
     // Actualiza las giftcardas
     router.post("/pago", compra.pago);
-    
+
     // La ruta de la api para actualiizar giftcards
     app.use("/compra", router);
 };

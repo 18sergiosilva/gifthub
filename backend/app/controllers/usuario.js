@@ -23,7 +23,8 @@ exports.create = (req, res) => {
         dpi: req.body.dpi,
         edad: req.body.edad,
         tarjetas: req.body.tarjetas || [],
-        transacciones: req.body.transacciones || []
+        transacciones: req.body.transacciones || [],
+        tarjetasCredito: req.body.tarjetasCredito || []
     });
 
     // Guardar usuario en la base de datos
