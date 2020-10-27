@@ -101,6 +101,24 @@ exports.findOne = (req, res) => {
     return buscarUsuario(req, res)
 };
 
+// Devolver todos los usuarios
+exports.getAll = (req, res) => {
+    return Usuario.find({})
+        .populate()
+        .then((data) => {
+            console.log(data)
+            return res
+                .status(200)
+                .send({ message: "Usuarios devueltos", usuarios: data });
+
+        })
+        .catch(err => {
+            return res
+                .status(500)
+                .send({ message: `Error al devolver los usuarios` });
+        });
+}
+
 // Elimina un usuario por su username
 exports.delete = (req, res) => {
     const username = req.params.username;
