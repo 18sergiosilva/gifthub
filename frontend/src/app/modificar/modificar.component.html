@@ -1,0 +1,56 @@
+<!-- Formulario de editar producto-->
+<div class="col-12 grid-margin">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title" id="titulocarta">EDITAR USUARIO</h4>
+            <form class="form-sample">
+                <div class="row"> 
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label"id="vendedor">Email</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" [(ngModel)]="email" name="email"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label"id="vendedor">Nombres</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" [(ngModel)]="nombre" name="nombre"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label"id="vendedor">Apellidos</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" [(ngModel)]="apellido" name="apellido"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label"id="precio">Edad</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" [(ngModel)]="edad" name="edad"/>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+                <div class="row">
+                     
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label"id="vendedor">Password</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" [(ngModel)]="password" name="password"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" (click)="editarProducto()" class="btn btn-success mr-2">Editar</button>
+            </form>
+        </div>
+    </div>
+</div>
