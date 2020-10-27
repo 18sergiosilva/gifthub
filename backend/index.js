@@ -18,12 +18,16 @@ require("./app/routes/usuario")(app);
 require("./app/routes/cards")(app);
 require("./app/routes/compra")(app);
 
-const dbConnect = (url) => {
+const dbConnect = (url, cb) => {
     db.mongoose
         .connect(url)
         .catch(err => {
             console.error("** No se pudo conectar a la base de datos **");
             console.error(err);
+            if (cb){ 
+                cb(err);
+            }
+
             process.exit();
         });
 };
