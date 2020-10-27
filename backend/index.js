@@ -16,6 +16,7 @@ app.get('/', function(req, res) {
 
 require("./app/routes/usuario")(app);
 require("./app/routes/cards")(app);
+require("./app/routes/compra")(app);
 
 const dbConnect = (url) => {
     db.mongoose

@@ -41,7 +41,7 @@ exports.create = (req, res) => {
 };
 
 // Actualizar un usuario encontrado con su username
-exports.actualizar = (req, res) => {
+function actualizarUsuario(req, res) {
     if (Object.keys(req.body).length === 0) {
         return res.status(400).send({
             message: "Los datos a modificar no deben de esta vacios."
@@ -50,7 +50,7 @@ exports.actualizar = (req, res) => {
 
     let username = req.params.username;
 
-    Usuario.findOneAndUpdate({ username: username }, req.body)
+    return Usuario.findOneAndUpdate({ username: username }, req.body)
         .then((data) => {
             if (!data) {
                 return res.status(404).send({
@@ -65,14 +65,19 @@ exports.actualizar = (req, res) => {
                 message: `Error al actualizar el usuario con username=${username}.`
             });
         });
+}
+exports.actualizarUsuario = actualizarUsuario;
+
+exports.actualizar = (req, res) => {
+    return actualizarUsuario
 };
 
-
 // Busca usuario por su username
-exports.findOne = (req, res) => {
+function buscarUsuario(req, res) {
     const username = req.params.username;
 
-    Usuario.findOne({ username: username })
+    return Usuario.findOne({ username: username })
+        .populate()
         .then((data) => {
             if (!data) {
                 return res
@@ -89,6 +94,11 @@ exports.findOne = (req, res) => {
                 .status(500)
                 .send({ message: `Error al devolver el usuario con username=${username}` });
         });
+}
+exports.buscarUsuario = buscarUsuario;
+
+exports.findOne = (req, res) => {
+    return buscarUsuario(req, res)
 };
 
 // Elimina un usuario por su username

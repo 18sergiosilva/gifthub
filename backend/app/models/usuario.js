@@ -8,7 +8,8 @@ module.exports = mongoose => {
         dpi: { type: Number, required: true, unique: true },
         edad: { type: Number, required: true },
         tarjetas: [],
-        transacciones: []
+        transacciones: [],
+        tarjetasCredito: []
     }, { timestamps: true });
 
     schema.method("toJSON", function() {

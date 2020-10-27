@@ -24,18 +24,22 @@ exports.actualizar = (req, res) => {
         });
 };
 
-// Obtener todas las giftcards
-exports.getAll = (req, res) => {
-    CardsValueTasaCambio.find({})
+function obtenerDatos(res){
+    return CardsValueTasaCambio.find({})
         .then((data) => {
             return res
                 .status(200)
-                .send({ message: "Se devolvieron las giftcards.", cards: data });
-
+                .send({ message: "Se devolvieron las giftcards.", cards: data[0] });
         })
         .catch(err => {
             return res
                 .status(500)
-                .send({ message: `Error de la base de datos al devolver las giftcards` });
+                .send({ message: `Error de la base de datos al devolver las giftcards.` });
         });
+}
+exports.obtenerDatos = obtenerDatos;
+
+// Obtener todas las giftcards
+exports.getAll = (req, res) => {
+    obtenerDatos(res)
 };
