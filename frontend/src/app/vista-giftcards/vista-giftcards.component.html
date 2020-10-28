@@ -4,7 +4,7 @@
         <div class="card-body">
             <h4 class="card-title" id="titulocarta">GIFTCARDS DISPONIBLES</h4>
             <div class="row image-grid">
-                <ng-container *ngFor="let item of listaDeGiftcards">
+                <ng-container *ngFor="let item of listaDeGiftcards;let indice=index">
                     <div class="separador2 col-sm-4 col-md-4 ">
                         <div class="panel panel-default">
                             <div class="panel-body tamano d-flex justify-content-center">
@@ -16,27 +16,14 @@
                                 {{item.displayName}}
                             </div>
                             <div class="separador panel-footer d-flex justify-content-center">
-                                Cantidad
-                                <div class="col-sm-4 col-md-4">
-                                    <select class="form-control">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
-                                        <option>6</option>
-                                        <option>7</option>
-                                        <option>8</option>
-                                        <option>9</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="separador panel-footer d-flex justify-content-center">
-                                <button type="button" class="btn btn-success">Añadir al Carrito</button>
+                                <button type="button" class="btn btn-success" (click)="agregarAlCarrito(indice)">Añadir al Carrito</button>
                             </div>
                         </div>
                     </div>
                 </ng-container>
+            </div>
+            <div class="col-sm-12 col-md-12">
+                <button type="button" class="col-sm-12 col-md-12 btn btn-danger"(click)="verCarrito()">Ir al Checkout</button>
             </div>
         </div>
     </div>

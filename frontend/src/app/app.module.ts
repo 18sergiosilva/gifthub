@@ -14,6 +14,8 @@ import { HomeComponent } from './home/home.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ModificarComponent } from './modificar/modificar.component';
 import { VistaGiftcardsComponent } from './vista-giftcards/vista-giftcards.component';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -31,6 +33,8 @@ import { VistaGiftcardsComponent } from './vista-giftcards/vista-giftcards.compo
     FormsModule,
     NgbModule,
     HttpClientModule,
+    BrowserAnimationsModule, 
+    ToastrModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]
