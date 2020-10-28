@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ServicioVistaGiftcardsService } from '../services/servicio-vista-giftcards.service'
 import { first } from 'rxjs/operators';
-//import { Venta, Producto, Factura } from '../models/modelos';
+import { Giftcard } from '../models/modelos';
 
 @Component({
   selector: 'app-vista-giftcards',
@@ -14,9 +14,12 @@ export class VistaGiftcardsComponent implements OnInit {
 
   constructor(private servicioVistaGiftcards: ServicioVistaGiftcardsService) { }
 
+  giftcards = [];
+  listaDeGiftcards = [];
+
   ngOnInit(): void {
     this.actualizarGiftcards();
-    this.getGiftcardsLocales();
+    
   }
 
   actualizarGiftcards() {
@@ -25,6 +28,7 @@ export class VistaGiftcardsComponent implements OnInit {
       .subscribe(
         data => {
           console.log("data actualizada");
+          this.getGiftcardsLocales();
         },
         error => {
           console.log(error);
@@ -37,7 +41,53 @@ export class VistaGiftcardsComponent implements OnInit {
       .pipe(first())
       .subscribe(
         data => {
-          console.log("LA INFO ",data);
+          this.giftcards = data["cards"]["Card"];
+          for (var i = 0; i < this.giftcards.length; i++){
+            if (this.giftcards[i]["active"]){
+              for(var y = 0; y < this.giftcards[i]["availability"].length; y++){
+                if(this.giftcards[i]["availability"][y] == 1){
+                  const vistaGiftcard: Giftcard = {
+                    nombre: this.giftcards[i]["name"],
+                    imagen: this.giftcards[i]["image"],
+                    precio: 10 + (10*this.giftcards[i]["chargeRate"]),
+                    displayName: this.giftcards[i]["name"] + " - $10.00"
+                  };
+                  this.listaDeGiftcards.push(vistaGiftcard);
+                  console.log(vistaGiftcard.displayName);
+
+                } else if (this.giftcards[i]["availability"][y] == 2){
+                  const vistaGiftcard: Giftcard = {
+                    nombre: this.giftcards[i]["name"],
+                    imagen: this.giftcards[i]["image"],
+                    precio: 25 + (25*this.giftcards[i]["chargeRate"]),
+                    displayName: this.giftcards[i]["name"] + " - $25.00"
+                  };
+                  this.listaDeGiftcards.push(vistaGiftcard);
+                  console.log(vistaGiftcard.displayName);
+
+                } else if (this.giftcards[i]["availability"][y] == 3){
+                  const vistaGiftcard: Giftcard = {
+                    nombre: this.giftcards[i]["name"],
+                    imagen: this.giftcards[i]["image"],
+                    precio: 50 + (50*this.giftcards[i]["chargeRate"]),
+                    displayName: this.giftcards[i]["name"] + " - $50.00"
+                  };
+                  this.listaDeGiftcards.push(vistaGiftcard);
+                  console.log(vistaGiftcard.displayName);
+
+                } else if (this.giftcards[i]["availability"][y] == 4){
+                  const vistaGiftcard: Giftcard = {
+                    nombre: this.giftcards[i]["name"],
+                    imagen: this.giftcards[i]["image"],
+                    precio: 100 + (100*this.giftcards[i]["chargeRate"]),
+                    displayName: this.giftcards[i]["name"] + " - $100.00"
+                  };
+                  this.listaDeGiftcards.push(vistaGiftcard);
+                  console.log(vistaGiftcard.displayName);
+                }
+              }
+            }
+          }
         },
         error => {
           console.log(error);
