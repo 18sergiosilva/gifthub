@@ -1,13 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { HttpClientModule } from '@angular/common/http';
+import { Router, Routes } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { VistaGiftcardsComponent } from './vista-giftcards.component';
 
 describe('VistaGiftcardsComponent', () => {
   let component: VistaGiftcardsComponent;
   let fixture: ComponentFixture<VistaGiftcardsComponent>;
+  let router: Router;
+  
+  const routes: Routes = [
+    { path: 'giftcards', component: VistaGiftcardsComponent }
+  ];
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [HttpClientModule, RouterTestingModule.withRoutes(routes)],
       declarations: [ VistaGiftcardsComponent ]
     })
     .compileComponents();
