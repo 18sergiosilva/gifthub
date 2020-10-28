@@ -13,6 +13,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { HomeComponent } from './home/home.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ModificarComponent } from './modificar/modificar.component';
+import { VistaGiftcardsComponent } from './vista-giftcards/vista-giftcards.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { ModificarComponent } from './modificar/modificar.component';
     NavbarComponent,
     SidebarComponent,
     HomeComponent,
-    ModificarComponent
+    ModificarComponent,
+    VistaGiftcardsComponent
   ],
   imports: [
     BrowserModule,
