@@ -33,12 +33,16 @@ const dbConnect = (url, cb) => {
         });
 };
 
+const dbClose = () => {
+    return db.mongoose.connection.close();
+}
+
 const port = process.env.PORT || 5000;
 
 const server = app.listen(port, () => {
     api.dbConnect(process.env.TESTING ? db.testUrl : db.url);
 });
 
-let api = { server: server, app: app, dbConnect: dbConnect };
+let api = { server: server, app: app, dbConnect: dbConnect, dbClose: dbClose };
 
 module.exports = api;

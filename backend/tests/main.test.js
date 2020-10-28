@@ -6,6 +6,9 @@ const sinon = require('sinon');
 process.env.TESTING = true;
 
 const api = require('../index');
+
+process.env.API = api;
+
 const controllerUsuario = require('../app/controllers/usuario');
 const controllerCrds = require('../app/controllers/cards');
 const db = require("../app/models");
@@ -25,6 +28,11 @@ beforeEach(function() {
 
 afterEach(function() {
     sandbox.restore();
+});
+
+afterAll(async function(){
+    await api.dbClose();
+    await api.server.close();
 });
 
 const nombre = faker.name.firstName()
@@ -97,6 +105,8 @@ describe('Historia: Registrar Usuarios', function() {
 
                     mock.verify();
                     done();
+
+                    return catchObj;
                 }
             });
 

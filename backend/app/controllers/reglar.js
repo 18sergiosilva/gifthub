@@ -6,7 +6,7 @@ const { testUrl } = require("../models");
 exports.Usuario = Usuario;
 
 async function obtenerUsuario(username) {
-    let userData = []
+    let userData = {}
     let request = {
         send: (data) => {
             userData = data;
@@ -25,49 +25,59 @@ async function obtenerUsuario(username) {
     return userData.usuario
 }
 
-async function modificarInventarioTrjetasUsuario1(usuario, tarjetas) {
-    for (let j = 0; j < tarjetas.length; j++) {
-        let existe = true
-        for (let i = 0; i < usuario.tarjetas.length; i++) {
-            if (usuario.tarjetas[i].id == tarjetas[j].id) {
-                existe = false;
-                usuario.tarjetas[i].cantidad -= tarjetas[j].cantidad
-                if (usuario.tarjetas[i].cantidad < 0) {
+function modificarInventarioTrjetasUsuario1(usuario, tarjetas) {
+
+    let existe;
+    for (const t in tarjetas){
+        existe = false;
+
+        for(let i = 0; i < usuario.tarjetas.length; i++){
+            const ut = usuario.tarjetas[i];
+            if (t.id === ut.id){
+                existe = true;
+                let nueva_cantidad = ut.cantidad - t.cantidad;
+                if (nueva_cantidad < 0){
                     return { message: `No se cuenta con la cantidad suficiente tarjetas para regalar.` };
                 }
+                
+                usuario.tarjetas[i] = nueva_cantidad;
+                break;
             }
         }
-        if (existe) {
-            return `La tajeta que se desea regalar no existe.`
+
+        if (!existe){
+            return { message: `La tajeta que se desea regalar no existe en el inventario del usuario.` }            
         }
     }
+
     return usuario;
 }
 
-async function modificarInventarioTrjetasUsuario2(usuario, tarjetas) {
+function modificarInventarioTrjetasUsuario2(usuario, tarjetas) {
     listaTarjetas = []
-    for (let j = 0; j < tarjetas.length; j++) {
-        let noExiste = true
-        for (let i = 0; i < usuario.tarjetas.length; i++) {
-            if (usuario.tarjetas[i].id == tarjetas[j].id) {
-                noExiste = false;
-                usuario.tarjetas[i].cantidad += tarjetas[j].cantidad
-            }
+
+    let existe;
+    for (const t in tarjetas){
+        existe = false;
+        
+        for(let i = 0; i < usuario.tarjetas.length; i++){
+            if (usuario.tarjetas[i].id === t.id){
+                existe = true;
+                usuario.tarjetas[i].cantidad += t.cantidad;
+                break;
+            }    
         }
-        if (noExiste) {
-            let giftcard = tarjetas[j]
-            giftcard.cantidad = tarjetas[j].cantidad
-            listaTarjetas.push(giftcard)
+
+        if (!existe){
+            usuario.tarjetas.push({ id: t.id, cantidad: t.cantidad });
         }
     }
-    listaTarjetas.forEach(tarjeta => {
-        usuario.tarjetas.push(tarjeta);
-    })
+
     return usuario;
 }
 
 async function actualizarUsuario(usuario) {
-    let userData = []
+    let userData = {}
     let request = {
         send: (data) => {
             userData = data;
@@ -87,12 +97,13 @@ async function actualizarUsuario(usuario) {
 }
 
 async function regalarGiftcards(req, res) {
-    // Verifica si los datos existen
+
     if (!req.body.usuario1 || !req.body.usuario2 || !req.body.giftcards) {
         return res.status(400).send({
             message: "Datos faltantes para dar el regalo."
         });
     }
+
     let usuario1 = await obtenerUsuario(req.body.usuario1)
     if (!usuario1) {
         return res.status(400).send({
@@ -107,40 +118,28 @@ async function regalarGiftcards(req, res) {
         });
     }
 
-    usuario1 = await modificarInventarioTrjetasUsuario1(usuario1, req.body.giftcards)
+    usuario1 = modificarInventarioTrjetasUsuario1(usuario1, req.body.giftcards)
     if (usuario1.message) {
-        res.status(400).send({
+        return res.status(400).send({
             message: usuario1.message
         });
-        return
     }
 
-    usuario2 = await modificarInventarioTrjetasUsuario2(usuario2, req.body.giftcards)
+    usuario2 = modificarInventarioTrjetasUsuario2(usuario2, req.body.giftcards)
     if (usuario2.message) {
         return res.status(400).send({
             message: usuario2.message
         });
     }
 
-    usuario1 = await actualizarUsuario(usuario1);
-    if (usuario1.message != 'Usuario actualizado correctamente.') {
-        res.status(400).send({
-            message: usuario1.message
-        });
-        return
-    }
+    usuario1 = actualizarUsuario(usuario1);
+    usuario2 = actualizarUsuario(usuario2);
 
-    usuario2 = await actualizarUsuario(usuario2);
-    if (usuario1.message != 'Usuario actualizado correctamente.') {
-        res.status(400).send({
-            message: usuario2.message
-        });
-        return
-    }
-
+    console.log("Usuario 1", usuario1);
+    console.log("Usuario 2", usuario2);
 
     return res.status(200).send({
-        message: `Tarjeta/s regaladas con exito.`,
+        message: `Tarjeta/s regaladas con exito.`
     });
 }
 
