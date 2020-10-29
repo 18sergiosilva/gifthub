@@ -96,6 +96,11 @@ async function actualizarUsuario(usuario) {
     return userData
 }
 
+exports.obtenerUsuario = obtenerUsuario;
+exports.modificarInventarioTrjetasUsuario1 = modificarInventarioTrjetasUsuario1;
+exports.modificarInventarioTrjetasUsuario2 = modificarInventarioTrjetasUsuario2;
+exports.actualizarUsuario = actualizarUsuario;
+
 exports.regalar = async function (req, res) {
 
     if (!req.body.usuario1 || !req.body.usuario2 || !req.body.giftcards) {
@@ -152,8 +157,3 @@ exports.regalar = async function (req, res) {
         message: `Tarjeta/s regaladas con exito.`
     });
 }
-
-exports.obtenerUsuario = obtenerUsuario;
-exports.modificarInventarioTrjetasUsuario1 = modificarInventarioTrjetasUsuario1;
-exports.modificarInventarioTrjetasUsuario2 = modificarInventarioTrjetasUsuario2;
-exports.actualizarUsuario = actualizarUsuario;
