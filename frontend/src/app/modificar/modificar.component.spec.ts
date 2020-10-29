@@ -25,8 +25,4 @@ describe('ModificarComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
 });

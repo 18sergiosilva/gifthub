@@ -19,7 +19,4 @@ describe('RegistrarseComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
 });
