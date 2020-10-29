@@ -9,13 +9,13 @@ import { RegistrarseComponent } from './registrarse/registrarse.component';
 import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   { path: 'modificar/:id', component: ModificarComponent },
   { path: 'giftcards', component: VistaGiftcardsComponent },
   { path: 'home', component: HomeComponent },
-  { path: 'registrarse', component: RegistrarseComponent }
-  { path: 'login', component: LoginComponent}
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'registrarse', component: RegistrarseComponent },
+  { path: 'login', component: LoginComponent},
 ];
 
 @NgModule({
