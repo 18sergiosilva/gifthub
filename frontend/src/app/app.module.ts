@@ -13,6 +13,10 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { HomeComponent } from './home/home.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ModificarComponent } from './modificar/modificar.component';
+import { VistaGiftcardsComponent } from './vista-giftcards/vista-giftcards.component';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RegistrarseComponent } from './registrarse/registrarse.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +24,9 @@ import { ModificarComponent } from './modificar/modificar.component';
     NavbarComponent,
     SidebarComponent,
     HomeComponent,
-    ModificarComponent
+    RegistrarseComponent,
+    ModificarComponent,
+    VistaGiftcardsComponent
   ],
   imports: [
     BrowserModule,
@@ -29,6 +35,8 @@ import { ModificarComponent } from './modificar/modificar.component';
     FormsModule,
     NgbModule,
     HttpClientModule,
+    BrowserAnimationsModule, 
+    ToastrModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]

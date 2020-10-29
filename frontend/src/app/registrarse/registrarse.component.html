@@ -1,0 +1,95 @@
+<!-- Formulario de nuevo Ususario-->
+<div class="col-3"></div>
+<div class="col"></div>
+<div class="col-3"></div>
+<div class="col-12 grid-margin">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">REGISTRAR USUARIO</h4>
+            <form class="form-sample">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Username</label>
+                            <div class="col-sm-9">
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" [(ngModel)]="username" name="username"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Correo</label>
+                            <div class="col-sm-9">
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" [(ngModel)]="correo" name="correo"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Nombres</label>
+                            <div class="col-sm-9">
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" [(ngModel)]="nombres" name="nombres"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Apellidos</label>
+                            <div class="col-sm-9">
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" [(ngModel)]="apellidos" name="apellidos"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Contraseña</label>
+                            <div class="col-sm-9">
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" [(ngModel)]="contrasena" name="contrasena"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">DPI</label>
+                            <div class="col-sm-9">
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" [(ngModel)]="dpi" name="dpi"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Edad</label>
+                            <div class="col-sm-9">
+                                <div class="col-sm-9">
+                                    <input type="number" class="form-control" [(ngModel)]="edad" name="edad"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <button type="submit" (click)="agregar()" class="btn btn-success mr-2">Agregar</button>
+                <button class="btn btn-light" (click)="cancelar()" >Cancelar</button>
+            </form>
+        </div>
+    </div>
+</div>
