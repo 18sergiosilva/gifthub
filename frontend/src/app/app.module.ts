@@ -24,7 +24,7 @@ import { RegistrarseComponent } from './registrarse/registrarse.component';
     NavbarComponent,
     SidebarComponent,
     HomeComponent,
-    RegistrarseComponent
+    RegistrarseComponent,
     ModificarComponent,
     VistaGiftcardsComponent
   ],
