@@ -18,4 +18,5 @@ describe('RegistrarseComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
+
 });

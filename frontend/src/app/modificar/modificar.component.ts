@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+import { ModificarUsuarioService } from '../services/modificar-usuario.service';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-modificar',
@@ -10,109 +12,72 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ModificarComponent implements OnInit {
 
-  constructor(private router: Router, private http: HttpClient, private route: ActivatedRoute) {}
+  constructor(private router: Router, private http: HttpClient, private route: ActivatedRoute,private modificarService: ModificarUsuarioService) {}
 
-  email: string;
-  nombre: string; //NOMBRE
-  apellido: string;
-  edad : number
-  password: string
-
-
-  //nombre_producto: string; //NOMBRE
-  //vendedor_producto: string;
-  //descripcion_producto: string;
-  //precio_producto: string;
-  //etiquetas_producto: string;
-  //id = String(this.route.snapshot.params['id']);
+    //datos
+    usuario;
+    id="EAWLL";
+    //id = String(this.route.snapshot.params['id']);
+    httpdata;
+    httpdata1;
+    username = "";
+    correo = "";
+    contrasena = "";
+    nombres = "";
+    apellidos = "";
+    dpi = "";
+    edad = null;
 
   ngOnInit() {
-    this.cargarProducto();
+    this.cargarDatosUsuario();
   }
 
-  cargarProducto(): boolean {
-    try{
-      //this.http.get('https://35.239.230.8:5000/usuario/arnol' + this.id)
-      this.http.get('http://35.239.230.8:5000/usuario/arnol')
-      .toPromise().then((data: any) => {
-        this.email = data.usuario.correo
-        this.nombre = data.usuario.nombres
-        this.apellido = data.usuario.apellidos
-        this.edad = data.usuario.edad
-        this.password = data.usuario.contrasena
-        console.log(data.usuario.correo)
-        //this.etiquetas_producto = this.getString(data.tags);
-      });
-    return true;
-
-    } catch(error){
-      
+  cargarDatosUsuario(): boolean {
+      this.modificarService.obtenerDatosUsuario(this.id)
+      .pipe(first())
+      .subscribe(
+        data => {
+          //console.log(data);
+          this.usuario = data.usuario;
+          this.displaydata(this.usuario);
+          return true;
+        },
+        error => {
+          console.log(error);
+          return false;
+        });
+        return true;
     }
+
+  displaydata(data) {
+    this.httpdata1 = data;
+    //console.log(this.httpdata1);
+    this.username=data.username;
+    this.correo = data.correo;
+    this.contrasena = data.contrasena;
+    this.nombres = data.nombres;
+    this.apellidos = data.apellidos;
+    this.dpi = data.dpi;
+    this.edad = data.edad;
   }
 
-  getString(arreglo: string[]): string {
-    try {
-      return arreglo.toString();
-    } catch(error){
-      
-    }
-    
-  }
-
-  getTags(precio_producto: string): string[] {
-    try{
-      return precio_producto.split(',');
-    } catch(error){
-      
-    }
-  }
-
-  imprimirConsola(impresion :any):number{
-    try{
-      console.log(impresion)
-      return 1;
-    } catch(error){
-     
-    }
-    
-
-  }
-
-  editarProducto():boolean {
-    try{
-      //this.http.put('https://ayd1g6-cotizador.herokuapp.com/productos/' + this.id
-      this.http.put('http://35.239.230.8:5000/usuario/arnol',
-      {
-        'nombres':this.nombre,
-        'apellidos':this.apellido,
-        'edad':this.edad,
-        'contrasena':this.password,
-        'correo':this.email
-      }).toPromise().then((data: any) => {
-        this.imprimirConsola(data);
-        //this.router.navigate(['productos']);
+  editarUsuario(): boolean {
+    this.modificarService.modificarDatosUser(this.id,this.correo,this.contrasena,this.nombres,this.apellidos,this.dpi,this.edad)
+    .pipe(first())
+    .subscribe(
+      data => {
+        //console.log(data);
+        this.router.navigate(['giftcards']);
+      },
+      error => {
+        console.log(error);
+        return false;
       });
       return true;
-
-    } catch(error){
-      
-    }
-    
   }
 
-  cancelar(): number {
-    try{
-
-      this.email = '';
-      this.nombre = '';
-      this.apellido = '';
-      this.edad = 0;
-      this.password = '';
-      return -1;
-    } catch(error){
-
-    }
-    
+  cancelar() {
+    this.router.navigate(['giftcards']);
   }
 
 }

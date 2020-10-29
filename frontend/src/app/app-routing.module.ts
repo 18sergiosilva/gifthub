@@ -10,7 +10,7 @@ import { RegistrarseComponent } from './registrarse/registrarse.component';
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
-  { path: 'modificar', component: ModificarComponent },
+  { path: 'modificar/:id', component: ModificarComponent },
   { path: 'giftcards', component: VistaGiftcardsComponent },
   { path: 'home', component: HomeComponent },
   { path: 'registrarse', component: RegistrarseComponent }
