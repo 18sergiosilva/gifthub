@@ -331,7 +331,9 @@ describe('Regalar GiftCards', () => {
             if (p.username === "edgar"){
                 return { message: 'Error'};
             }
-            else return true;
+            else {
+                return { message: 'Usuario actualizado correctamente.' };
+            }
         });
 
         await regalar.regalar({ body: { usuario1: "leo", usuario2: "edgar", giftcards: [] } }, res);
@@ -356,7 +358,7 @@ describe('Regalar GiftCards', () => {
         sandbox.stub(regalar, 'obtenerUsuario').returns(true);
         sandbox.stub(regalar, 'modificarInventarioTrjetasUsuario1').returns({ username: "leo"});
         sandbox.stub(regalar, 'modificarInventarioTrjetasUsuario2').returns({ username: "edgar" });
-        sandbox.stub(regalar, 'actualizarUsuario').returns(true);
+        sandbox.stub(regalar, 'actualizarUsuario').returns({ message: 'Usuario actualizado correctamente.'});
 
         await regalar.regalar({ body: { usuario1: "leo", usuario2: "edgar", giftcards: [] } }, res);
 
