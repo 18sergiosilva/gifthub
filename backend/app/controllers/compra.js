@@ -1,50 +1,9 @@
-const db = require("../models");
-const axios = require('axios');
 const cards = require('../controllers/cards')
-const Usuario = require('../controllers/usuario')
-const CardsValueTasaCambio = db.cardsValueTasaCambio;
+const Usuario = require('../controllers/usuario');
 
-// Actualiiza las giftcards en la base de datos
-exports.comprar = async (req, res) => {
-    let reportData = [];
-    var request = {
-        send: (data) => {
-            reportData = data;
-        }
-    };
+exports.cards = cards;
 
-    tarjetas = req.body.tarjetas
-
-    request.status = () => { return request }
-
-    await cards.obtenerDatos(request)
-
-    let total = 0;
-    reportData.cards.Value.forEach((tarjeta) => {
-        tarjetas.forEach((giftcard) => {
-            if (tarjeta.id == giftcard.idTarjeta) {
-                total += tarjeta.total * giftcard.cantidad
-            }
-        })
-    })
-    console.log(reportData.cards.Value)
-
-    return res.status(200).send(reportData);
-};
-
-exports.pago = async (req, res) => {
-    let actualizarData = [];
-    var actualizarUsuario = {
-        send: (data) => {
-            actualizarData = data;
-        }
-    };
-
-    actualizarUsuario.status = () => { return actualizarUsuario }
-    //---
-    let tarjetaUsuario = req.body.tarjeta;
-    //------------
-
+async function obtenerGiftcards(tarjetas) {
     let giftData = [];
     var giftRequest = {
         send: (data) => {
@@ -57,26 +16,27 @@ exports.pago = async (req, res) => {
     await cards.obtenerDatos(giftRequest)
 
     if (giftData.message == `Error de la base de datos al devolver las giftcards.`) {
-        return res
-            .status(404)
-            .send({ message: `Error de la base de datos al devolver las giftcards.` });
+        return { message: `Error de la base de datos al devolver las giftcards.` };
     }
+
     let tarjetasGift = []
-    for (let i = 0; i < req.body.tarjetas.length; i++) {
-        giftcard = req.body.tarjetas[i]
+    for (let i = 0; i < tarjetas.length; i++) {
+        giftcard = tarjetas[i]
         for (let j = 0; j < giftData.cards.Card.length; j++) {
             gift = giftData.cards.Card[j]
             if (gift.id == giftcard.idTarjeta) {
                 let newGiftCard = gift
                 newGiftCard.cantidad = parseInt(giftcard.cantidad)
-
                 tarjetasGift.push(newGiftCard)
                 break;
             }
         };
     };
 
-    //---
+    return { tarjetasGift: tarjetasGift, giftData: giftData }
+}
+
+async function buscarUsuario(username) {
     let userData = [];
     var requestUsuario = {
         send: (data) => {
@@ -84,57 +44,63 @@ exports.pago = async (req, res) => {
         }
     };
 
-
     requestUsuario.status = () => { return requestUsuario }
 
-    await Usuario.buscarUsuario({ params: { username: req.body.username } }, requestUsuario)
+    await Usuario.buscarUsuario({ params: { username: username } }, requestUsuario)
 
-    if (userData.message == `Usuario con username=${req.body.username} no encontrado.` ||
-        userData.message == `Error al devolver el usuario con username=${req.body.username}`) {
-        return res
-            .status(404)
-            .send({ message: `Usuario con username=${req.body.username} no encontrado.` });
+    if (userData.message == `Usuario con username=${username} no encontrado.` ||
+        userData.message == `Error al devolver el usuario con username=${username}`) {
+        return { message: `Usuario con username=${username} no encontrado.` };
     }
+
+    return userData
+}
+
+async function realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, monto, tarjetasGift, username) {
+    let actualizarData = [];
+    var actualizarUsuario = {
+        send: (data) => {
+            actualizarData = data;
+        }
+    };
+
+    actualizarUsuario.status = () => { return actualizarUsuario }
 
     let existeTarjeta = true
 
-    for (let i = 0; i < userData.usuario.tarjetasCredito.length; i++) {
-        tarjeta = userData.usuario.tarjetasCredito[i];
+    for (let i = 0; i < tarjetasCredito.length; i++) {
+        tarjeta = tarjetasCredito[i];
         if (tarjeta.numero == tarjetaUsuario.numero) {
             existeTarjeta = false;
             if (tarjeta.nombre != tarjetaUsuario.nombre ||
                 tarjeta.fecha != tarjetaUsuario.fecha ||
                 tarjeta.codigoSeguridad != tarjetaUsuario.codigoSeguridad) {
                 tarjetaUsuario.transaccion = "Transaccion fallida tarjeta invalida."
-                tarjetaUsuario.totalApagar = req.body.monto;
+                tarjetaUsuario.totalApagar = monto;
                 tarjetaUsuario.tarjetas = tarjetasGift
                 userData.usuario.transacciones.push(tarjetaUsuario);
                 await Usuario.actualizarUsuario({
-                    params: { username: req.body.username }, body: {
+                    params: { username: username }, body: {
                         transacciones: userData.usuario.transacciones
                     }
                 }, actualizarUsuario)
 
-                return res
-                    .status(404)
-                    .send({ message: `Los datos de la tarjeta no coinciden.` });
+                return { message: `Los datos de la tarjeta no coinciden.` };
             }
             else {
-                tarjeta.credito -= req.body.monto;
+                tarjeta.credito -= monto;
                 if (tarjeta.credito < 0) {
                     tarjetaUsuario.transaccion = "Transaccion fallida debido a la falta de fondos."
-                    tarjetaUsuario.totalApagar = req.body.monto;
+                    tarjetaUsuario.totalApagar = monto;
                     tarjetaUsuario.tarjetas = tarjetasGift
                     userData.usuario.transacciones.push(tarjetaUsuario);
                     await Usuario.actualizarUsuario({
-                        params: { username: req.body.username }, body: {
+                        params: { username: username }, body: {
                             transacciones: userData.usuario.transacciones
                         }
                     }, actualizarUsuario)
 
-                    return res
-                        .status(404)
-                        .send({ message: `Imposible realizar la transaccion, fondos insuficientes` });
+                    return { message: `Imposible realizar la transaccion, fondos insuficientes` };
                 }
 
             }
@@ -142,17 +108,21 @@ exports.pago = async (req, res) => {
     };
 
     if (existeTarjeta) {
-        tarjetaUsuario.credito = 10000 - req.body.monto;
-        userData.usuario.tarjetasCredito.push(tarjetaUsuario);
+        tarjetaUsuario.credito = 10000 - monto;
+        tarjetasCredito.push(tarjetaUsuario);
     }
 
+    return userData
+}
 
-    for (let i = 0; i < req.body.tarjetas.length; i++) {
-        giftcard = req.body.tarjetas[i]
+async function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, giftcard, tarjetasGift, monto, availability) {
+    var gifcardsNews = []
+    for (let i = 0; i < tarjetas.length; i++) {
+        giftcard = tarjetas[i]
         let existeGift = true;
-        for (let j = 0; j < userData.usuario.tarjetas.length; j++) {
-            tarjeta = userData.usuario.tarjetas[j]
-            if (tarjeta.id == giftcard.idTarjeta) {
+        for (let j = 0; j < usuario.tarjetas.length; j++) {
+            tarjeta = usuario.tarjetas[j]
+            if (tarjeta.id == giftcard.idTarjeta && tarjeta.availability == giftcard.availability) {
                 existeGift = false;
                 tarjeta.cantidad += parseInt(giftcard.cantidad);
                 break;
@@ -160,14 +130,21 @@ exports.pago = async (req, res) => {
         };
         if (existeGift) {
             let encontroGiftcard = true
-            for (let j = 0; j < giftData.cards.Card.length; j++) {
-                gift = giftData.cards.Card[j]
+            for (let j = 0; j < card.length; j++) {
+                gift = card[j]
                 if (gift.id == giftcard.idTarjeta) {
                     encontroGiftcard = false
-                    let newGiftCard = gift
+                    let newGiftCard = {}
+
+                    newGiftCard.active = gift.active
+                    newGiftCard.chargeRate = gift.chargeRate
+                    newGiftCard.id = gift.id
+                    newGiftCard.image = gift.image
+                    newGiftCard.name = gift.name
+                    newGiftCard.availability = giftcard.availability
                     newGiftCard.cantidad = parseInt(giftcard.cantidad)
 
-                    userData.usuario.tarjetas.push(newGiftCard)
+                    gifcardsNews.push(newGiftCard)
                     break;
                 }
             };
@@ -175,31 +152,91 @@ exports.pago = async (req, res) => {
                 tarjetaUsuario.transaccion = "Transaccion fallida, giftcard no encontrada ."
                 tarjetaUsuario.totalApagar = req.body.monto;
                 tarjetaUsuario.tarjetas = tarjetasGift
-                userData.usuario.transacciones.push(tarjetaUsuario);
+                usuario.transacciones.push(tarjetaUsuario);
 
-                return res
-                    .status(404)
-                    .send({ message: `Giftcard con id ${tarjeta.id} no encontrada` });
+                return { message: `Giftcard con id ${tarjeta.id} no encontrada` };
             }
         }
     };
 
     tarjetaUsuario.transaccion = "Transaccion realizada con exito."
-    tarjetaUsuario.totalApagar = req.body.monto;
+    tarjetaUsuario.totalApagar = monto;
     tarjetaUsuario.tarjetas = tarjetasGift
-    userData.usuario.transacciones.push(tarjetaUsuario);
+    usuario.transacciones.push(tarjetaUsuario);
+
+    gifcardsNews.forEach(nGif => {
+        usuario.tarjetas.push(nGif);
+    });
+    return usuario
+}
+
+async function actualizarUsusarios(usuario, username) {
+    let actualizarData = [];
+    var actualizarUsuario = {
+        send: (data) => {
+            actualizarData = data;
+        }
+    };
+
+    actualizarUsuario.status = () => { return actualizarUsuario }
 
     await Usuario.actualizarUsuario({
-        params: { username: req.body.username }, body: {
-            tarjetasCredito: userData.usuario.tarjetasCredito, transacciones: userData.usuario.transacciones, tarjetas: userData.usuario.tarjetas
+        params: { username: username }, body: {
+            tarjetasCredito: usuario.tarjetasCredito, transacciones: usuario.transacciones, tarjetas: usuario.tarjetas
         }
     }, actualizarUsuario)
 
     if (actualizarData.message == `¡No se encontro el usuario!`) {
+        return { message: `Error al actualizar el usuario con username=${username}.` };
+    }
+    return { message: `Compra exitosa.` };
+}
+
+exports.pago = async (req, res) => {
+    if (!req.body.tarjetas || !req.body.tarjeta ||
+        !req.body.monto || !req.body.username) {
+        return res
+            .status(400)
+            .send({ message: "Datos incompletos." });
+    }
+    let tarjetaUsuario = req.body.tarjeta;
+
+    let giftData = await obtenerGiftcards(req.body.tarjetas);
+    if (giftData.message) {
+        res
+            .status(404)
+            .send({ message: giftData.message });
+        return undefined
+    }
+    let tarjetasGift = giftData.tarjetasGift;
+    giftData = giftData.giftData;
+
+    let userData = await buscarUsuario(req.body.username)
+    if (userData.message != 'Usuario encontrado.') {
         return res
             .status(404)
-            .send({ message: `Error al actualizar el usuario con username=${req.body.username}.` });
+            .send({ message: userData.message });
     }
 
-    return res.status(200).send({ message: "se realizo la compra de las giftcards." });
+    userData = await realizarTransaccion(userData.usuario.tarjetasCredito, userData,
+        tarjetaUsuario, req.body.monto, tarjetasGift, req.body.username)
+    if (userData.message != 'Usuario encontrado.') {
+        return res
+            .status(404)
+            .send({ message: userData.message });
+    }
+
+    let usuario = await realizarTransaccion2(req.body.tarjetas, tarjetaUsuario, giftData.cards.Card, userData.usuario, giftcard, tarjetasGift, req.body.monto)
+    if (usuario.message) {
+        return res
+            .status(404)
+            .send({ message: usuario.message });
+    }
+
+    retorno = await actualizarUsusarios(usuario, req.body.username)
+    if (retorno.message != `¡No se encontro el usuario!`) {
+        return res.status(404).send({ message: retorno.message });
+    }
+
+    return res.status(200).send({ message: retorno.message });
 };
