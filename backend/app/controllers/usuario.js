@@ -70,7 +70,7 @@ function actualizarUsuario(req, res) {
 exports.actualizarUsuario = actualizarUsuario;
 
 exports.actualizar = (req, res) => {
-    return actualizarUsuario
+    return actualizarUsuario(req, res)
 };
 
 // Busca usuario por su username
@@ -120,7 +120,6 @@ exports.getAll = (req, res) => {
 // Elimina un usuario por su username
 exports.delete = (req, res) => {
     const username = req.params.username;
-
     Usuario.findOneAndRemove({ username: username })
         .then(data => {
             if (!data) {
