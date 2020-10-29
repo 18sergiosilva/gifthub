@@ -1,7 +1,6 @@
 const db = require("../models");
 const Usuario = db.usuario;
 const controllerUsuario = require("../controllers/usuario");
-const { testUrl } = require("../models");
 
 exports.Usuario = Usuario;
 
@@ -26,13 +25,15 @@ async function obtenerUsuario(username) {
 }
 
 function modificarInventarioTrjetasUsuario1(usuario, tarjetas) {
-
+    //console.log(tarjetas);
     let existe;
-    for (const t in tarjetas){
+    for (const t of tarjetas){
+        //console.log("Tarjeta a regalar: ", t);
         existe = false;
 
         for(let i = 0; i < usuario.tarjetas.length; i++){
             const ut = usuario.tarjetas[i];
+            //console.log("Tarjeta de usuario: ", ut);
             if (t.id === ut.id){
                 existe = true;
                 let nueva_cantidad = ut.cantidad - t.cantidad;
@@ -40,7 +41,7 @@ function modificarInventarioTrjetasUsuario1(usuario, tarjetas) {
                     return { message: `No se cuenta con la cantidad suficiente tarjetas para regalar.` };
                 }
                 
-                usuario.tarjetas[i] = nueva_cantidad;
+                usuario.tarjetas[i].cantidad = nueva_cantidad;
                 break;
             }
         }
@@ -55,9 +56,8 @@ function modificarInventarioTrjetasUsuario1(usuario, tarjetas) {
 
 function modificarInventarioTrjetasUsuario2(usuario, tarjetas) {
     listaTarjetas = []
-
     let existe;
-    for (const t in tarjetas){
+    for (const t of tarjetas){
         existe = false;
         
         for(let i = 0; i < usuario.tarjetas.length; i++){
@@ -96,7 +96,7 @@ async function actualizarUsuario(usuario) {
     return userData
 }
 
-async function regalarGiftcards(req, res) {
+exports.regalar = async function (req, res) {
 
     if (!req.body.usuario1 || !req.body.usuario2 || !req.body.giftcards) {
         return res.status(400).send({
@@ -104,49 +104,56 @@ async function regalarGiftcards(req, res) {
         });
     }
 
-    let usuario1 = await obtenerUsuario(req.body.usuario1)
+    let usuario1 = await this.obtenerUsuario(req.body.usuario1)
     if (!usuario1) {
         return res.status(400).send({
             message: `No se encontro el usuario ${req.body.usuario1}`
         });
     }
 
-    let usuario2 = await obtenerUsuario(req.body.usuario2)
+    let usuario2 = await this.obtenerUsuario(req.body.usuario2)
     if (!usuario2) {
         return res.status(400).send({
             message: `No se encontro el usuario ${req.body.usuario2}`
         });
     }
 
-    usuario1 = modificarInventarioTrjetasUsuario1(usuario1, req.body.giftcards)
+    usuario1 = this.modificarInventarioTrjetasUsuario1(usuario1, req.body.giftcards)
     if (usuario1.message) {
         return res.status(400).send({
             message: usuario1.message
         });
     }
 
-    usuario2 = modificarInventarioTrjetasUsuario2(usuario2, req.body.giftcards)
+    usuario2 = this.modificarInventarioTrjetasUsuario2(usuario2, req.body.giftcards)
     if (usuario2.message) {
         return res.status(400).send({
             message: usuario2.message
         });
     }
 
-    usuario1 = actualizarUsuario(usuario1);
-    usuario2 = actualizarUsuario(usuario2);
+    usuario1 = await this.actualizarUsuario(usuario1);
+    if (usuario1.message){
+        console.log(`Error modificando las tarjetas de ${req.body.usuario1}: `, usuario1.message);
+        return res.status(500).send({
+            message: usuario1.message
+        });
+    }
 
-    console.log("Usuario 1", usuario1);
-    console.log("Usuario 2", usuario2);
+    usuario2 = await this.actualizarUsuario(usuario2);
+    if (usuario2.message){
+        console.log(`Error modificando las tarjetas de ${req.body.usuario2}: `, usuario2.message);
+        return res.status(500).send({
+            message: usuario2.message
+        });
+    }
 
     return res.status(200).send({
         message: `Tarjeta/s regaladas con exito.`
     });
 }
 
-exports.regalarGiftcards = regalarGiftcards
-
-// Regalar giftcards
-exports.regalar = (req, res) => {
-    regalarGiftcards(req, res)
-};
-
+exports.obtenerUsuario = obtenerUsuario;
+exports.modificarInventarioTrjetasUsuario1 = modificarInventarioTrjetasUsuario1;
+exports.modificarInventarioTrjetasUsuario2 = modificarInventarioTrjetasUsuario2;
+exports.actualizarUsuario = actualizarUsuario;
