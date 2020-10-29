@@ -6,6 +6,7 @@ import { HomeComponent } from './home/home.component';
 import { ModificarComponent } from './modificar/modificar.component'
 import { VistaGiftcardsComponent } from './vista-giftcards/vista-giftcards.component'
 import { RegistrarseComponent } from './registrarse/registrarse.component';
+import { RegalarGiftcardsComponent } from './regalar-giftcards/regalar-giftcards.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -13,7 +14,8 @@ const routes: Routes = [
   { path: 'modificar', component: ModificarComponent },
   { path: 'giftcards', component: VistaGiftcardsComponent },
   { path: 'home', component: HomeComponent },
-  { path: 'registrarse', component: RegistrarseComponent }
+  { path: 'registrarse', component: RegistrarseComponent },
+  { path: 'regalar', component: RegalarGiftcardsComponent }
 ];
 
 @NgModule({

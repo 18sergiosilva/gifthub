@@ -17,6 +17,7 @@ import { VistaGiftcardsComponent } from './vista-giftcards/vista-giftcards.compo
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RegistrarseComponent } from './registrarse/registrarse.component';
+import { RegalarGiftcardsComponent } from './regalar-giftcards/regalar-giftcards.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { RegistrarseComponent } from './registrarse/registrarse.component';
     HomeComponent,
     RegistrarseComponent,
     ModificarComponent,
-    VistaGiftcardsComponent
+    VistaGiftcardsComponent,
+    RegalarGiftcardsComponent
   ],
   imports: [
     BrowserModule,
