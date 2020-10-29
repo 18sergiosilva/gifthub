@@ -19,6 +19,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RegistrarseComponent } from './registrarse/registrarse.component';
 import { LoginComponent } from './login/login.component';
 import { RegalarGiftcardsComponent } from './regalar-giftcards/regalar-giftcards.component';
+import { InventarioGiftcardsComponent } from './inventario-giftcards/inventario-giftcards.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { RegalarGiftcardsComponent } from './regalar-giftcards/regalar-giftcards
     RegistrarseComponent,
     ModificarComponent,
     VistaGiftcardsComponent,
-    RegalarGiftcardsComponent
+    RegalarGiftcardsComponent,
+    InventarioGiftcardsComponent
   ],
   imports: [
     BrowserModule,
