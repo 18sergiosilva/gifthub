@@ -35,7 +35,7 @@ async function obtenerGiftcards(tarjetas) {
 
     return { tarjetasGift: tarjetasGift, giftData: giftData }
 }
-
+exports.obtenerGiftcards = obtenerGiftcards
 async function buscarUsuario(username) {
     let userData = [];
     var requestUsuario = {
@@ -55,7 +55,7 @@ async function buscarUsuario(username) {
 
     return userData
 }
-
+exports.buscarUsuario = buscarUsuario
 async function realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, monto, tarjetasGift, username) {
     let actualizarData = [];
     var actualizarUsuario = {
@@ -114,7 +114,7 @@ async function realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, mo
 
     return userData
 }
-
+exports.realizarTransaccion = realizarTransaccion
 async function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, giftcard, tarjetasGift, monto, availability) {
     var gifcardsNews = []
     for (let i = 0; i < tarjetas.length; i++) {
@@ -169,7 +169,7 @@ async function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, gif
     });
     return usuario
 }
-
+exports.realizarTransaccion2 = realizarTransaccion2
 async function actualizarUsusarios(usuario, username) {
     let actualizarData = [];
     var actualizarUsuario = {
@@ -191,7 +191,7 @@ async function actualizarUsusarios(usuario, username) {
     }
     return { message: `Compra exitosa.` };
 }
-
+exports.actualizarUsusarios = actualizarUsusarios
 exports.pago = async (req, res) => {
     if (!req.body.tarjetas || !req.body.tarjeta ||
         !req.body.monto || !req.body.username) {
