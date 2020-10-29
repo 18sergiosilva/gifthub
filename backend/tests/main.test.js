@@ -30,11 +30,6 @@ afterEach(function() {
     sandbox.restore();
 });
 
-afterAll(async function(){
-    await api.dbClose();
-    await api.server.close();
-});
-
 const nombre = faker.name.firstName()
 const apellido = faker.name.lastName()
 
@@ -94,7 +89,7 @@ describe('Historia: Registrar Usuarios', function() {
                 message: "El usuario se creo correctamente."
             });
             
-            let catchObj = { catch: () => { done(); } };
+            let catchObj = { catch: () => { } };
 
             sandbox.stub(controllerUsuario.Usuario, 'create').returns({
                 then: (callBack) => {
