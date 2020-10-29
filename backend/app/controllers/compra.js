@@ -115,13 +115,14 @@ async function realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, mo
     return userData
 }
 
-async function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, giftcard, tarjetasGift, monto) {
+async function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, giftcard, tarjetasGift, monto, availability) {
+    var gifcardsNews = []
     for (let i = 0; i < tarjetas.length; i++) {
         giftcard = tarjetas[i]
         let existeGift = true;
         for (let j = 0; j < usuario.tarjetas.length; j++) {
             tarjeta = usuario.tarjetas[j]
-            if (tarjeta.id == giftcard.idTarjeta) {
+            if (tarjeta.id == giftcard.idTarjeta && tarjeta.availability == giftcard.availability) {
                 existeGift = false;
                 tarjeta.cantidad += parseInt(giftcard.cantidad);
                 break;
@@ -133,10 +134,17 @@ async function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, gif
                 gift = card[j]
                 if (gift.id == giftcard.idTarjeta) {
                     encontroGiftcard = false
-                    let newGiftCard = gift
+                    let newGiftCard = {}
+
+                    newGiftCard.active = gift.active
+                    newGiftCard.chargeRate = gift.chargeRate
+                    newGiftCard.id = gift.id
+                    newGiftCard.image = gift.image
+                    newGiftCard.name = gift.name
+                    newGiftCard.availability = giftcard.availability
                     newGiftCard.cantidad = parseInt(giftcard.cantidad)
 
-                    usuario.tarjetas.push(newGiftCard)
+                    gifcardsNews.push(newGiftCard)
                     break;
                 }
             };
@@ -156,6 +164,9 @@ async function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, gif
     tarjetaUsuario.tarjetas = tarjetasGift
     usuario.transacciones.push(tarjetaUsuario);
 
+    gifcardsNews.forEach(nGif => {
+        usuario.tarjetas.push(nGif);
+    });
     return usuario
 }
 
@@ -183,8 +194,7 @@ async function actualizarUsusarios(usuario, username) {
 
 exports.pago = async (req, res) => {
     if (!req.body.tarjetas || !req.body.tarjeta ||
-        !req.body.monto || !req.body.username ||
-        req.body.availability) {
+        !req.body.monto || !req.body.username) {
         return res
             .status(400)
             .send({ message: "Datos incompletos." });
