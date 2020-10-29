@@ -848,5 +848,43 @@ describe('Historia: Realizar compra', function () {
             expect(ret.message).to.equal('Los datos de la tarjeta no coinciden.');
 
         });
+        it('Guarda las transacciones fallidas si la tarjeta no cuenta con los fondos necesarios', async () => {
+            let tarjetasCredito = [{
+                numero: "1234544",
+                nombre: "tarjeta ",
+                fecha: "06/20",
+                codigoSeguridad: "123"
+            }]
+
+            let userData = {
+                message: 'Usuario encontrado.',
+                usuario: {
+                    tarjetas: [],
+                    transacciones: [],
+                    tarjetasCredito: [],
+                    username: 'BBCCI',
+                    correo: 'dolor@vulputate.ca',
+                    contrasena: 'UDJ84UOI4AK',
+                    nombres: 'Maxine',
+                    apellidos: 'Mckenzie',
+                    dpi: 607423428524,
+                    edad: 41,
+                }
+            }
+
+            let tarjetaUsuario = {
+                codigoSeguridad: '123',
+                fecha: '06/20',
+                nombre: 'tarjeta 1',
+                numero: '1234544'
+            }
+
+            let tarjetasGift = []
+            //tarjetas, tarjetaUsuario, card, usuario, giftcard, tarjetasGift, monto, availability
+            let ret = await controllerCompra.realizarTransaccion2(tarjetas, tarjetasCredito, card, usuario, giftcard, tarjetasGift, 500, availability);
+
+            expect(ret.message).to.equal('Los datos de la tarjeta no coinciden.');
+
+        });
     });
 });
