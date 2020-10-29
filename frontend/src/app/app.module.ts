@@ -25,7 +25,7 @@ import { LoginComponent } from './login/login.component';
     NavbarComponent,
     SidebarComponent,
     HomeComponent,
-    LoginComponent
+    LoginComponent,
     HomeComponent,
     RegistrarseComponent,
     ModificarComponent,
@@ -38,7 +38,7 @@ import { LoginComponent } from './login/login.component';
     FormsModule,
     NgbModule,
     HttpClientModule,
-    BrowserAnimationsModule, 
+    BrowserAnimationsModule,
     ToastrModule.forRoot(),
   ],
   providers: [],
