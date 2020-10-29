@@ -11,6 +11,16 @@ export interface Giftcard2 {
     displayName: String,
     imagen: String,
     id: number,
-    precio: number
+    precio: number,
     availability: string
+}
+
+export interface Giftcard3 {
+    nombre: String;
+    displayName: String,
+    imagen: String,
+    id: number,
+    precio: number,
+    availability: string,
+    cantidad: number
 }
