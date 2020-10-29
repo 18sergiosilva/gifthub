@@ -720,6 +720,57 @@ describe('Historia: Realizar compra', function () {
             mock.verify();
 
         });
+        it("Las giftcards se encontraron en la base de datos", async () => {
+            let response = {
+                send: () => { },
+                status: sinon.stub().returnsThis()
+            };
+            let cards = {
+                active: false,
+                availability: "1",
+                chargeRate: 1,
+                id: '1',
+                image: 'https://media.karousell.com/media/photos/products/2020/5/21/rm50_goggle_play_gift_card_mal_1590040469_c1100b5a_progressive.jpg',
+                name: 'Google Play'
+            }
+
+            sandbox.stub(controllerCompra.cards, 'obtenerDatos').callsFake((cb) => {
+                cb.send({ message: `Todo bien.`, cards: { Card: [cards] } })
+            })
+
+            let res = {
+                send: () => { },
+                status: sinon.stub().returnsThis()
+            };
+
+            let body = {
+                tarjetas: [
+                    {
+                        idTarjeta: "1",
+                        cantidad: "1"
+                    }
+                ],
+                tarjeta: {
+                    numero: "1234544",
+                    nombre: "tarjeta 1",
+                    fecha: "06/20",
+                    codigoSeguridad: "123"
+                },
+                monto: "5",
+                username: "VJSBH"
+            }
+
+            let ret = await controllerCompra.obtenerGiftcards(body.tarjetas);
+
+            expect(ret.giftData.message).to.equal('Todo bien.');
+
+            expect(ret.tarjetasGift[0].active).to.equal(false);
+            expect(ret.tarjetasGift[0].availability).to.equal('1');
+            expect(ret.tarjetasGift[0].id).to.equal('1');
+            expect(ret.tarjetasGift[0].image).to.equal('https://media.karousell.com/media/photos/products/2020/5/21/rm50_goggle_play_gift_card_mal_1590040469_c1100b5a_progressive.jpg');
+            expect(ret.tarjetasGift[0].name).to.equal('Google Play');
+
+        });
         it('Buscar un usuario en la base de datos', async () => {
             var userData = {}
             userData.message = `Usuario con username=edgar no encontrado.`
@@ -799,11 +850,15 @@ describe('Historia: Realizar compra', function () {
             let tarjetaUsuario = {
                 codigoSeguridad: '123',
                 fecha: '06/20',
-                nombre: 'tarjeta 1',
+                nombre: 'tarjeta',
                 numero: '1234544'
             }
 
             let tarjetasGift = []
+
+            sandbox.stub(controllerUsuario, 'actualizarUsuario').callsFake((param, req) => {
+                req.send({});
+            });
 
             let ret = await controllerCompra.realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, 200, tarjetasGift, "edgar");
 
@@ -843,12 +898,16 @@ describe('Historia: Realizar compra', function () {
 
             let tarjetasGift = []
 
+            sandbox.stub(controllerUsuario, 'actualizarUsuario').callsFake((param, req) => {
+                req.send({});
+            });
+
             let ret = await controllerCompra.realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, 200000, tarjetasGift, "edgar");
 
             expect(ret.message).to.equal('Los datos de la tarjeta no coinciden.');
 
         });
-        it('Guarda las transacciones fallidas si la tarjeta no cuenta con los fondos necesarios', async () => {
+        it('Se insertan giftcards al usuario y se añade a las transacciones del usuario', async () => {
             let tarjetasCredito = [{
                 numero: "1234544",
                 nombre: "tarjeta ",
@@ -871,7 +930,15 @@ describe('Historia: Realizar compra', function () {
                     edad: 41,
                 }
             }
-
+            card = [{
+                active: false,
+                availability: "1",
+                cantidad: 22,
+                chargeRate: 1,
+                id: '1',
+                image: 'https://media.karousell.com/media/photos/products/2020/5/21/rm50_goggle_play_gift_card_mal_1590040469_c1100b5a_progressive.jpg',
+                name: 'Google Play'
+            }]
             let tarjetaUsuario = {
                 codigoSeguridad: '123',
                 fecha: '06/20',
@@ -879,11 +946,57 @@ describe('Historia: Realizar compra', function () {
                 numero: '1234544'
             }
 
-            let tarjetasGift = []
-            //tarjetas, tarjetaUsuario, card, usuario, giftcard, tarjetasGift, monto, availability
-            let ret = await controllerCompra.realizarTransaccion2(tarjetas, tarjetasCredito, card, usuario, giftcard, tarjetasGift, 500, availability);
+            let tarjetasGift = [{
+                active: false,
+                availability: "1",
+                cantidad: 22,
+                chargeRate: 1,
+                id: '1',
+                image: 'https://media.karousell.com/media/photos/products/2020/5/21/rm50_goggle_play_gift_card_mal_1590040469_c1100b5a_progressive.jpg',
+                name: 'Google Play'
+            }]
 
-            expect(ret.message).to.equal('Los datos de la tarjeta no coinciden.');
+            let tarjetas = [{
+                availability: '6',
+                cantidad: '53',
+                idTarjeta: '1'
+            }]
+
+            let giftcard = []
+            let ret = controllerCompra.realizarTransaccion2(tarjetas, tarjetaUsuario, card, userData.usuario, giftcard, tarjetasGift, 500);
+
+            expect(ret.apellidos).to.equal('Mckenzie');
+            expect(ret.contrasena).to.equal('UDJ84UOI4AK');
+            expect(ret.correo).to.equal('dolor@vulputate.ca');
+            expect(ret.dpi).to.equal(607423428524);
+            expect(ret.edad).to.equal(41);
+            expect(ret.nombres).to.equal('Maxine');
+            expect(ret.username).to.equal('BBCCI');
+
+        });
+        it('Actualizar el usuario con las nuevas giftcards compradas', async () => {
+            var userData = {}
+            userData.message = `Usuario con username=edgar no encontrado.`
+            sandbox.stub(controllerUsuario, 'actualizarUsuario').callsFake((param, req) => {
+                req.send({ userData });
+            });
+
+            let result = await controllerCompra.actualizarUsusarios("edgar");
+
+            expect(result.message).to.equal('Compra exitosa.');
+
+        });
+        it('Erroa al Actualizar el usuario con las nuevas giftcards compradas', async () => {
+            var userData = {}
+            userData.message = `¡No se encontro el usuario!`
+            sandbox.stub(controllerUsuario, 'actualizarUsuario').callsFake((param, req) => {
+                req.send(userData);
+            });
+
+            let result = await controllerCompra.actualizarUsusarios({}, "edgar");
+
+            expect(result.message).to.equal(`Error al actualizar el usuario con username=edgar.`);
+
 
         });
     });
