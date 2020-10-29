@@ -35,6 +35,7 @@ async function obtenerGiftcards(tarjetas) {
 
     return { tarjetasGift: tarjetasGift, giftData: giftData }
 }
+exports.obtenerGiftcards = obtenerGiftcards
 
 async function buscarUsuario(username) {
     let userData = [];
@@ -55,6 +56,7 @@ async function buscarUsuario(username) {
 
     return userData
 }
+exports.buscarUsuario = buscarUsuario
 
 async function realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, monto, tarjetasGift, username) {
     let actualizarData = [];
@@ -114,8 +116,9 @@ async function realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, mo
 
     return userData
 }
+exports.realizarTransaccion = realizarTransaccion
 
-async function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, giftcard, tarjetasGift, monto, availability) {
+function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, giftcard, tarjetasGift, monto, availability) {
     var gifcardsNews = []
     for (let i = 0; i < tarjetas.length; i++) {
         giftcard = tarjetas[i]
@@ -169,6 +172,7 @@ async function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, gif
     });
     return usuario
 }
+exports.realizarTransaccion2 = realizarTransaccion2
 
 async function actualizarUsusarios(usuario, username) {
     let actualizarData = [];
@@ -191,6 +195,7 @@ async function actualizarUsusarios(usuario, username) {
     }
     return { message: `Compra exitosa.` };
 }
+exports.actualizarUsusarios = actualizarUsusarios
 
 exports.pago = async (req, res) => {
     if (!req.body.tarjetas || !req.body.tarjeta ||
@@ -226,7 +231,7 @@ exports.pago = async (req, res) => {
             .send({ message: userData.message });
     }
 
-    let usuario = await realizarTransaccion2(req.body.tarjetas, tarjetaUsuario, giftData.cards.Card, userData.usuario, giftcard, tarjetasGift, req.body.monto)
+    let usuario = realizarTransaccion2(req.body.tarjetas, tarjetaUsuario, giftData.cards.Card, userData.usuario, giftcard, tarjetasGift, req.body.monto)
     if (usuario.message) {
         return res
             .status(404)
