@@ -104,35 +104,35 @@ exports.regalar = async function (req, res) {
         });
     }
 
-    let usuario1 = await obtenerUsuario(req.body.usuario1)
+    let usuario1 = await this.obtenerUsuario(req.body.usuario1)
     if (!usuario1) {
         return res.status(400).send({
             message: `No se encontro el usuario ${req.body.usuario1}`
         });
     }
 
-    let usuario2 = await obtenerUsuario(req.body.usuario2)
+    let usuario2 = await this.obtenerUsuario(req.body.usuario2)
     if (!usuario2) {
         return res.status(400).send({
             message: `No se encontro el usuario ${req.body.usuario2}`
         });
     }
 
-    usuario1 = modificarInventarioTrjetasUsuario1(usuario1, req.body.giftcards)
+    usuario1 = this.modificarInventarioTrjetasUsuario1(usuario1, req.body.giftcards)
     if (usuario1.message) {
         return res.status(400).send({
             message: usuario1.message
         });
     }
 
-    usuario2 = modificarInventarioTrjetasUsuario2(usuario2, req.body.giftcards)
+    usuario2 = this.modificarInventarioTrjetasUsuario2(usuario2, req.body.giftcards)
     if (usuario2.message) {
         return res.status(400).send({
             message: usuario2.message
         });
     }
 
-    usuario1 = await actualizarUsuario(usuario1);
+    usuario1 = await this.actualizarUsuario(usuario1);
     if (usuario1.message != 'Usuario actualizado correctamente.'){
         console.log(`Error modificando las tarjetas de ${req.body.usuario1}: `, usuario1.message);
         return res.status(500).send({
@@ -140,7 +140,7 @@ exports.regalar = async function (req, res) {
         });
     }
 
-    usuario2 = await actualizarUsuario(usuario2);
+    usuario2 = await this.actualizarUsuario(usuario2);
     if (usuario2.message != 'Usuario actualizado correctamente.'){
         console.log(`Error modificando las tarjetas de ${req.body.usuario2}: `, usuario2.message);
         return res.status(500).send({
