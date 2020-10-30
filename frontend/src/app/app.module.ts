@@ -18,6 +18,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RegistrarseComponent } from './registrarse/registrarse.component';
 import { LoginComponent } from './login/login.component';
+import { CarritoComponent } from './carrito/carrito.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { LoginComponent } from './login/login.component';
     HomeComponent,
     RegistrarseComponent,
     ModificarComponent,
-    VistaGiftcardsComponent
+    VistaGiftcardsComponent,
+    CarritoComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +43,8 @@ import { LoginComponent } from './login/login.component';
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
   ],
-  providers: [],
+  providers: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
