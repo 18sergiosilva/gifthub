@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Location } from '@angular/common';
@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
   entrar() {
     this.http.get('http://35.239.230.8:5000/usuario/' + this.correo)
       .toPromise().then((data: any) => {
-        //if (data.usuario.contrasena === this.contra) {
+        // if (data.usuario.contrasena === this.contra) {
         if (true) {
           localStorage.setItem('user', this.correo);
           this.router.navigate(['home']);

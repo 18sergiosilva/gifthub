@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ServicioVistaGiftcardsService } from '../services/servicio-vista-giftcards.service'
 import { first } from 'rxjs/operators';
 import { Giftcard } from '../models/modelos';
-import { Utils } from '../utils/utils'
+import { Utils } from '../utils/utils';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -20,7 +20,6 @@ export class VistaGiftcardsComponent implements OnInit {
 
   ngOnInit(): void {
     this.actualizarGiftcards();
-    
   }
 
   actualizarGiftcards() {
@@ -107,7 +106,7 @@ export class VistaGiftcardsComponent implements OnInit {
   }
 
   verCarrito(){
-    console.log(Utils.carrito[0].displayName);
+    console.log(Utils.carrito);
   }
 
 }

@@ -20,6 +20,7 @@ import { RegistrarseComponent } from './registrarse/registrarse.component';
 import { LoginComponent } from './login/login.component';
 import { RegalarGiftcardsComponent } from './regalar-giftcards/regalar-giftcards.component';
 import { InventarioGiftcardsComponent } from './inventario-giftcards/inventario-giftcards.component';
+import { CarritoComponent } from './carrito/carrito.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,9 @@ import { InventarioGiftcardsComponent } from './inventario-giftcards/inventario-
     ModificarComponent,
     VistaGiftcardsComponent,
     RegalarGiftcardsComponent,
-    InventarioGiftcardsComponent
+    InventarioGiftcardsComponent,
+    VistaGiftcardsComponent,
+    CarritoComponent
   ],
   imports: [
     BrowserModule,
@@ -45,7 +48,8 @@ import { InventarioGiftcardsComponent } from './inventario-giftcards/inventario-
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
   ],
-  providers: [],
+  providers: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
