@@ -4,6 +4,7 @@ import { first } from 'rxjs/operators';
 import { Giftcard } from '../models/modelos';
 import { Utils } from '../utils/utils';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-vista-giftcards',
@@ -12,7 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class VistaGiftcardsComponent implements OnInit {
 
-  constructor(private servicioVistaGiftcards: ServicioVistaGiftcardsService,private toastr: ToastrService) { }
+  constructor(private router: Router, private servicioVistaGiftcards: ServicioVistaGiftcardsService, private toastr: ToastrService) { }
 
   giftcards = [];
   listaDeGiftcards = [];
@@ -106,7 +107,7 @@ export class VistaGiftcardsComponent implements OnInit {
   }
 
   verCarrito(){
-    console.log(Utils.carrito);
+    this.router.navigate(['carrito']);
   }
 
 }
