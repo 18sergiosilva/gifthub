@@ -13,6 +13,7 @@ db.url = dbConfig.url;
 db.testUrl = dbConfig.testing;
 
 db.usuario = require("./usuario")(mongoose);
+db.transacciones = require("./transacciones")(mongoose);
 db.cardsValueTasaCambio = require("./cardsValueTasaCambio")(mongoose);
 
 // configuracion de la conexion a mongodb
