@@ -297,7 +297,7 @@ describe('Regalar GiftCards', () => {
         const mock = sinon.mock(res);
 
         mock.expects("send").once().withExactArgs({
-            message: "Error"
+            message: "Error modificando las tarjetas de leo: Error"
         });
 
         sandbox.stub(regalar, 'obtenerUsuario').returns(true);
@@ -321,7 +321,7 @@ describe('Regalar GiftCards', () => {
         const mock = sinon.mock(res);
 
         mock.expects("send").once().withExactArgs({
-            message: "Error"
+            message: "Error modificando las tarjetas de edgar: Error"
         });
 
         sandbox.stub(regalar, 'obtenerUsuario').returns(true);
@@ -367,6 +367,90 @@ describe('Regalar GiftCards', () => {
 
         mock.verify();
     });
+
+    it('Devuelve error si al requerir las transacciones no se es un usuario admin', async () => {
+        const res = {
+            send: () => { },
+            status: sinon.stub().returnsThis()
+        };
+        const mock = sinon.mock(res);
+
+        mock.expects("send").once().withExactArgs({
+            message: "El usuario no es admin."
+        });
+
+        await regalar.transacciones({query: { usuario: 'leo' }}, res);
+        
+        expect(res.status.calledOnce).to.be.true;
+        expect(res.status.firstCall.calledWithExactly(403)).to.be.true;
+
+        mock.verify();
+    });
+
+    it('Devuelve una lista de transacciones si el usuario es admin', (done) => {
+        const res = {
+            send: () => { },
+            status: sinon.stub().returnsThis()
+        };
+        const mock = sinon.mock(res);
+
+        mock.expects("send").once().withExactArgs({
+            transacciones: []
+        });
+
+        sandbox.stub(regalar.Transaccion, 'find').returns(
+            {
+                then: (callBack) => {
+                    callBack([]);
+
+                    expect(res.status.calledOnce).to.be.true;
+                    expect(res.status.firstCall.calledWithExactly(200)).to.be.true;
+
+                    mock.verify();
+
+                    done();
+
+                    return { catch: () => { } }
+                }
+            }
+        );
+
+        regalar.transacciones({query: { usuario: 'admin' }}, res);
+    });
+
+    it('Devuelve un error 500 si existe un error en la base de datos', (done) => {
+        const res = {
+            send: () => { },
+            status: sinon.stub().returnsThis()
+        };
+        const mock = sinon.mock(res);
+
+        mock.expects("send").once().withExactArgs({
+            message: "Error devolviendo datos",
+            error: "Error interno de la base de datos"
+        });
+
+        sandbox.stub(regalar.Transaccion, 'find').returns(
+            {
+                then: sandbox.stub().returnsThis(),                
+                catch: (callBack) => {
+
+                    callBack("Error interno de la base de datos");
+
+                    expect(res.status.calledOnce).to.be.true;
+                    expect(res.status.firstCall.calledWithExactly(500)).to.be.true;
+
+                    mock.verify();
+
+                    done();
+                }
+            }
+        );
+
+        regalar.transacciones({query: { usuario: 'admin' }}, res);
+    });
+    
+
 });
 
 
