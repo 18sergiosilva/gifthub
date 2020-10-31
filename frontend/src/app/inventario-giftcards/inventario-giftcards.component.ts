@@ -35,8 +35,8 @@ export class InventarioGiftcardsComponent implements OnInit {
       .subscribe(
         (data) => {
           this.giftcards = data["usuario"]["tarjetas"];
-          for (var i = 0; i < this.giftcards.length; i++) {
-            if (this.giftcards[i]["availability"] == 1) {
+          for (var i = 0; i < this.longitud(); i++) {
+            if (this.disponibilidad(i) == "1") {
               const vistaGiftcard: Giftcard3 = {
                 nombre: this.giftcards[i]["name"],
                 imagen: this.giftcards[i]["image"],
@@ -46,9 +46,10 @@ export class InventarioGiftcardsComponent implements OnInit {
                 availability: this.giftcards[i]["availability"],
                 cantidad : this.giftcards[i]["cantidad"],
               };
-              this.listaDeGiftcards.push(vistaGiftcard);
+              this.agregarGiftcard(vistaGiftcard);
+              //this.listaDeGiftcards.push(vistaGiftcard);
               //console.log(vistaGiftcard.displayName);
-            } else if (this.giftcards[i]["availability"] == 2) {
+            } else if (this.disponibilidad(i) == "2") {
               const vistaGiftcard: Giftcard3 = {
                 nombre: this.giftcards[i]["name"],
                 imagen: this.giftcards[i]["image"],
@@ -58,9 +59,10 @@ export class InventarioGiftcardsComponent implements OnInit {
                 availability: this.giftcards[i]["availability"],
                 cantidad : this.giftcards[i]["cantidad"],
               };
-              this.listaDeGiftcards.push(vistaGiftcard);
+              this.agregarGiftcard(vistaGiftcard);
+              //this.listaDeGiftcards.push(vistaGiftcard);
               //console.log(vistaGiftcard.displayName);
-            } else if (this.giftcards[i]["availability"] == 3) {
+            } else if (this.disponibilidad(i) == "3") {
               const vistaGiftcard: Giftcard3 = {
                 nombre: this.giftcards[i]["name"],
                 imagen: this.giftcards[i]["image"],
@@ -70,9 +72,10 @@ export class InventarioGiftcardsComponent implements OnInit {
                 availability: this.giftcards[i]["availability"],
                 cantidad : this.giftcards[i]["cantidad"],
               };
-              this.listaDeGiftcards.push(vistaGiftcard);
+              this.agregarGiftcard(vistaGiftcard);
+              //this.listaDeGiftcards.push(vistaGiftcard);
               //console.log(vistaGiftcard.displayName);
-            } else if (this.giftcards[i]["availability"] == 4) {
+            } else if (this.disponibilidad(i) == "4") {
               const vistaGiftcard: Giftcard3 = {
                 nombre: this.giftcards[i]["name"],
                 imagen: this.giftcards[i]["image"],
@@ -82,15 +85,37 @@ export class InventarioGiftcardsComponent implements OnInit {
                 availability: this.giftcards[i]["availability"],
                 cantidad : this.giftcards[i]["cantidad"],
               };
-              this.listaDeGiftcards.push(vistaGiftcard);
+              this.agregarGiftcard(vistaGiftcard);
+              //this.listaDeGiftcards.push(vistaGiftcard);
               //console.log(vistaGiftcard.displayName);
             }
           }
         },
         (error) => {
-          console.log(error);
+          this.imprimirError(error);
         }
       );
   }
+
+
+  imprimirError(error:string):string{
+    console.log(error);
+    return "impreso";
+  }
+
+  agregarGiftcard(gc:Giftcard3):boolean{
+    this.listaDeGiftcards.push(gc);
+    return true;
+  }
+
+  disponibilidad(i: number):string{
+    return this.giftcards[i]["availability"];
+  }
+
+  longitud():number{
+    return this.giftcards.length;
+  }
+
+  
 
 }
