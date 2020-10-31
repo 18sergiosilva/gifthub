@@ -1,9 +1,9 @@
-const sonarqubeScanner = require('sonarqube-scanner');
+const sonarqubeScanner = require('./lib/sonarqube-scanner');
 
 sonarqubeScanner({
     serverUrl: 'http://localhost:9000',
     options: {
-        'sonar.sources': '.',
+        'sonar.sources': './app',
         'sonar.tests': 'tests',
         'sonar.inclusions': '**', // Entry point of your code
         'sonar.test.inclusions': 'tests/*.test.js',
