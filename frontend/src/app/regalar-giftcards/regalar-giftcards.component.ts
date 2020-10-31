@@ -29,8 +29,8 @@ export class RegalarGiftcardsComponent implements OnInit {
       .subscribe(
         (data) => {
           this.giftcards = data["usuario"]["tarjetas"];
-          for (var i = 0; i < this.giftcards.length; i++) {
-            if (this.giftcards[i]["availability"] == 1) {
+          for (var i = 0; i < this.longitud(); i++) {
+            if (this.disponibilidad(i) == "1") {
               const vistaGiftcard: Giftcard2 = {
                 nombre: this.giftcards[i]["name"],
                 imagen: this.giftcards[i]["image"],
@@ -39,9 +39,10 @@ export class RegalarGiftcardsComponent implements OnInit {
                 displayName: this.giftcards[i]["name"] + " - $10.00",
                 availability: this.giftcards[i]["availability"],
               };
-              this.listaDeGiftcards.push(vistaGiftcard);
+              this.agregarGiftcard(vistaGiftcard);
+              //this.listaDeGiftcards.push(vistaGiftcard);
               //console.log(vistaGiftcard.displayName);
-            } else if (this.giftcards[i]["availability"] == 2) {
+            } else if (this.disponibilidad(i) == "2") {
               const vistaGiftcard: Giftcard2 = {
                 nombre: this.giftcards[i]["name"],
                 imagen: this.giftcards[i]["image"],
@@ -50,9 +51,10 @@ export class RegalarGiftcardsComponent implements OnInit {
                 displayName: this.giftcards[i]["name"] + " - $25.00",
                 availability: this.giftcards[i]["availability"],
               };
-              this.listaDeGiftcards.push(vistaGiftcard);
+              this.agregarGiftcard(vistaGiftcard);
+              //this.listaDeGiftcards.push(vistaGiftcard);
               //console.log(vistaGiftcard.displayName);
-            } else if (this.giftcards[i]["availability"] == 3) {
+            } else if (this.disponibilidad(i) == "3") {
               const vistaGiftcard: Giftcard2 = {
                 nombre: this.giftcards[i]["name"],
                 imagen: this.giftcards[i]["image"],
@@ -61,9 +63,10 @@ export class RegalarGiftcardsComponent implements OnInit {
                 displayName: this.giftcards[i]["name"] + " - $50.00",
                 availability: this.giftcards[i]["availability"],
               };
-              this.listaDeGiftcards.push(vistaGiftcard);
+              this.agregarGiftcard(vistaGiftcard);
+              //this.listaDeGiftcards.push(vistaGiftcard);
               //console.log(vistaGiftcard.displayName);
-            } else if (this.giftcards[i]["availability"] == 4) {
+            } else if (this.disponibilidad(i) == "4") {
               const vistaGiftcard: Giftcard2 = {
                 nombre: this.giftcards[i]["name"],
                 imagen: this.giftcards[i]["image"],
@@ -72,19 +75,20 @@ export class RegalarGiftcardsComponent implements OnInit {
                 displayName: this.giftcards[i]["name"] + " - $100.00",
                 availability: this.giftcards[i]["availability"],
               };
-              this.listaDeGiftcards.push(vistaGiftcard);
+              this.agregarGiftcard(vistaGiftcard);
+              //this.listaDeGiftcards.push(vistaGiftcard);
               //console.log(vistaGiftcard.displayName);
             }
           }
         },
         (error) => {
-          console.log(error);
+          this.imprimirError(error);
         }
       );
   }
 
-  regalarGiftcard() {
-    for (var i = 0; i < this.listaDeGiftcards.length; i++) {
+  regalarGiftcard():boolean {
+    for (var i = 0; i < this.longitud2(); i++) {
       if (this.listaDeGiftcards[i].displayName == this.giftcard) {
         //console.log("id ", this.listaDeGiftcards[i].id);
         //console.log("nose", this.listaDeGiftcards[i].nombre);
@@ -92,13 +96,48 @@ export class RegalarGiftcardsComponent implements OnInit {
           .pipe(first())
           .subscribe(
             (data) => {
-              console.log("REGALADA", data);
+              this.imprimirError("REGALADA");
+              return true;
+              //console.log("REGALADA", data);
             },
             (error) => {
-              console.log(error);
+              this.imprimirError(error);
+              return false;
             }
           );
       }
     }
+    return false;
+  }
+
+
+
+
+
+  imprimirError(error:string):string{
+    console.log(error);
+    return "impreso";
+  }
+
+  agregarGiftcard(gc:Giftcard2):boolean{
+    this.listaDeGiftcards.push(gc);
+    return true;
+  }
+
+  disponibilidad(i: number):string{
+    return this.giftcards[i]["availability"];
+  }
+
+  longitud():number{
+    return this.giftcards.length;
+  }
+
+  longitud2():number{
+    return this.listaDeGiftcards.length;
+  }
+
+
+  getDisplay(i:number):string{
+    return this.listaDeGiftcards[i].displayName;
   }
 }
