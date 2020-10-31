@@ -32,18 +32,19 @@
         "mock-mongoose": "^8.0.1-a",
         "node-mocks-http": "^1.9.0",
         "nodemon": "^2.0.4",
-        "sinon": "^9.0.3",
+        "sinon": "^9.2.1",
         "supertest": "^5.0.0"
     },
     "jest": {
         "testEnvironment": "node",
         "coveragePathIgnorePatterns": [
-            "/node_modules/"
+            "/node_modules/",
+            "/lib"
         ],
         "reporters": [
             "default",
             [
-                "jest-sonar-master",
+                "./lib/jest-sonar-master",
                 {
                     "outputDirectory": "coverage",
                     "outputName": "test-sonar.xml"
