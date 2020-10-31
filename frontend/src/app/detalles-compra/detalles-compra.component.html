@@ -1,0 +1,78 @@
+<div class="col-12 grid-margin">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title" id="titulocategoria">DETALLES DE COMPRA</h4>
+            <form class="form-sample">
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label"><strong>Número de Tarjeta: </strong></label>
+                            <label class="col-sm-6 col-form-label">{{num}}</label>
+                        </div>   
+                    </div>       
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label"><strong>Fecha de Expiración: </strong></label>
+                            <label class="col-sm-6 col-form-label">{{fecha}}</label>
+                        </div>   
+                    </div>   
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label"><strong>Código de Seguridad: </strong></label>
+                            <label class="col-sm-6 col-form-label">{{cvv}}</label>
+                        </div>   
+                    </div> 
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label"><strong>Estado de Transacción: </strong></label>
+                            <label class="col-sm-6 col-form-label">{{transaccion}}</label>
+                        </div>   
+                    </div>        
+                </div>
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th> Cantidad </th>
+                                    <th> Nombre Producto </th>
+                                    <th> Precio Unitario </th>
+                                    <th> Recargo por Unidad </th>
+                                    <th> Recargo Total </th>
+                                    <th> Total Unitario </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Repitencia-->
+                                <tr *ngFor="let compra of arr;let i = index;">
+                             
+                                    <td> {{compra.cantidad}}</td>
+                                    <td> {{compra.name}}</td>
+                                    <td> $. {{preciosReales[i] | number:'1.2-2'}}</td>
+                                    <td> $. {{compra.chargeRate | number:'1.2-2'}}</td>
+                                    <td> $. {{recargos[i] | number:'1.2-2'}}</td>
+                                    <td> $. {{totales[i] | number:'1.2-2'}}</td>
+                                   
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th> </th>
+                                    <th> </th>
+                                    <th> </th>
+                                    <th> </th>
+                                    <th> Total </th>
+                                    <th> $. {{tot| number:'1.2-2'}} </th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

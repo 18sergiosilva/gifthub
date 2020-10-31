@@ -11,6 +11,7 @@
                             <th> </th>
                             <th> Correlativo de Compra </th>
                             <th> Total Pagado</th>
+                            <th> Estado de Transacción</th>
                             <th> Detalles </th>
                         </tr>
                     </thead>
@@ -27,6 +28,9 @@
                                 $. {{compra.totalApagar | number:'1.2-2'}}
                             </td>
                             <td>
+                                {{compra.transaccion}}
+                            </td>
+                            <td>
                                 <button type="button" class="btn social-btn py-0 px-0 mr-2"><i
                                         class="mdi mdi-36px mdi-cart-plus" (click)="verCompra(i)"></i></button>
                             </td>
@@ -37,3 +41,5 @@
         </div>
     </div>
 </div>
+
+

@@ -17,6 +17,14 @@ export class ServicioHistorialService {
         return data;
       }));
   }
+
+  getPrecios() {
+    let apiUrl = 'https://my-json-server.typicode.com/CoffeePaw/AyD1API/Value';
+    return this.http.get<any>(apiUrl, {})
+      .pipe(map(data => {
+        return data;
+      }));
+  }
 }
 
 
