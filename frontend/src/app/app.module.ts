@@ -21,6 +21,8 @@ import { LoginComponent } from './login/login.component';
 import { RegalarGiftcardsComponent } from './regalar-giftcards/regalar-giftcards.component';
 import { InventarioGiftcardsComponent } from './inventario-giftcards/inventario-giftcards.component';
 import { CarritoComponent } from './carrito/carrito.component';
+import { HistorialComprasComponent } from './historial-compras/historial-compras.component';
+import { DetallesCompraComponent } from './detalles-compra/detalles-compra.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import { CarritoComponent } from './carrito/carrito.component';
     RegalarGiftcardsComponent,
     InventarioGiftcardsComponent,
     VistaGiftcardsComponent,
-    CarritoComponent
+    CarritoComponent,
+    HistorialComprasComponent,
+    DetallesCompraComponent
   ],
   imports: [
     BrowserModule,

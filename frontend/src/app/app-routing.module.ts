@@ -10,6 +10,8 @@ import { LoginComponent } from './login/login.component';
 import { RegalarGiftcardsComponent } from './regalar-giftcards/regalar-giftcards.component';
 import { InventarioGiftcardsComponent } from './inventario-giftcards/inventario-giftcards.component';
 import { CarritoComponent } from './carrito/carrito.component';
+import { HistorialComprasComponent } from './historial-compras/historial-compras.component';
+import { DetallesCompraComponent } from './detalles-compra/detalles-compra.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -21,7 +23,9 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'regalar', component: RegalarGiftcardsComponent },
   { path: 'inventario', component: InventarioGiftcardsComponent },
-  { path: 'carrito', component: CarritoComponent}
+  { path: 'carrito', component: CarritoComponent},
+  { path: 'compras/:id',component:HistorialComprasComponent},
+  { path: 'detallescompra/:id/:no',component:DetallesCompraComponent}
 ];
 
 @NgModule({
