@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "sonar": "node sonar-project.js",
-        "sonarqube": "jest --coverage --forceExit & npm run sonar",
+        "sonarqube": "jest --verbose --coverage --forceExit & npm run sonar",
         "nycTest": "nyc mocha 'tests/**/*.js' --exit",
         "nycTest2": "nyc report --reporter=lcov --report-dir=.nyc_coverage",
         "test": "mocha 'tests/**/*.js' --exit",
@@ -39,7 +39,7 @@
         "testEnvironment": "node",
         "coveragePathIgnorePatterns": [
             "/node_modules/",
-            "/lib"
+            "/lib/"
         ],
         "reporters": [
             "default",
