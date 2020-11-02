@@ -4,7 +4,7 @@ const Usuario = require('../controllers/usuario');
 exports.cards = cards;
 
 async function obtenerGiftcards(tarjetas) {
-    let giftData = [];
+    let giftData = {};
     var giftRequest = {
         send: (data) => {
             giftData = data;
@@ -18,12 +18,11 @@ async function obtenerGiftcards(tarjetas) {
     if (giftData.message == `Error de la base de datos al devolver las giftcards.`) {
         return { message: `Error de la base de datos al devolver las giftcards.` };
     }
-
     let tarjetasGift = []
     for (let i = 0; i < tarjetas.length; i++) {
         giftcard = tarjetas[i]
-        for (let j = 0; j < giftData.cards.Card.length; j++) {
-            gift = giftData.cards.Card[j]
+        for (let j = 0; j < giftData.cards[0].Card.length; j++) {
+            gift = giftData.cards[0].Card[j]
             if (gift.id == giftcard.idTarjeta) {
                 let newGiftCard = gift
                 newGiftCard.cantidad = parseInt(giftcard.cantidad)

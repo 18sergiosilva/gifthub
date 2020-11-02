@@ -909,7 +909,7 @@ describe('Historia: Realizar compra', function () {
             }
 
             sandbox.stub(controllerCompra.cards, 'obtenerDatos').callsFake((cb) => {
-                cb.send({ message: `Todo bien.`, cards: { Card: [cards] } })
+                cb.send({ message: `Todo bien.`, cards: [{ Card: [cards] }] })
             })
 
             let res = {
@@ -1186,6 +1186,139 @@ describe('Historia: Realizar compra', function () {
             let numeroEncriptado = controllerCompra.encriptar(1234);
             expect(numeroEncriptado).to.equal("1234");
         });
+        it("Compra de tarjetas exitosa", async () => {
+            let res = {
+                send: () => { },
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: 'Compra exitosa.',
+            });
+            let val1 = {
+                tarjetasGift: [{
+                    active: false,
+                    availability: "1",
+                    cantidad: 22,
+                    chargeRate: 1,
+                    id: '1',
+                    image: 'https://media.karousell.com/media/photos/products/2020/5/21/rm50_goggle_play_gift_card_mal_1590040469_c1100b5a_progressive.jpg',
+                    name: 'Google Play'
+                }]
+            }
+
+            let val2 = {
+                message: 'Usuario encontrado.',
+                usuario: {
+                    tarjetas: [
+                        {
+                            active: false,
+                            chargeRate: 1,
+                            id: '1',
+                            image: 'https://media.karousell.com/media/photos/products/2020/5/21/rm50_goggle_play_gift_card_mal_1590040469_c1100b5a_progressive.jpg',
+                            name: 'Google Play',
+                            availability: '1',
+                            cantidad: 785
+                        },
+                        {
+                            active: false,
+                            chargeRate: 1,
+                            id: '1',
+                            image: 'https://media.karousell.com/media/photos/products/2020/5/21/rm50_goggle_play_gift_card_mal_1590040469_c1100b5a_progressive.jpg',
+                            name: 'Google Play',
+                            availability: '2',
+                            cantidad: 479
+                        },
+                        {
+                            active: false,
+                            chargeRate: 1,
+                            id: '1',
+                            image: 'https://media.karousell.com/media/photos/products/2020/5/21/rm50_goggle_play_gift_card_mal_1590040469_c1100b5a_progressive.jpg',
+                            name: 'Google Play',
+                            availability: '3',
+                            cantidad: 333
+                        }
+                    ],
+                    transacciones: [
+                        {
+                            numero: '1234544',
+                            nombre: 'tarjeta 1',
+                            fecha: '06/20',
+                            codigoSeguridad: '123',
+                            credito: 9500,
+                            transaccion: 'Transaccion realizada con exito.',
+                            totalApagar: '500',
+                            tarjetas: [Array]
+                        },
+                        {
+                            numero: '1234544',
+                            nombre: 'tarjeta 1',
+                            fecha: '06/20',
+                            codigoSeguridad: '123',
+                            transaccion: 'Transaccion realizada con exito.',
+                            totalApagar: '500',
+                            tarjetas: [Array]
+                        }
+                    ],
+                    tarjetasCredito: [
+                        {
+                            numero: '1234544',
+                            nombre: 'tarjeta 1',
+                            fecha: '06/20',
+                            codigoSeguridad: '123',
+                            credito: 2500,
+                            transaccion: 'Transaccion realizada con exito.',
+                            totalApagar: '500',
+                            tarjetas: [Array]
+                        }
+                    ],
+                    username: 'BBCCI',
+                    correo: 'dolor@vulputate.ca',
+                    contrasena: 'UDJ84UOI4AK',
+                    nombres: 'Maxine',
+                    apellidos: 'Mckenzie',
+                    dpi: 607423428524,
+                    edad: 41,
+                }
+            }
+            var userData = {}
+            userData.message = `Usuario con username=edgar no encontrado.`
+            /*sandbox.stub(controllerUsuario, 'buscarUsuario').callsFake((param, req) => {
+                req.send({ userData: userData });
+            });*/
+            sandbox.stub(controllerCompra, 'obtenerGiftcards').returns(val1);
+            sandbox.stub(controllerCompra, 'buscarUsuario').returns(val2);
+            sandbox.stub(controllerCompra, 'realizarTransaccion').returns(val2);
+            sandbox.stub(controllerCompra, 'realizarTransaccion2').returns(val2.usuario);
+            sandbox.stub(controllerCompra, 'actualizarUsusarios').returns({ message: 'Compra exitosa.' });
+
+            let body = {
+                tarjetas: [
+                    {
+                        idTarjeta: "1",
+                        cantidad: "53",
+                        availability: "1"
+                    }
+                ],
+                tarjeta: {
+                    numero: "1234544",
+                    nombre: "tarjeta 1",
+                    fecha: "06/20",
+                    codigoSeguridad: "123"
+                },
+                monto: "500",
+                username: "BBCCI"
+            }
+
+            controllerCompra.pago({ body: body }, res);
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.firstCall.calledWithExactly(200)).to.be.true;
+
+            mock.verify();
+        });
+
     });
 });
 
