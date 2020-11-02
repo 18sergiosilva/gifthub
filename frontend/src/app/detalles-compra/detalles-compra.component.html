@@ -38,22 +38,21 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
+                                    <th> Código </th>
                                     <th> Cantidad </th>
                                     <th> Nombre Producto </th>
                                     <th> Precio Unitario </th>
                                     <th> Recargo por Unidad </th>
-                                    <th> Recargo Total </th>
                                     <th> Total Unitario </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <!-- Repitencia-->
                                 <tr *ngFor="let compra of arr;let i = index;">
-                             
-                                    <td> {{compra.cantidad}}</td>
+                                    <td> {{alfa[i]}}</td>
+                                    <td> {{cants[i]}}</td>
                                     <td> {{compra.name}}</td>
                                     <td> $. {{preciosReales[i] | number:'1.2-2'}}</td>
-                                    <td> $. {{compra.chargeRate | number:'1.2-2'}}</td>
                                     <td> $. {{recargos[i] | number:'1.2-2'}}</td>
                                     <td> $. {{totales[i] | number:'1.2-2'}}</td>
                                    
