@@ -593,16 +593,42 @@ describe('Historia: Ver catalogo giftcards', function () {
                 status: sinon.stub().returnsThis()
             };
 
+            let cards = [
+                {
+                    "id": "1",
+                    "name": "Google Play",
+                    "image": "https://media.karousell.com/media/photos/products/2020/5/21/rm50_goggle_play_gift_card_mal_1590040469_c1100b5a_progressive.jpg",
+                    "chargeRate": 1,
+                    "active": false,
+                    "availability": [
+                        1,
+                        2,
+                        4
+                    ]
+                },
+                {
+                    "id": "2",
+                    "name": "PlayStation",
+                    "image": "https://www.allkeyshop.com/blog/wp-content/uploads/PlayStationNetworkGiftCard.jpg",
+                    "chargeRate": 0.25,
+                    "active": true,
+                    "availability": [
+                        1,
+                        3
+                    ]
+                },
+            ]
+
             const mock = sinon.mock(res);
 
             mock.expects("send").once().withExactArgs({
                 message: "Se devolvieron las giftcards.",
-                cards: []
+                cards: cards
             });
 
             sandbox.stub(controllerCrds.Card, 'find').returns({
                 then: (callBack) => {
-                    callBack([]);
+                    callBack(cards);
 
                     expect(res.status.calledOnce).to.be.true;
                     expect(res.status.firstCall.calledWithExactly(200)).to.be.true;
@@ -637,6 +663,153 @@ describe('Historia: Ver catalogo giftcards', function () {
             });
 
             controllerCrds.getAll({ params: {} }, res);
+
+            expect(stub.calledOnce).to.be.true;
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.firstCall.calledWithExactly(500)).to.be.true;
+
+            mock.verify();
+
+            done();
+        });
+
+        it("Obtiene los precios de la base de datos", done => {
+            let res = {
+                send: () => { },
+                status: sinon.stub().returnsThis()
+            };
+
+            let precios = {
+                value: [
+                    {
+                        "id": "1",
+                        "total": "10"
+                    },
+                    {
+                        "id": "2",
+                        "total": "25"
+                    },
+                    {
+                        "id": "3",
+                        "total": "50"
+                    },
+                    {
+                        "id": "4",
+                        "total": "100"
+                    }
+                ]
+            }
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: "Se devuelven los precios.",
+                precios: precios.value
+            });
+
+            sandbox.stub(controllerCrds.Card, 'find').returns({
+                then: (callBack) => {
+                    callBack(precios);
+
+                    expect(res.status.calledOnce).to.be.true;
+                    expect(res.status.firstCall.calledWithExactly(200)).to.be.true;
+
+                    mock.verify();
+
+                    done();
+
+                    return { catch: () => { } }
+                }
+            });
+            controllerCrds.obtenerPrecios(res);
+        });
+        it("Error de la base de datos al obtener los precios", done => {
+            let catchStub = sandbox.stub();
+            let stub = sandbox.stub(controllerCrds.Card, 'find').returns({
+                then: sandbox.stub().callsFake(() => { return { catch: catchStub } }),
+            });
+
+            catchStub.callsFake((cb) => {
+                cb({ message: `Error de la base de datos al devolver los precios.` }, {});
+            });
+            let res = {
+                send: () => { },
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: `Error de la base de datos al devolver los precios.`
+            });
+
+            controllerCrds.obtenerPrecios(res);
+
+            expect(stub.calledOnce).to.be.true;
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.firstCall.calledWithExactly(500)).to.be.true;
+
+            mock.verify();
+
+            done();
+        });
+
+        it("Obtiene los precios de la base de datos", done => {
+            let res = {
+                send: () => { },
+                status: sinon.stub().returnsThis()
+            };
+
+            let TasaCambio = {
+                TasaCambio: {
+                    total: "7.85"
+                }
+            }
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: "Se devuelve la tasa de cambio.",
+                TasaCambio: TasaCambio.TasaCambio
+            });
+
+            sandbox.stub(controllerCrds.Card, 'find').returns({
+                then: (callBack) => {
+                    callBack(TasaCambio);
+
+                    expect(res.status.calledOnce).to.be.true;
+                    expect(res.status.firstCall.calledWithExactly(200)).to.be.true;
+
+                    mock.verify();
+
+                    done();
+
+                    return { catch: () => { } }
+                }
+            });
+            controllerCrds.obtenerTasaCambios(res);
+        });
+        it("Error de la base de datos al obtener los precios", done => {
+            let catchStub = sandbox.stub();
+            let stub = sandbox.stub(controllerCrds.Card, 'find').returns({
+                then: sandbox.stub().callsFake(() => { return { catch: catchStub } }),
+            });
+
+            catchStub.callsFake((cb) => {
+                cb({ message: `Error de la base de datos al devolver la tasa de cambio.` }, {});
+            });
+            let res = {
+                send: () => { },
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: `Error de la base de datos al devolver la tasa de cambio.`
+            });
+
+            controllerCrds.obtenerTasaCambios(res);
 
             expect(stub.calledOnce).to.be.true;
             expect(res.status.calledOnce).to.be.true;

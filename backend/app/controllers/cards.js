@@ -29,7 +29,7 @@ function obtenerDatos(res){
         .then((data) => {
             return res
                 .status(200)
-                .send({ message: "Se devolvieron las giftcards.", cards: data[0] || [] });
+                .send({ message: "Se devolvieron las giftcards.", cards: data });
         })
         .catch(err => {
             return res
@@ -43,3 +43,33 @@ exports.obtenerDatos = obtenerDatos;
 exports.getAll = (req, res) => {
     obtenerDatos(res)
 };
+
+function obtenerTasaCambios(res){
+    return CardsValueTasaCambio.find({})
+        .then((data) => {
+            return res
+                .status(200)
+                .send({ message: "Se devuelve la tasa de cambio.", TasaCambio: data.TasaCambio });
+        })
+        .catch(err => {
+            return res
+                .status(500)
+                .send({ message: `Error de la base de datos al devolver la tasa de cambio.` });
+        });
+}
+exports.obtenerTasaCambios = obtenerTasaCambios;
+
+function obtenerPrecios(res){
+    return CardsValueTasaCambio.find({})
+        .then((data) => {
+            return res
+                .status(200)
+                .send({ message: "Se devuelven los precios.", precios: data.value });
+        })
+        .catch(err => {
+            return res
+                .status(500)
+                .send({ message: `Error de la base de datos al devolver los precios.` });
+        });
+}
+exports.obtenerPrecios = obtenerPrecios;
