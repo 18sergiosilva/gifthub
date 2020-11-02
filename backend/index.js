@@ -18,6 +18,7 @@ require("./app/routes/usuario")(app);
 require("./app/routes/cards")(app);
 require("./app/routes/compra")(app);
 require("./app/routes/regalar")(app);
+require("./app/routes/login")(app);
 
 const dbConnect = (url, cb) => {
     db.mongoose

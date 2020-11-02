@@ -12,6 +12,7 @@ process.env.API = api;
 const controllerCompra = require('../app/controllers/compra');
 const controllerUsuario = require('../app/controllers/usuario');
 const controllerCrds = require('../app/controllers/cards');
+const controllerLogin = require('../app/controllers/login');
 const db = require("../app/models");
 const { query } = require('express');
 
@@ -332,7 +333,7 @@ describe('Historia: Registrar Usuarios', function () {
             controllerUsuario.buscarUsuario({ params: { username: nombre + apellido } }, res);
         });
 
-        it("Error de la base de datos al intentar eliminar un usuarios.", done => {
+        it("Error de la base de datos al buscar usuario.", done => {
             let catchStub = sandbox.stub();
             let stub = sandbox.stub(controllerUsuario.Usuario, 'findOne').returns({
                 then: sandbox.stub().callsFake(() => { return { catch: catchStub } }),
@@ -1001,3 +1002,173 @@ describe('Historia: Realizar compra', function () {
         });
     });
 });
+
+
+describe('Login', function () {
+    describe('POST /', () => {
+        it("Loguin exitoso", done => {
+            let res = {
+                send: () => { },
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            let user = {
+                tarjetas: [],
+                transacciones: [],
+                tarjetasCredito: [],
+                username: "MKJLW",
+                correo: "amet.dapibus@dolordolortempus.net",
+                contrasena: "IJA20SAJ8KI",
+                nombres: "Rigel",
+                apellidos: "Griffin",
+                dpi: 745027164490,
+                edad: 67,
+                id: "5f9a586ea9be5b9630ba8590"
+            }
+
+            mock.expects("send").once().withExactArgs({
+                message: "Login exitoso.",
+                usuario: user
+            });
+
+            sandbox.stub(controllerUsuario.Usuario, 'findOne').returns({
+                then: (callBack) => {
+                    callBack(user);
+
+                    expect(res.status.calledOnce).to.be.true;
+                    expect(res.status.firstCall.calledWithExactly(200)).to.be.true;
+
+                    mock.verify();
+
+                    done();
+
+                    return { catch: () => { } };
+                }
+            });
+            let body = {
+                userOMail: "MKJLW",
+                pass: "IJA20SAJ8KI"
+            }
+            controllerLogin.buscarUsuario({ body: body }, res);
+        });
+
+        it("Login con un usuario que no existe", done => {
+            let res = {
+                send: () => { },
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: `Usuario MKJLW no encontrado.`
+            });
+
+            sandbox.stub(controllerUsuario.Usuario, 'findOne').returns({
+                then: (callBack) => {
+                    callBack(undefined);
+
+                    expect(res.status.calledOnce).to.be.true;
+                    expect(res.status.firstCall.calledWithExactly(404)).to.be.true;
+
+                    mock.verify();
+
+                    done();
+
+                    return { catch: () => { } };
+                }
+            });
+            let body = {
+                userOMail: "MKJLW",
+                pass: "IJA20SAJ8KI"
+            }
+            controllerLogin.buscarUsuario({ body: body }, res);
+        });
+  
+        it("Contraseña incorrecta", done => {
+            let res = {
+                send: () => { },
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            let user = {
+                tarjetas: [],
+                transacciones: [],
+                tarjetasCredito: [],
+                username: "MKJLW",
+                correo: "amet.dapibus@dolordolortempus.net",
+                contrasena: "IJA20SAJ8KI",
+                nombres: "Rigel",
+                apellidos: "Griffin",
+                dpi: 745027164490,
+                edad: 67,
+                id: "5f9a586ea9be5b9630ba8590"
+            }
+
+            mock.expects("send").once().withExactArgs({
+                message: "Contraseña incorrecta."
+            });
+
+            sandbox.stub(controllerUsuario.Usuario, 'findOne').returns({
+                then: (callBack) => {
+                    callBack(user);
+
+                    expect(res.status.calledOnce).to.be.true;
+                    expect(res.status.firstCall.calledWithExactly(400)).to.be.true;
+
+                    mock.verify();
+
+                    done();
+
+                    return { catch: () => { } };
+                }
+            });
+            let body = {
+                userOMail: "MKJLW",
+                pass: "XXXX"
+            }
+            controllerLogin.buscarUsuario({ body: body }, res);
+        });
+
+        
+        it("Error de la base de datos al buscar hacer login.", done => {
+            let catchStub = sandbox.stub();
+            let stub = sandbox.stub(controllerUsuario.Usuario, 'findOne').returns({
+                then: sandbox.stub().callsFake(() => { return { catch: catchStub } }),
+            });
+
+            catchStub.callsFake((cb) => {
+                cb({ message: `Error al devolver el usuario con username=userx100` }, {});
+            });
+            let res = {
+                send: () => { },
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: `Error al buscar el usuario userx100.`
+            });
+
+            let body = {
+                userOMail: "userx100",
+                pass: "XXXX"
+            }
+            controllerLogin.buscarUsuario({ body: body }, res);
+
+            expect(stub.calledOnce).to.be.true;
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.firstCall.calledWithExactly(500)).to.be.true;
+
+            mock.verify();
+
+            done();
+        });
+
+    })
+})
