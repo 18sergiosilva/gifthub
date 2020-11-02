@@ -52,7 +52,7 @@ function modificarInventarioTrjetasUsuario1(usuario, tarjetas) {
         ExisteCard = true
         const ut = usuario.tarjetas[i];
         for (const t of tarjetas) {
-            if (t.alfanumerico == ut.alfanumerico) {
+            if (t.id == ut.alfanumerico) {
                 ExisteCard = false
             }
         }
@@ -148,10 +148,10 @@ exports.regalar = async function (req, res) {
     }
 
     let ret1 = exports.modificarInventarioTrjetasUsuario1(usuario1, req.body.giftcards)
-    if (usuario1.message) {
+    if (ret1.message) {
         return exports.guardarEnHistorial(
             transaccion,
-            { mensaje: usuario1.message, estado: "no aceptado" },
+            { mensaje: ret1.message, estado: "no aceptado" },
             (obj) => {
                 res.status(400).send(obj);
             });
