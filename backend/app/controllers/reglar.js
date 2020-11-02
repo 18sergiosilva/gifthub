@@ -26,7 +26,8 @@ async function obtenerUsuario(username) {
 }
 
 function modificarInventarioTrjetasUsuario1(usuario, tarjetas) {
-    //console.log(tarjetas);
+    let cards = []
+    let cardsUser = []
     let existe;
     for (const t of tarjetas) {
         //console.log("Tarjeta a regalar: ", t);
@@ -34,15 +35,9 @@ function modificarInventarioTrjetasUsuario1(usuario, tarjetas) {
 
         for (let i = 0; i < usuario.tarjetas.length; i++) {
             const ut = usuario.tarjetas[i];
-            //console.log("Tarjeta de usuario: ", ut);
-            if (t.id == ut.id && t.availability == ut.availability) {
+            if (t.id == ut.alfanumerico) {
                 existe = true;
-                let nueva_cantidad = ut.cantidad - t.cantidad;
-                if (nueva_cantidad < 0) {
-                    return { message: `No se cuenta con la cantidad suficiente tarjetas para regalar.` };
-                }
-
-                usuario.tarjetas[i].cantidad = nueva_cantidad;
+                cards.push(ut)
                 break;
             }
         }
@@ -52,26 +47,28 @@ function modificarInventarioTrjetasUsuario1(usuario, tarjetas) {
         }
     }
 
-    return usuario;
+    let ExisteCard
+    for (let i = 0; i < usuario.tarjetas.length; i++) {
+        ExisteCard = true
+        const ut = usuario.tarjetas[i];
+        for (const t of tarjetas) {
+            if (t.alfanumerico == ut.alfanumerico) {
+                ExisteCard = false
+            }
+        }
+        if (ExisteCard) {
+            cardsUser.push(ut)
+        }
+    }
+    usuario.tarjetas = cardsUser;
+    return { usuario: usuario, tarjetas: cards };
 }
 
 function modificarInventarioTrjetasUsuario2(usuario, tarjetas) {
     listaTarjetas = []
     let existe;
     for (const t of tarjetas) {
-        existe = false;
-
-        for (let i = 0; i < usuario.tarjetas.length; i++) {
-            if (usuario.tarjetas[i].id == t.id && usuario.tarjetas[i].availability == t.availability) {
-                existe = true;
-                usuario.tarjetas[i].cantidad += t.cantidad;
-                break;
-            }
-        }
-
-        if (!existe) {
-            usuario.tarjetas.push(t);
-        }
+        usuario.tarjetas.push(t);
     }
 
     return usuario;
@@ -119,7 +116,6 @@ exports.guardarEnHistorial = guardarEnHistorial;
 exports.Transaccion = Transaccion;
 
 exports.regalar = async function (req, res) {
-
     if (!req.body.usuario1 || !req.body.usuario2 || !req.body.giftcards) {
         return res.status(400).send({
             message: "Datos faltantes para dar el regalo."
@@ -151,7 +147,7 @@ exports.regalar = async function (req, res) {
             });
     }
 
-    usuario1 = exports.modificarInventarioTrjetasUsuario1(usuario1, req.body.giftcards)
+    let ret1 = exports.modificarInventarioTrjetasUsuario1(usuario1, req.body.giftcards)
     if (usuario1.message) {
         return exports.guardarEnHistorial(
             transaccion,
@@ -160,8 +156,10 @@ exports.regalar = async function (req, res) {
                 res.status(400).send(obj);
             });
     }
+    usuario1 = ret1.usuario
+    let cards = ret1.tarjetas
 
-    usuario2 = exports.modificarInventarioTrjetasUsuario2(usuario2, req.body.giftcards)
+    usuario2 = exports.modificarInventarioTrjetasUsuario2(usuario2, cards)
     if (usuario2.message) {
         return exports.guardarEnHistorial(
             transaccion,
