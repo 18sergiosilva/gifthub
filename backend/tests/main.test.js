@@ -1211,33 +1211,33 @@ describe('Historia: Realizar compra', function () {
                 }],
                 giftData: {
                     cards:
-                    {
-                        Card: [
-                            {
-                                "id": "1",
-                                "name": "Google Play",
-                                "image": "https://media.karousell.com/media/photos/products/2020/5/21/rm50_goggle_play_gift_card_mal_1590040469_c1100b5a_progressive.jpg",
-                                "chargeRate": 1,
-                                "active": false,
-                                "availability": [
-                                    1,
-                                    2,
-                                    4
-                                ]
-                            },
-                            {
-                                "id": "2",
-                                "name": "PlayStation",
-                                "image": "https://www.allkeyshop.com/blog/wp-content/uploads/PlayStationNetworkGiftCard.jpg",
-                                "chargeRate": 0.25,
-                                "active": true,
-                                "availability": [
-                                    1,
-                                    3
-                                ]
-                            }
-                        ]
-                    }
+                        [{
+                            Card: [
+                                {
+                                    "id": "1",
+                                    "name": "Google Play",
+                                    "image": "https://media.karousell.com/media/photos/products/2020/5/21/rm50_goggle_play_gift_card_mal_1590040469_c1100b5a_progressive.jpg",
+                                    "chargeRate": 1,
+                                    "active": false,
+                                    "availability": [
+                                        1,
+                                        2,
+                                        4
+                                    ]
+                                },
+                                {
+                                    "id": "2",
+                                    "name": "PlayStation",
+                                    "image": "https://www.allkeyshop.com/blog/wp-content/uploads/PlayStationNetworkGiftCard.jpg",
+                                    "chargeRate": 0.25,
+                                    "active": true,
+                                    "availability": [
+                                        1,
+                                        3
+                                    ]
+                                }
+                            ]
+                        }]
                 }
             }
 
