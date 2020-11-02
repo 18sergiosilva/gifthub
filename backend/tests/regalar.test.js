@@ -449,8 +449,6 @@ describe('Regalar GiftCards', () => {
 
         regalar.transacciones({query: { usuario: 'admin' }}, res);
     });
-    
-
 });
 
 
