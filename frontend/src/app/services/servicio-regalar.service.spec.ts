@@ -57,7 +57,7 @@ describe('ServicioRegalarService', () => {
 
   it('Debe regalar una tarjeta', () => {
 
-    coursesService.regalarTarjeta("BBCCI","MKJLW",1,"1",1)
+    coursesService.regalarTarjeta("BBCCI","MKJLW",1,"1","BHNqGwmq")
         .subscribe(courses => {
 
             expect(courses).toBeTruthy('No se pudo regalar la tarjeta');
