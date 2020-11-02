@@ -593,16 +593,42 @@ describe('Historia: Ver catalogo giftcards', function () {
                 status: sinon.stub().returnsThis()
             };
 
+            let cards = [
+                {
+                    "id": "1",
+                    "name": "Google Play",
+                    "image": "https://media.karousell.com/media/photos/products/2020/5/21/rm50_goggle_play_gift_card_mal_1590040469_c1100b5a_progressive.jpg",
+                    "chargeRate": 1,
+                    "active": false,
+                    "availability": [
+                        1,
+                        2,
+                        4
+                    ]
+                },
+                {
+                    "id": "2",
+                    "name": "PlayStation",
+                    "image": "https://www.allkeyshop.com/blog/wp-content/uploads/PlayStationNetworkGiftCard.jpg",
+                    "chargeRate": 0.25,
+                    "active": true,
+                    "availability": [
+                        1,
+                        3
+                    ]
+                },
+            ]
+
             const mock = sinon.mock(res);
 
             mock.expects("send").once().withExactArgs({
                 message: "Se devolvieron las giftcards.",
-                cards: []
+                cards: cards
             });
 
             sandbox.stub(controllerCrds.Card, 'find').returns({
                 then: (callBack) => {
-                    callBack([]);
+                    callBack(cards);
 
                     expect(res.status.calledOnce).to.be.true;
                     expect(res.status.firstCall.calledWithExactly(200)).to.be.true;
@@ -637,6 +663,153 @@ describe('Historia: Ver catalogo giftcards', function () {
             });
 
             controllerCrds.getAll({ params: {} }, res);
+
+            expect(stub.calledOnce).to.be.true;
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.firstCall.calledWithExactly(500)).to.be.true;
+
+            mock.verify();
+
+            done();
+        });
+
+        it("Obtiene los precios de la base de datos", done => {
+            let res = {
+                send: () => { },
+                status: sinon.stub().returnsThis()
+            };
+
+            let precios = {
+                value: [
+                    {
+                        "id": "1",
+                        "total": "10"
+                    },
+                    {
+                        "id": "2",
+                        "total": "25"
+                    },
+                    {
+                        "id": "3",
+                        "total": "50"
+                    },
+                    {
+                        "id": "4",
+                        "total": "100"
+                    }
+                ]
+            }
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: "Se devuelven los precios.",
+                precios: precios.value
+            });
+
+            sandbox.stub(controllerCrds.Card, 'find').returns({
+                then: (callBack) => {
+                    callBack(precios);
+
+                    expect(res.status.calledOnce).to.be.true;
+                    expect(res.status.firstCall.calledWithExactly(200)).to.be.true;
+
+                    mock.verify();
+
+                    done();
+
+                    return { catch: () => { } }
+                }
+            });
+            controllerCrds.obtenerPrecios(res);
+        });
+        it("Error de la base de datos al obtener los precios", done => {
+            let catchStub = sandbox.stub();
+            let stub = sandbox.stub(controllerCrds.Card, 'find').returns({
+                then: sandbox.stub().callsFake(() => { return { catch: catchStub } }),
+            });
+
+            catchStub.callsFake((cb) => {
+                cb({ message: `Error de la base de datos al devolver los precios.` }, {});
+            });
+            let res = {
+                send: () => { },
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: `Error de la base de datos al devolver los precios.`
+            });
+
+            controllerCrds.obtenerPrecios(res);
+
+            expect(stub.calledOnce).to.be.true;
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.firstCall.calledWithExactly(500)).to.be.true;
+
+            mock.verify();
+
+            done();
+        });
+
+        it("Obtiene los precios de la base de datos", done => {
+            let res = {
+                send: () => { },
+                status: sinon.stub().returnsThis()
+            };
+
+            let TasaCambio = {
+                TasaCambio: {
+                    total: "7.85"
+                }
+            }
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: "Se devuelve la tasa de cambio.",
+                TasaCambio: TasaCambio.TasaCambio
+            });
+
+            sandbox.stub(controllerCrds.Card, 'find').returns({
+                then: (callBack) => {
+                    callBack(TasaCambio);
+
+                    expect(res.status.calledOnce).to.be.true;
+                    expect(res.status.firstCall.calledWithExactly(200)).to.be.true;
+
+                    mock.verify();
+
+                    done();
+
+                    return { catch: () => { } }
+                }
+            });
+            controllerCrds.obtenerTasaCambios(res);
+        });
+        it("Error de la base de datos al obtener los precios", done => {
+            let catchStub = sandbox.stub();
+            let stub = sandbox.stub(controllerCrds.Card, 'find').returns({
+                then: sandbox.stub().callsFake(() => { return { catch: catchStub } }),
+            });
+
+            catchStub.callsFake((cb) => {
+                cb({ message: `Error de la base de datos al devolver la tasa de cambio.` }, {});
+            });
+            let res = {
+                send: () => { },
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: `Error de la base de datos al devolver la tasa de cambio.`
+            });
+
+            controllerCrds.obtenerTasaCambios(res);
 
             expect(stub.calledOnce).to.be.true;
             expect(res.status.calledOnce).to.be.true;
@@ -736,7 +909,7 @@ describe('Historia: Realizar compra', function () {
             }
 
             sandbox.stub(controllerCompra.cards, 'obtenerDatos').callsFake((cb) => {
-                cb.send({ message: `Todo bien.`, cards: { Card: [cards] } })
+                cb.send({ message: `Todo bien.`, cards: [{ Card: [cards] }] })
             })
 
             let res = {
@@ -1013,6 +1186,171 @@ describe('Historia: Realizar compra', function () {
             let numeroEncriptado = controllerCompra.encriptar(1234);
             expect(numeroEncriptado).to.equal("1234");
         });
+        it("Compra de tarjetas exitosa", async () => {
+            let res = {
+                send: () => { },
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: 'Compra exitosa.',
+            });
+
+            let val1 = {
+                tarjetasGift: [{
+                    active: false,
+                    alfanumerico: "1234asdf",
+                    availability: "1",
+                    cantidad: 22,
+                    chargeRate: 1,
+                    id: '1',
+                    image: 'https://media.karousell.com/media/photos/products/2020/5/21/rm50_goggle_play_gift_card_mal_1590040469_c1100b5a_progressive.jpg',
+                    name: 'Google Play'
+                }],
+                giftData: {
+                    cards:
+                        [{
+                            Card: [
+                                {
+                                    "id": "1",
+                                    "name": "Google Play",
+                                    "image": "https://media.karousell.com/media/photos/products/2020/5/21/rm50_goggle_play_gift_card_mal_1590040469_c1100b5a_progressive.jpg",
+                                    "chargeRate": 1,
+                                    "active": false,
+                                    "availability": [
+                                        1,
+                                        2,
+                                        4
+                                    ]
+                                },
+                                {
+                                    "id": "2",
+                                    "name": "PlayStation",
+                                    "image": "https://www.allkeyshop.com/blog/wp-content/uploads/PlayStationNetworkGiftCard.jpg",
+                                    "chargeRate": 0.25,
+                                    "active": true,
+                                    "availability": [
+                                        1,
+                                        3
+                                    ]
+                                }
+                            ]
+                        }]
+                }
+            }
+
+            let val2 = {
+                message: 'Usuario encontrado.',
+                usuario: {
+                    tarjetas: [
+                        {
+                            active: false,
+                            chargeRate: 1,
+                            id: '1',
+                            image: 'https://media.karousell.com/media/photos/products/2020/5/21/rm50_goggle_play_gift_card_mal_1590040469_c1100b5a_progressive.jpg',
+                            name: 'Google Play',
+                            availability: '1',
+                            cantidad: 785
+                        },
+                        {
+                            active: false,
+                            chargeRate: 1,
+                            id: '1',
+                            image: 'https://media.karousell.com/media/photos/products/2020/5/21/rm50_goggle_play_gift_card_mal_1590040469_c1100b5a_progressive.jpg',
+                            name: 'Google Play',
+                            availability: '2',
+                            cantidad: 479
+                        },
+                        {
+                            active: false,
+                            chargeRate: 1,
+                            id: '1',
+                            image: 'https://media.karousell.com/media/photos/products/2020/5/21/rm50_goggle_play_gift_card_mal_1590040469_c1100b5a_progressive.jpg',
+                            name: 'Google Play',
+                            availability: '3',
+                            cantidad: 333
+                        }
+                    ],
+                    transacciones: [
+                        {
+                            numero: '1234544',
+                            nombre: 'tarjeta 1',
+                            fecha: '06/20',
+                            codigoSeguridad: '123',
+                            credito: 9500,
+                            transaccion: 'Transaccion realizada con exito.',
+                            totalApagar: '500',
+                            tarjetas: [Array]
+                        },
+                        {
+                            numero: '1234544',
+                            nombre: 'tarjeta 1',
+                            fecha: '06/20',
+                            codigoSeguridad: '123',
+                            transaccion: 'Transaccion realizada con exito.',
+                            totalApagar: '500',
+                            tarjetas: [Array]
+                        }
+                    ],
+                    tarjetasCredito: [
+                        {
+                            numero: '1234544',
+                            nombre: 'tarjeta 1',
+                            fecha: '06/20',
+                            codigoSeguridad: '123',
+                            credito: 2500,
+                            transaccion: 'Transaccion realizada con exito.',
+                            totalApagar: '500',
+                            tarjetas: [Array]
+                        }
+                    ],
+                    username: 'BBCCI',
+                    correo: 'dolor@vulputate.ca',
+                    contrasena: 'UDJ84UOI4AK',
+                    nombres: 'Maxine',
+                    apellidos: 'Mckenzie',
+                    dpi: 607423428524,
+                    edad: 41,
+                }
+            }
+            var userData = {}
+            userData.message = `Usuario con username=edgar no encontrado.`
+            /*sandbox.stub(controllerUsuario, 'buscarUsuario').callsFake((param, req) => {
+                req.send({ userData: userData });
+            });*/
+            sandbox.stub(controllerCompra, 'obtenerGiftcards').returns(val1);
+            sandbox.stub(controllerCompra, 'buscarUsuario').returns(val2);
+            sandbox.stub(controllerCompra, 'realizarTransaccion').returns(val2);
+            sandbox.stub(controllerCompra, 'realizarTransaccion2').returns(val2.usuario);
+            sandbox.stub(controllerCompra, 'actualizarUsusarios').returns({ message: 'Compra exitosa.' });
+
+            let body = {
+                tarjetas: [
+                    {
+                        idTarjeta: "1",
+                        cantidad: "53",
+                        availability: "1"
+                    }
+                ],
+                tarjeta: {
+                    numero: "1234544",
+                    nombre: "tarjeta 1",
+                    fecha: "06/20",
+                    codigoSeguridad: "123"
+                },
+                monto: "500",
+                username: "BBCCI"
+            }
+
+            await controllerCompra.pago({ body: body }, res);
+            expect(res.status.calledOnce).to.be.true;
+            expect(res.status.firstCall.calledWithExactly(200)).to.be.true;
+
+            mock.verify();
+        });
+
     });
 });
 

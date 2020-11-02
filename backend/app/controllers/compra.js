@@ -22,8 +22,8 @@ async function obtenerGiftcards(tarjetas) {
     let tarjetasGift = []
     for (let i = 0; i < tarjetas.length; i++) {
         giftcard = tarjetas[i]
-        for (let j = 0; j < giftData.cards.Card.length; j++) {
-            gift = giftData.cards.Card[j]
+        for (let j = 0; j < giftData.cards[0].Card.length; j++) {
+            gift = giftData.cards[0].Card[j]
             if (gift.id == giftcard.idTarjeta) {
                 let newGiftCard = gift
                 newGiftCard.cantidad = parseInt(giftcard.cantidad)
@@ -131,30 +131,38 @@ function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, giftcard,
                 break;
             }
         };
-        if (existeGift) {
+        if (true) {
             let encontroGiftcard = true
             for (let j = 0; j < card.length; j++) {
                 gift = card[j]
-                if (true) {
-                    encontroGiftcard = false
-                    let newGiftCard = {}
+                if (gift.id == giftcard.idTarjeta) {
 
-                    newGiftCard.active = gift.active
-                    newGiftCard.chargeRate = gift.chargeRate
-                    newGiftCard.id = gift.id
-                    newGiftCard.image = gift.image
-                    newGiftCard.name = gift.name
-                    newGiftCard.availability = giftcard.availability
-                    newGiftCard.alfanumerico = generarAlfanumerico();
+                    for (let k = 0; k < gift.cantidad; k++) {
 
-                    gifcardsNews.push(newGiftCard)
+                        encontroGiftcard = false
+                        let newGiftCard = {}
+
+                        newGiftCard.active = gift.active
+                        newGiftCard.chargeRate = gift.chargeRate
+                        newGiftCard.id = gift.id
+                        newGiftCard.image = gift.image
+                        newGiftCard.name = gift.name
+                        newGiftCard.availability = giftcard.availability
+                        newGiftCard.alfanumerico = generarAlfanumerico();
+
+                        gifcardsNews.push(newGiftCard)
+                    }
                     break;
                 }
             };
             if (encontroGiftcard) {
                 tarjetaUsuario.transaccion = "Transaccion fallida, giftcard no encontrada ."
-                tarjetaUsuario.totalApagar = req.body.monto;
+                tarjetaUsuario.totalApagar = monto;
+                tarjetasGift.forEach(trjg => {
+                    trjg.alfanumerico = 'XXXXXXXX'
+                });
                 tarjetaUsuario.tarjetas = tarjetasGift
+
                 usuario.transacciones.push(tarjetaUsuario);
 
                 return { message: `Giftcard con id ${tarjeta.id} no encontrada` };
@@ -164,7 +172,8 @@ function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, giftcard,
 
     tarjetaUsuario.transaccion = "Transaccion realizada con exito."
     tarjetaUsuario.totalApagar = monto;
-    tarjetaUsuario.tarjetas = tarjetasGift
+    
+    tarjetaUsuario.tarjetas = gifcardsNews
     usuario.transacciones.push(tarjetaUsuario);
 
     gifcardsNews.forEach(nGif => {
@@ -206,8 +215,8 @@ exports.pago = async (req, res) => {
     }
     let tarjetaUsuario = req.body.tarjeta;
     tarjetaUsuario.numeroEncriptado = encriptar(tarjetaUsuario.numero)
-    
-    let giftData = await obtenerGiftcards(req.body.tarjetas);
+
+    let giftData = await exports.obtenerGiftcards(req.body.tarjetas);
     if (giftData.message) {
         res
             .status(404)
@@ -224,7 +233,7 @@ exports.pago = async (req, res) => {
             .send({ message: userData.message });
     }
 
-    userData = await realizarTransaccion(userData.usuario.tarjetasCredito, userData,
+    userData = await exports.realizarTransaccion(userData.usuario.tarjetasCredito, userData,
         tarjetaUsuario, req.body.monto, tarjetasGift, req.body.username)
     if (userData.message != 'Usuario encontrado.') {
         return res
@@ -232,32 +241,32 @@ exports.pago = async (req, res) => {
             .send({ message: userData.message });
     }
 
-    let usuario = realizarTransaccion2(req.body.tarjetas, tarjetaUsuario, giftData.cards.Card, userData.usuario, giftcard, tarjetasGift, req.body.monto)
+    let usuario = exports.realizarTransaccion2(req.body.tarjetas, tarjetaUsuario, giftData.cards[0].Card, userData.usuario, giftcard, tarjetasGift, req.body.monto)
     if (usuario.message) {
         return res
             .status(404)
             .send({ message: usuario.message });
     }
 
-    retorno = await actualizarUsusarios(usuario, req.body.username)
-    if (retorno.message != `¡No se encontro el usuario!`) {
+    retorno = await exports.actualizarUsusarios(usuario, req.body.username)
+    if (retorno.message == `¡No se encontro el usuario!`) {
         return res.status(404).send({ message: retorno.message });
     }
 
     return res.status(200).send({ message: retorno.message });
 };
 
-function generarAlfanumerico(){
+function generarAlfanumerico() {
     var caracteres = "abcdefghijkmnpqrtuvwxyzABCDEFGHJKMNPQRTUVWXYZ2346789";
     var id = "";
-    for (i=0; i<8; i++) id +=caracteres.charAt(Math.floor(Math.random()*caracteres.length)); 
+    for (i = 0; i < 8; i++) id += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
     return id;
 }
 exports.generarAlfanumerico = generarAlfanumerico;
 
 
-function encriptar(numero){
-    if(numero.toString().length<16){
+function encriptar(numero) {
+    if (numero.toString().length < 16) {
         return numero.toString()
     }
     let aux1 = numero.toString().substring(0, 4);
