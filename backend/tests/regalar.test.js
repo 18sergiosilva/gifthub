@@ -39,64 +39,6 @@ describe('Regalar GiftCards', () => {
         expect(result).to.equal(undefined);
     });
 
-    it('El usuario que regala es retornado con exito', (done) => {
-
-        const usuario = {
-            tarjetas: [
-                { id: 1, cantidad: 1 },
-                { id: 2, cantidad: 2 },
-                { id: 3, cantidad: 3 },
-                { id: 4, cantidad: 4 },
-                { id: 5, cantidad: 5 }
-            ]
-        }
-
-        const tarjetas_a_regalar = [
-            { id: 2, cantidad: 2 },
-            { id: 5, cantidad: 3 }
-        ]
-
-        let result = regalar.modificarInventarioTrjetasUsuario1(usuario, tarjetas_a_regalar);
-
-        const salida_esperada = {
-            tarjetas: [
-                { id: 1, cantidad: 1 },
-                { id: 2, cantidad: 0 }, // quedan 0 tarjetas
-                { id: 3, cantidad: 3 },
-                { id: 4, cantidad: 4 },
-                { id: 5, cantidad: 2 }  // solo hay 2 tarjetas                
-            ]
-        }
-
-        expect(result).to.be.an("object");
-        expect(result).to.deep.equal(salida_esperada);
-
-        done();
-    });
-
-    it('Si la nueva cantidad es menor que cero, retorna un mensaje de cantidad insuficiente', (done) => {
-        const usuario = {
-            tarjetas: [
-                { id: 1, cantidad: 1 },
-                { id: 2, cantidad: 2 },
-            ]
-        }
-
-        const tarjetas_a_regalar = [
-            { id: 2, cantidad: 100 } //muchas mas tarjetas de las que tiene el usuario
-        ]
-
-        let result = regalar.modificarInventarioTrjetasUsuario1(usuario, tarjetas_a_regalar);
-
-        const salida_esperada = {
-            message: `No se cuenta con la cantidad suficiente tarjetas para regalar.`
-        }
-
-        expect(result).to.deep.equal(salida_esperada);
-
-        done();
-    });
-
     it('Si no existe la tarjeta en el inventario del usuario que regala, devuelve un error', (done) => {
         const usuario = {
             tarjetas: [
@@ -113,32 +55,6 @@ describe('Regalar GiftCards', () => {
 
         const salida_esperada = {
             message: `La tajeta que se desea regalar no existe en el inventario del usuario.`
-        }
-
-        expect(result).to.deep.equal(salida_esperada);
-
-        done();
-    });
-
-    it('Agregar al usuario que le regalan la cantidad nueva de una tarjeta', (done) => {
-        const usuario = {
-            tarjetas: [
-                { id: 1, cantidad: 1 },
-            ]
-        }
-
-        const tarjetas_a_regalar = [
-            { id: 1, cantidad: 2 },
-            { id: 3, cantidad: 100 }
-        ]
-
-        let result = regalar.modificarInventarioTrjetasUsuario2(usuario, tarjetas_a_regalar);
-
-        const salida_esperada = {
-            tarjetas: [
-                { id: 1, cantidad: 3 },
-                { id: 3, cantidad: 100 }
-            ]
         }
 
         expect(result).to.deep.equal(salida_esperada);
@@ -242,29 +158,6 @@ describe('Regalar GiftCards', () => {
         mock.verify();
     });
 
-    it('Si hay un error modificando las tarjetas del usuario que regala devuelve un error 400', async () => {
-
-        const res = {
-            send: () => { },
-            status: sinon.stub().returnsThis()
-        };
-        const mock = sinon.mock(res);
-
-        mock.expects("send").once().withExactArgs({
-            message: "Error!"
-        });
-
-        sandbox.stub(regalar, 'obtenerUsuario').returns(true);
-        sandbox.stub(regalar, 'modificarInventarioTrjetasUsuario1').returns({ message: 'Error!' });
-
-        await regalar.regalar({ body: { usuario1: "leo", usuario2: "edgar", giftcards: [] } }, res);
-
-        expect(res.status.calledOnce).to.be.true;
-        expect(res.status.firstCall.calledWithExactly(400)).to.be.true;
-
-        mock.verify();
-    });
-
     it('Si hay un error modificando las tarjetas del usuario al que regalan devuelve un error 400', async () => {
 
         const res = {
@@ -304,37 +197,6 @@ describe('Regalar GiftCards', () => {
         sandbox.stub(regalar, 'modificarInventarioTrjetasUsuario1').returns(true);
         sandbox.stub(regalar, 'modificarInventarioTrjetasUsuario2').returns(true);
         sandbox.stub(regalar, 'actualizarUsuario').returns({ message: 'Error'});
-
-        await regalar.regalar({ body: { usuario1: "leo", usuario2: "edgar", giftcards: [] } }, res);
-
-        expect(res.status.calledOnce).to.be.true;
-        expect(res.status.firstCall.calledWithExactly(500)).to.be.true;
-
-        mock.verify();
-    });
-    
-    it('Si hay un error modificando al usuario que le regalaron muestra un error', async () => {
-        const res = {
-            send: () => { },
-            status: sinon.stub().returnsThis()
-        };
-        const mock = sinon.mock(res);
-
-        mock.expects("send").once().withExactArgs({
-            message: "Error modificando las tarjetas de edgar: Error"
-        });
-
-        sandbox.stub(regalar, 'obtenerUsuario').returns(true);
-        sandbox.stub(regalar, 'modificarInventarioTrjetasUsuario1').returns({ username: "leo"});
-        sandbox.stub(regalar, 'modificarInventarioTrjetasUsuario2').returns({ username: "edgar" });
-        sandbox.stub(regalar, 'actualizarUsuario').callsFake((p) =>{
-            if (p.username === "edgar"){
-                return { message: 'Error'};
-            }
-            else {
-                return { message: 'Usuario actualizado correctamente.' };
-            }
-        });
 
         await regalar.regalar({ body: { usuario1: "leo", usuario2: "edgar", giftcards: [] } }, res);
 
