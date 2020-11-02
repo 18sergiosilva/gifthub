@@ -163,7 +163,6 @@ describe('Historia: Registrar Usuarios', function () {
             done();
         });
     });
-
     describe('PUT /', () => {
         it("Actualiar un usuario existente", done => {
             let res = {
@@ -519,6 +518,7 @@ describe('Historia: Registrar Usuarios', function () {
         });
     });
 });
+
 describe('Historia: Conectarse a api externa', function () {
     describe('GET /', () => {
         it("Actualizar las giftcards en la base de datos", done => {
@@ -1000,9 +1000,13 @@ describe('Historia: Realizar compra', function () {
 
 
         });
+        it('Prueba generacon alfanumerico', async () => {  
+            let alfanumerico = controllerCompra.generarAlfanumerico();
+
+            expect(alfanumerico.length).to.equal(8);
+        });
     });
 });
-
 
 describe('Login', function () {
     describe('POST /', () => {
@@ -1133,8 +1137,7 @@ describe('Login', function () {
             }
             controllerLogin.buscarUsuario({ body: body }, res);
         });
-
-        
+ 
         it("Error de la base de datos al buscar hacer login.", done => {
             let catchStub = sandbox.stub();
             let stub = sandbox.stub(controllerUsuario.Usuario, 'findOne').returns({
