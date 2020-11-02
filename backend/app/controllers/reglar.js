@@ -52,7 +52,7 @@ function modificarInventarioTrjetasUsuario1(usuario, tarjetas) {
         ExisteCard = true
         const ut = usuario.tarjetas[i];
         for (const t of tarjetas) {
-            if (t.alfanumerico == ut.alfanumerico) {
+            if (t.id == ut.alfanumerico) {
                 ExisteCard = false
             }
         }
