@@ -1000,10 +1000,18 @@ describe('Historia: Realizar compra', function () {
 
 
         });
-        it('Prueba generacon alfanumerico', async () => {  
+        it('Generacion codigo alfanumerico', async () => {
             let alfanumerico = controllerCompra.generarAlfanumerico();
 
             expect(alfanumerico.length).to.equal(8);
+        });
+        it('Generacion numero enmascarado', async () => {
+            let numeroEncriptado = controllerCompra.encriptar(1234567891234567);
+            expect(numeroEncriptado).to.equal("1234XXXXXXXX4567");
+        });
+        it('Error al generar numero enmascarado', async () => {
+            let numeroEncriptado = controllerCompra.encriptar(1234);
+            expect(numeroEncriptado).to.equal("1234");
         });
     });
 });
@@ -1090,7 +1098,7 @@ describe('Login', function () {
             }
             controllerLogin.buscarUsuario({ body: body }, res);
         });
-  
+
         it("Contraseña incorrecta", done => {
             let res = {
                 send: () => { },
@@ -1137,7 +1145,7 @@ describe('Login', function () {
             }
             controllerLogin.buscarUsuario({ body: body }, res);
         });
- 
+
         it("Error de la base de datos al buscar hacer login.", done => {
             let catchStub = sandbox.stub();
             let stub = sandbox.stub(controllerUsuario.Usuario, 'findOne').returns({

@@ -205,7 +205,8 @@ exports.pago = async (req, res) => {
             .send({ message: "Datos incompletos." });
     }
     let tarjetaUsuario = req.body.tarjeta;
-
+    tarjetaUsuario.numeroEncriptado = encriptar(tarjetaUsuario.numero)
+    
     let giftData = await obtenerGiftcards(req.body.tarjetas);
     if (giftData.message) {
         res
@@ -253,3 +254,17 @@ function generarAlfanumerico(){
     return id;
 }
 exports.generarAlfanumerico = generarAlfanumerico;
+
+
+function encriptar(numero){
+    if(numero.toString().length<16){
+        return numero.toString()
+    }
+    let aux1 = numero.toString().substring(0, 4);
+    let aux2 = numero.toString().substring(12, 16);
+
+    return aux1 + "XXXXXXXX" + aux2
+}
+exports.encriptar = encriptar;
+
+
