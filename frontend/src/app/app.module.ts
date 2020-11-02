@@ -23,6 +23,7 @@ import { InventarioGiftcardsComponent } from './inventario-giftcards/inventario-
 import { CarritoComponent } from './carrito/carrito.component';
 import { HistorialComprasComponent } from './historial-compras/historial-compras.component';
 import { DetallesCompraComponent } from './detalles-compra/detalles-compra.component';
+import { AdminComponent } from './admin/admin.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { DetallesCompraComponent } from './detalles-compra/detalles-compra.compo
     VistaGiftcardsComponent,
     CarritoComponent,
     HistorialComprasComponent,
-    DetallesCompraComponent
+    DetallesCompraComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,

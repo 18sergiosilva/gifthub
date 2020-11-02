@@ -17,7 +17,8 @@ export class HistorialComprasComponent implements OnInit {
     this.getTransacciones();
   }
   
-  id="EAWLL";
+  id="TGYFR";
+  //id=localStorage.getItem("user");
   //id = String(this.route.snapshot.params['id']);
   compras=[];
   detallesCompra=[];
@@ -27,7 +28,7 @@ export class HistorialComprasComponent implements OnInit {
     .subscribe(
       data => {
         this.compras=data.usuario.transacciones;
-        console.log(this.compras);
+        //console.log(this.compras);
         return true;
       },
       error => {
@@ -40,7 +41,7 @@ export class HistorialComprasComponent implements OnInit {
   verCompra(no: string) {
     this.detallesCompra=this.compras[no];
     let id=this.id;
-    console.log(this.detallesCompra);
+    //console.log(this.detallesCompra);
     this.router.navigate(['detallescompra',id,no]);
   }
 

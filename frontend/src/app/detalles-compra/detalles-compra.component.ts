@@ -18,7 +18,10 @@ export class DetallesCompraComponent implements OnInit {
     this.getTransacciones();
   }
 
-  id = String(this.route.snapshot.params['id']);
+  id="TGYFR";
+  //no=0;
+  //id = String(this.route.snapshot.params['id']); 
+  //id=localStorage.getItem("user");
   no = String(this.route.snapshot.params['no']);
   compras = [];
   detallesCompra;
@@ -37,6 +40,7 @@ export class DetallesCompraComponent implements OnInit {
   cants=[];
   totales=[];
   transaccion;
+  alfa=[];
 
   getTransacciones(): boolean {
     this.historialServ.obtener(this.id)
@@ -44,7 +48,7 @@ export class DetallesCompraComponent implements OnInit {
         data => {
           this.compras = data.usuario.transacciones;
           this.detallesCompra = this.compras[this.no];
-          this.num = this.detallesCompra.numero;
+          this.num = this.detallesCompra.numeroEncriptado;
           /*if(this.num=""){
             this.num="1234XXXXXXXX1234";
           }*/
@@ -53,7 +57,7 @@ export class DetallesCompraComponent implements OnInit {
           this.transaccion = this.detallesCompra.transaccion;
 
           this.arr = this.detallesCompra.tarjetas;
-          console.log(this.arr);
+          //console.log(this.arr);
           this.tot = this.detallesCompra.totalApagar;
           this.status = this.detallesCompra.transaccion;
           //console.log(this.compras);
@@ -62,7 +66,7 @@ export class DetallesCompraComponent implements OnInit {
           return true;
         },
         error => {
-          console.log(error);
+          //console.log(error);
           return false;
         });
     return true;
@@ -72,7 +76,8 @@ export class DetallesCompraComponent implements OnInit {
     this.arr.forEach(element => {
       this.ava.push(element.availability);
       this.recargo.push(element.chargeRate);
-      this.cants.push(element.cantidad);
+      this.cants.push(1);
+      this.alfa.push(element.alfanumerico);
     });
     this.historialServ.getPrecios()
       .subscribe(
@@ -104,7 +109,7 @@ export class DetallesCompraComponent implements OnInit {
             this.totales.push(totalito);
             this.preciosTotales.push(suma);
           }
-          console.log(this.preciosReales);
+          //console.log(this.preciosReales);
         },
         error => {
           console.log(error);

@@ -24,7 +24,7 @@ const routes: Routes = [
   { path: 'regalar', component: RegalarGiftcardsComponent },
   { path: 'inventario', component: InventarioGiftcardsComponent },
   { path: 'carrito', component: CarritoComponent},
-  { path: 'compras/:id',component:HistorialComprasComponent},
+  { path: 'compras',component:HistorialComprasComponent},
   { path: 'detallescompra/:id/:no',component:DetallesCompraComponent}
 ];
 
