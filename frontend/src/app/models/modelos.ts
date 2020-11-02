@@ -12,7 +12,8 @@ export interface Giftcard2 {
     imagen: String,
     id: number,
     precio: number,
-    availability: string
+    availability: string,
+    alfanumerico: string
 }
 
 export interface Giftcard3 {
@@ -22,5 +23,6 @@ export interface Giftcard3 {
     id: number,
     precio: number,
     availability: string,
-    cantidad: number
+    cantidad: number,
+    alfanumerico: string
 }

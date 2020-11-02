@@ -20,7 +20,7 @@ export class ServicioRegalarService {
   }
 
 
-  regalarTarjeta(usuarioRegala: string, usuarioBeneficio: string, cantidad: number, availability: string, id: number){
+  regalarTarjeta(usuarioRegala: string, usuarioBeneficio: string, cantidad: number, availability: string, id: string){
     let apiUrl = 'http://35.239.230.8:5000/regalar';
     return this.http.post(apiUrl,{
       "usuario1":usuarioRegala,

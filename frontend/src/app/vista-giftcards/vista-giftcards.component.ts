@@ -42,7 +42,7 @@ export class VistaGiftcardsComponent implements OnInit {
       .pipe(first())
       .subscribe(
         data => {
-          this.giftcards = data["cards"]["Card"];
+          this.giftcards = data.cards[0]["Card"];
           for (var i = 0; i < this.giftcards.length; i++){
             if (this.giftcards[i]["active"]){
               for(var y = 0; y < this.giftcards[i]["availability"].length; y++){

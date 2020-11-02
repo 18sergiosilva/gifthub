@@ -46,6 +46,7 @@ export class InventarioGiftcardsComponent implements OnInit {
                 displayName: this.giftcards[i]["name"] + " - $10.00",
                 availability: this.giftcards[i]["availability"],
                 cantidad : this.giftcards[i]["cantidad"],
+                alfanumerico : this.giftcards[i]["alfanumerico"],
               };
               this.agregarGiftcard(vistaGiftcard);
               //this.listaDeGiftcards.push(vistaGiftcard);
@@ -59,6 +60,7 @@ export class InventarioGiftcardsComponent implements OnInit {
                 displayName: this.giftcards[i]["name"] + " - $25.00",
                 availability: this.giftcards[i]["availability"],
                 cantidad : this.giftcards[i]["cantidad"],
+                alfanumerico : this.giftcards[i]["alfanumerico"],
               };
               this.agregarGiftcard(vistaGiftcard);
               //this.listaDeGiftcards.push(vistaGiftcard);
@@ -72,6 +74,7 @@ export class InventarioGiftcardsComponent implements OnInit {
                 displayName: this.giftcards[i]["name"] + " - $50.00",
                 availability: this.giftcards[i]["availability"],
                 cantidad : this.giftcards[i]["cantidad"],
+                alfanumerico : this.giftcards[i]["alfanumerico"],
               };
               this.agregarGiftcard(vistaGiftcard);
               //this.listaDeGiftcards.push(vistaGiftcard);
@@ -85,6 +88,7 @@ export class InventarioGiftcardsComponent implements OnInit {
                 displayName: this.giftcards[i]["name"] + " - $100.00",
                 availability: this.giftcards[i]["availability"],
                 cantidad : this.giftcards[i]["cantidad"],
+                alfanumerico : this.giftcards[i]["alfanumerico"],
               };
               this.agregarGiftcard(vistaGiftcard);
               //this.listaDeGiftcards.push(vistaGiftcard);

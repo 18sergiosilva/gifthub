@@ -39,6 +39,7 @@ export class RegalarGiftcardsComponent implements OnInit {
                 precio: 10 + 10 * this.giftcards[i]["chargeRate"],
                 displayName: this.giftcards[i]["name"] + " - $10.00",
                 availability: this.giftcards[i]["availability"],
+                alfanumerico : this.giftcards[i]["alfanumerico"],
               };
               this.agregarGiftcard(vistaGiftcard);
               //this.listaDeGiftcards.push(vistaGiftcard);
@@ -51,6 +52,7 @@ export class RegalarGiftcardsComponent implements OnInit {
                 precio: 25 + 25 * this.giftcards[i]["chargeRate"],
                 displayName: this.giftcards[i]["name"] + " - $25.00",
                 availability: this.giftcards[i]["availability"],
+                alfanumerico : this.giftcards[i]["alfanumerico"],
               };
               this.agregarGiftcard(vistaGiftcard);
               //this.listaDeGiftcards.push(vistaGiftcard);
@@ -63,6 +65,7 @@ export class RegalarGiftcardsComponent implements OnInit {
                 precio: 50 + 50 * this.giftcards[i]["chargeRate"],
                 displayName: this.giftcards[i]["name"] + " - $50.00",
                 availability: this.giftcards[i]["availability"],
+                alfanumerico : this.giftcards[i]["alfanumerico"],
               };
               this.agregarGiftcard(vistaGiftcard);
               //this.listaDeGiftcards.push(vistaGiftcard);
@@ -75,6 +78,7 @@ export class RegalarGiftcardsComponent implements OnInit {
                 id: this.giftcards[i]["id"],
                 displayName: this.giftcards[i]["name"] + " - $100.00",
                 availability: this.giftcards[i]["availability"],
+                alfanumerico : this.giftcards[i]["alfanumerico"],
               };
               this.agregarGiftcard(vistaGiftcard);
               //this.listaDeGiftcards.push(vistaGiftcard);
@@ -89,12 +93,16 @@ export class RegalarGiftcardsComponent implements OnInit {
   }
 
   regalarGiftcard():boolean {
+
     let usuarioz:string = localStorage.getItem('user');
     for (var i = 0; i < this.longitud2(); i++) {
-      if (this.listaDeGiftcards[i].displayName == this.giftcard) {
-        //console.log("id ", this.listaDeGiftcards[i].id);
-        //console.log("nose", this.listaDeGiftcards[i].nombre);
-        this.servicioRegalarGiftcards.regalarTarjeta(usuarioz, this.usuarioBeneficio, Number(this.cantidad), this.listaDeGiftcards[i].availability,Number(this.listaDeGiftcards[i].id))
+      let comparacion = this.listaDeGiftcards[i].alfanumerico + " - " + this.listaDeGiftcards[i].displayName;
+      if (comparacion == this.giftcard) {
+        console.log("USUARIO REGALA", usuarioz);
+        console.log("USUARIO BENEFICIO", this.usuarioBeneficio);
+        console.log("AVAILABILITY", this.listaDeGiftcards[i].availability);
+        console.log("ALFANUMERICO", this.listaDeGiftcards[i].alfanumerico);
+        this.servicioRegalarGiftcards.regalarTarjeta(usuarioz, this.usuarioBeneficio, 1, this.listaDeGiftcards[i].availability,this.listaDeGiftcards[i].alfanumerico)
           .pipe(first())
           .subscribe(
             (data) => {
