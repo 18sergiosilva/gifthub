@@ -23,8 +23,9 @@ export class RegalarGiftcardsComponent implements OnInit {
   }
 
   getGiftcards() {
+    let usuarioz:string = localStorage.getItem('user');
     this.servicioRegalarGiftcards
-      .obtenerGiftcards("BBCCI")
+      .obtenerGiftcards(usuarioz)
       .pipe(first())
       .subscribe(
         (data) => {
@@ -88,11 +89,12 @@ export class RegalarGiftcardsComponent implements OnInit {
   }
 
   regalarGiftcard():boolean {
+    let usuarioz:string = localStorage.getItem('user');
     for (var i = 0; i < this.longitud2(); i++) {
       if (this.listaDeGiftcards[i].displayName == this.giftcard) {
         //console.log("id ", this.listaDeGiftcards[i].id);
         //console.log("nose", this.listaDeGiftcards[i].nombre);
-        this.servicioRegalarGiftcards.regalarTarjeta("BBCCI", this.usuarioBeneficio, Number(this.cantidad), this.listaDeGiftcards[i].availability,Number(this.listaDeGiftcards[i].id))
+        this.servicioRegalarGiftcards.regalarTarjeta(usuarioz, this.usuarioBeneficio, Number(this.cantidad), this.listaDeGiftcards[i].availability,Number(this.listaDeGiftcards[i].id))
           .pipe(first())
           .subscribe(
             (data) => {

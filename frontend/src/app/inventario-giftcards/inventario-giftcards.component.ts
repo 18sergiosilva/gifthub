@@ -29,8 +29,9 @@ export class InventarioGiftcardsComponent implements OnInit {
 
 
   getGiftcards() {
+    let usuarioz:string = localStorage.getItem('user');
     this.servicioRegalarGiftcards
-      .obtenerGiftcards("BBCCI")
+      .obtenerGiftcards(usuarioz)
       .pipe(first())
       .subscribe(
         (data) => {
