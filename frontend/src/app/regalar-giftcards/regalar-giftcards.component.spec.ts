@@ -48,6 +48,7 @@ describe('RegalarGiftcardsComponent', () => {
       id: 1,
       displayName: "displayName",
       availability: "1",
+      alfanumerico : "BHNqGwmq",
     };
     component.giftcards.push(vistaGiftcard);
     expect(component.disponibilidad(0)).toContain("1");
@@ -61,6 +62,7 @@ describe('RegalarGiftcardsComponent', () => {
       id: 1,
       displayName: "displayName",
       availability: "1",
+      alfanumerico : "BHNqGwmq",
     };
     component.giftcards.push(vistaGiftcard);
     expect(component.longitud()).toBeGreaterThan(0);
@@ -75,6 +77,7 @@ describe('RegalarGiftcardsComponent', () => {
       id: 1,
       displayName: "displayName",
       availability: "1",
+      alfanumerico : "BHNqGwmq",
     };
     component.giftcards.push(vistaGiftcard);
     expect(component.agregarGiftcard(vistaGiftcard)).toBeTrue();
@@ -90,6 +93,7 @@ describe('RegalarGiftcardsComponent', () => {
       id: 1,
       displayName: "displayName",
       availability: "1",
+      alfanumerico : "BHNqGwmq",
     };
     component.listaDeGiftcards.push(vistaGiftcard);
     expect(component.longitud2()).toBeGreaterThan(0);
@@ -103,6 +107,7 @@ describe('RegalarGiftcardsComponent', () => {
       id: 1,
       displayName: "displayName",
       availability: "1",
+      alfanumerico : "BHNqGwmq",
     };
     component.listaDeGiftcards.push(vistaGiftcard);
     expect(component.getDisplay(0)).toContain("displayName");

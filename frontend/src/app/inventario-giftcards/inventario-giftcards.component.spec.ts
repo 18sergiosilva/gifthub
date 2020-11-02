@@ -45,6 +45,7 @@ describe('InventarioGiftcardsComponent', () => {
       displayName: "displayName",
       availability: "1",
       cantidad : 1,
+      alfanumerico : "BHNqGwmq",
     };
     component.giftcards.push(vistaGiftcard);
     expect(component.disponibilidad(0)).toContain("1");
@@ -59,6 +60,7 @@ describe('InventarioGiftcardsComponent', () => {
       displayName: "displayName",
       availability: "1",
       cantidad : 1,
+      alfanumerico : "BHNqGwmq",
     };
     component.giftcards.push(vistaGiftcard);
     expect(component.longitud()).toBeGreaterThan(0);
@@ -74,6 +76,7 @@ describe('InventarioGiftcardsComponent', () => {
       displayName: "displayName",
       availability: "1",
       cantidad : 1,
+      alfanumerico : "BHNqGwmq",
     };
     component.giftcards.push(vistaGiftcard);
     expect(component.agregarGiftcard(vistaGiftcard)).toBeTrue();
