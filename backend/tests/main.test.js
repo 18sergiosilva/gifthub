@@ -333,7 +333,7 @@ describe('Historia: Registrar Usuarios', function () {
             controllerUsuario.buscarUsuario({ params: { username: nombre + apellido } }, res);
         });
 
-        it("Error de la base de datos al intentar eliminar un usuarios.", done => {
+        it("Error de la base de datos al buscar usuario.", done => {
             let catchStub = sandbox.stub();
             let stub = sandbox.stub(controllerUsuario.Usuario, 'findOne').returns({
                 then: sandbox.stub().callsFake(() => { return { catch: catchStub } }),
@@ -1054,7 +1054,40 @@ describe('Login', function () {
             controllerLogin.buscarUsuario({ body: body }, res);
         });
 
-        it("Buscar un usuario que no existe", done => {
+        it("Login con un usuario que no existe", done => {
+            let res = {
+                send: () => { },
+                status: sinon.stub().returnsThis()
+            };
+
+            const mock = sinon.mock(res);
+
+            mock.expects("send").once().withExactArgs({
+                message: `Usuario MKJLW no encontrado.`
+            });
+
+            sandbox.stub(controllerUsuario.Usuario, 'findOne').returns({
+                then: (callBack) => {
+                    callBack(undefined);
+
+                    expect(res.status.calledOnce).to.be.true;
+                    expect(res.status.firstCall.calledWithExactly(404)).to.be.true;
+
+                    mock.verify();
+
+                    done();
+
+                    return { catch: () => { } };
+                }
+            });
+            let body = {
+                userOMail: "MKJLW",
+                pass: "IJA20SAJ8KI"
+            }
+            controllerLogin.buscarUsuario({ body: body }, res);
+        });
+  
+        it("Contraseña incorrecta", done => {
             let res = {
                 send: () => { },
                 status: sinon.stub().returnsThis()
@@ -1077,15 +1110,15 @@ describe('Login', function () {
             }
 
             mock.expects("send").once().withExactArgs({
-                message: `Usuario MKJLW no encontrado.`
+                message: "Contraseña incorrecta."
             });
 
             sandbox.stub(controllerUsuario.Usuario, 'findOne').returns({
                 then: (callBack) => {
-                    callBack({});
+                    callBack(user);
 
                     expect(res.status.calledOnce).to.be.true;
-                    expect(res.status.firstCall.calledWithExactly(200)).to.be.true;
+                    expect(res.status.firstCall.calledWithExactly(400)).to.be.true;
 
                     mock.verify();
 
@@ -1096,19 +1129,20 @@ describe('Login', function () {
             });
             let body = {
                 userOMail: "MKJLW",
-                pass: "IJA20SAJ8KI"
+                pass: "XXXX"
             }
             controllerLogin.buscarUsuario({ body: body }, res);
         });
 
-        it("Error de la base de datos al intentar eliminar un usuarios.", done => {
+        
+        it("Error de la base de datos al buscar hacer login.", done => {
             let catchStub = sandbox.stub();
             let stub = sandbox.stub(controllerUsuario.Usuario, 'findOne').returns({
                 then: sandbox.stub().callsFake(() => { return { catch: catchStub } }),
             });
 
             catchStub.callsFake((cb) => {
-                cb({ message: `Error al devolver el usuario con username=${nombre + apellido}` }, {});
+                cb({ message: `Error al devolver el usuario con username=userx100` }, {});
             });
             let res = {
                 send: () => { },
@@ -1118,10 +1152,14 @@ describe('Login', function () {
             const mock = sinon.mock(res);
 
             mock.expects("send").once().withExactArgs({
-                message: `Error al devolver el usuario con username=${nombre + apellido}`
+                message: `Error al buscar el usuario userx100.`
             });
 
-            controllerUsuario.buscarUsuario({ params: { username: nombre + apellido } }, res);
+            let body = {
+                userOMail: "userx100",
+                pass: "XXXX"
+            }
+            controllerLogin.buscarUsuario({ body: body }, res);
 
             expect(stub.calledOnce).to.be.true;
             expect(res.status.calledOnce).to.be.true;
