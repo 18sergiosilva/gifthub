@@ -163,7 +163,6 @@ describe('Historia: Registrar Usuarios', function () {
             done();
         });
     });
-
     describe('PUT /', () => {
         it("Actualiar un usuario existente", done => {
             let res = {
@@ -519,6 +518,7 @@ describe('Historia: Registrar Usuarios', function () {
         });
     });
 });
+
 describe('Historia: Conectarse a api externa', function () {
     describe('GET /', () => {
         it("Actualizar las giftcards en la base de datos", done => {
@@ -1000,9 +1000,21 @@ describe('Historia: Realizar compra', function () {
 
 
         });
+        it('Generacion codigo alfanumerico', async () => {
+            let alfanumerico = controllerCompra.generarAlfanumerico();
+
+            expect(alfanumerico.length).to.equal(8);
+        });
+        it('Generacion numero enmascarado', async () => {
+            let numeroEncriptado = controllerCompra.encriptar(1234567891234567);
+            expect(numeroEncriptado).to.equal("1234XXXXXXXX4567");
+        });
+        it('Error al generar numero enmascarado', async () => {
+            let numeroEncriptado = controllerCompra.encriptar(1234);
+            expect(numeroEncriptado).to.equal("1234");
+        });
     });
 });
-
 
 describe('Login', function () {
     describe('POST /', () => {
@@ -1086,7 +1098,7 @@ describe('Login', function () {
             }
             controllerLogin.buscarUsuario({ body: body }, res);
         });
-  
+
         it("Contraseña incorrecta", done => {
             let res = {
                 send: () => { },
@@ -1134,7 +1146,6 @@ describe('Login', function () {
             controllerLogin.buscarUsuario({ body: body }, res);
         });
 
-        
         it("Error de la base de datos al buscar hacer login.", done => {
             let catchStub = sandbox.stub();
             let stub = sandbox.stub(controllerUsuario.Usuario, 'findOne').returns({

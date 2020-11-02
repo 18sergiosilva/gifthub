@@ -135,7 +135,7 @@ function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, giftcard,
             let encontroGiftcard = true
             for (let j = 0; j < card.length; j++) {
                 gift = card[j]
-                if (gift.id == giftcard.idTarjeta) {
+                if (true) {
                     encontroGiftcard = false
                     let newGiftCard = {}
 
@@ -145,7 +145,7 @@ function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, giftcard,
                     newGiftCard.image = gift.image
                     newGiftCard.name = gift.name
                     newGiftCard.availability = giftcard.availability
-                    newGiftCard.cantidad = parseInt(giftcard.cantidad)
+                    newGiftCard.alfanumerico = generarAlfanumerico();
 
                     gifcardsNews.push(newGiftCard)
                     break;
@@ -205,7 +205,8 @@ exports.pago = async (req, res) => {
             .send({ message: "Datos incompletos." });
     }
     let tarjetaUsuario = req.body.tarjeta;
-
+    tarjetaUsuario.numeroEncriptado = encriptar(tarjetaUsuario.numero)
+    
     let giftData = await obtenerGiftcards(req.body.tarjetas);
     if (giftData.message) {
         res
@@ -245,3 +246,25 @@ exports.pago = async (req, res) => {
 
     return res.status(200).send({ message: retorno.message });
 };
+
+function generarAlfanumerico(){
+    var caracteres = "abcdefghijkmnpqrtuvwxyzABCDEFGHJKMNPQRTUVWXYZ2346789";
+    var id = "";
+    for (i=0; i<8; i++) id +=caracteres.charAt(Math.floor(Math.random()*caracteres.length)); 
+    return id;
+}
+exports.generarAlfanumerico = generarAlfanumerico;
+
+
+function encriptar(numero){
+    if(numero.toString().length<16){
+        return numero.toString()
+    }
+    let aux1 = numero.toString().substring(0, 4);
+    let aux2 = numero.toString().substring(12, 16);
+
+    return aux1 + "XXXXXXXX" + aux2
+}
+exports.encriptar = encriptar;
+
+
