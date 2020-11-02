@@ -1197,16 +1197,48 @@ describe('Historia: Realizar compra', function () {
             mock.expects("send").once().withExactArgs({
                 message: 'Compra exitosa.',
             });
+
             let val1 = {
                 tarjetasGift: [{
                     active: false,
+                    alfanumerico: "1234asdf",
                     availability: "1",
                     cantidad: 22,
                     chargeRate: 1,
                     id: '1',
                     image: 'https://media.karousell.com/media/photos/products/2020/5/21/rm50_goggle_play_gift_card_mal_1590040469_c1100b5a_progressive.jpg',
                     name: 'Google Play'
-                }]
+                }],
+                giftData: {
+                    cards:
+                    {
+                        Card: [
+                            {
+                                "id": "1",
+                                "name": "Google Play",
+                                "image": "https://media.karousell.com/media/photos/products/2020/5/21/rm50_goggle_play_gift_card_mal_1590040469_c1100b5a_progressive.jpg",
+                                "chargeRate": 1,
+                                "active": false,
+                                "availability": [
+                                    1,
+                                    2,
+                                    4
+                                ]
+                            },
+                            {
+                                "id": "2",
+                                "name": "PlayStation",
+                                "image": "https://www.allkeyshop.com/blog/wp-content/uploads/PlayStationNetworkGiftCard.jpg",
+                                "chargeRate": 0.25,
+                                "active": true,
+                                "availability": [
+                                    1,
+                                    3
+                                ]
+                            }
+                        ]
+                    }
+                }
             }
 
             let val2 = {
@@ -1312,7 +1344,7 @@ describe('Historia: Realizar compra', function () {
                 username: "BBCCI"
             }
 
-            controllerCompra.pago({ body: body }, res);
+            await controllerCompra.pago({ body: body }, res);
             expect(res.status.calledOnce).to.be.true;
             expect(res.status.firstCall.calledWithExactly(200)).to.be.true;
 

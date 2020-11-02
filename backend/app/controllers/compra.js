@@ -206,24 +206,25 @@ exports.pago = async (req, res) => {
     let tarjetaUsuario = req.body.tarjeta;
     tarjetaUsuario.numeroEncriptado = encriptar(tarjetaUsuario.numero)
     
-    let giftData = await obtenerGiftcards(req.body.tarjetas);
+    let giftData = await exports.obtenerGiftcards(req.body.tarjetas);
     if (giftData.message) {
         res
             .status(404)
             .send({ message: giftData.message });
         return undefined
     }
+    
     let tarjetasGift = giftData.tarjetasGift;
     giftData = giftData.giftData;
 
-    let userData = await buscarUsuario(req.body.username)
+    let userData = await exports.buscarUsuario(req.body.username)
     if (userData.message != 'Usuario encontrado.') {
         return res
             .status(404)
             .send({ message: userData.message });
     }
 
-    userData = await realizarTransaccion(userData.usuario.tarjetasCredito, userData,
+    userData = await exports.realizarTransaccion(userData.usuario.tarjetasCredito, userData,
         tarjetaUsuario, req.body.monto, tarjetasGift, req.body.username)
     if (userData.message != 'Usuario encontrado.') {
         return res
@@ -231,15 +232,16 @@ exports.pago = async (req, res) => {
             .send({ message: userData.message });
     }
 
-    let usuario = realizarTransaccion2(req.body.tarjetas, tarjetaUsuario, giftData.cards.Card, userData.usuario, giftcard, tarjetasGift, req.body.monto)
+    let usuario = exports.realizarTransaccion2(req.body.tarjetas, tarjetaUsuario, 
+        giftData.cards[0].Card, userData.usuario, giftcard, tarjetasGift, req.body.monto)
     if (usuario.message) {
         return res
             .status(404)
             .send({ message: usuario.message });
     }
 
-    retorno = await actualizarUsusarios(usuario, req.body.username)
-    if (retorno.message != `¡No se encontro el usuario!`) {
+    retorno = await exports.actualizarUsusarios(usuario, req.body.username)
+    if (retorno.message != 'Compra exitosa.') {
         return res.status(404).send({ message: retorno.message });
     }
 
