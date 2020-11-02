@@ -6,4 +6,5 @@ module.exports = app => {
     // Login
     router.post("/", producto.findOne);
 
+    app.use("/login", router);
 };

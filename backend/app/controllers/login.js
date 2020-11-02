@@ -18,16 +18,16 @@ function buscarUsuario(req, res) {
             if (data.contrasena != pass) {
                 return res
                     .status(400)
-                    .send({ message: "Contraseña incorrecta" });
+                    .send({ message: "Contraseña incorrecta." });
             }
             return res
                 .status(200)
-                .send({ message: "Usuario encontrado.", usuario: data });
+                .send({ message: "Login exitoso.", usuario: data });
         })
         .catch(err => {
             return res
                 .status(500)
-                .send({ message: `Error al buscar el usuario ${userOMail}` });
+                .send({ message: `Error al buscar el usuario ${userOMail}.` });
         });
 }
 exports.buscarUsuario = buscarUsuario;
