@@ -6,3 +6,4 @@
 [1017/014349.910:ERROR:filesystem_win.cc(129)] GetFileAttributes C:\Users\betor\AppData\Local\Temp\karma-40322947\Crashpad\attachments\49985398-81fc-43e2-a5e3-94999470b82f: El sistema no puede encontrar la ruta especificada. (0x3)[1030/233045.490:ERROR:directory_reader_win.cc(43)] FindFirstFile: El sistema no puede encontrar la ruta especificada. (0x3)
 [1030/233045.512:ERROR:directory_reader_win.cc(43)] FindFirstFile: El sistema no puede encontrar la ruta especificada. (0x3)
 [1031/025950.201:ERROR:file_io_win.cc(162)] CreateFile C:\Users\asus\AppData\Local\Temp\karma-44337990\Crashpad\settings.dat: El sistema no puede encontrar el archivo especificado. (0x2)
+[1102/070250.764:ERROR:directory_reader_win.cc(43)] FindFirstFile: The system cannot find the path specified. (0x3)
