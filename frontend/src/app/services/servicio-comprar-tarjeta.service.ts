@@ -15,6 +15,19 @@ export class ServicioComprarTarjetaService {
     return this.http.get(url);
   }
   realizarCompra(compra: Compra) {
-
+    const url = 'http://35.239.230.8:5000/compra/pago';
+    console.log(compra);
+    return this.http.post(url, compra);
+  }
+  obtenerTazaCambio() {
+    const url = 'http://35.239.230.8:5000/cards/mongo';
+    return this.http.get(url);
+  }
+  actualizarGiftcards() {
+    const url = 'http://35.239.230.8:5000/cards';
+    return this.http.get<any>(url, {})
+      .pipe(map(data => {
+        return data;
+      }));
   }
 }
