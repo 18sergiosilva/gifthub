@@ -12,6 +12,7 @@ import { InventarioGiftcardsComponent } from './inventario-giftcards/inventario-
 import { CarritoComponent } from './carrito/carrito.component';
 import { HistorialComprasComponent } from './historial-compras/historial-compras.component';
 import { DetallesCompraComponent } from './detalles-compra/detalles-compra.component';
+import { AdminComponent } from './admin/admin.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -25,7 +26,8 @@ const routes: Routes = [
   { path: 'inventario', component: InventarioGiftcardsComponent },
   { path: 'carrito', component: CarritoComponent},
   { path: 'compras',component:HistorialComprasComponent},
-  { path: 'detallescompra/:id/:no',component:DetallesCompraComponent}
+  { path: 'detallescompra/:id/:no',component:DetallesCompraComponent},
+  { path: 'admin',component:AdminComponent}
 ];
 
 @NgModule({

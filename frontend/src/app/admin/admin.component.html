@@ -1,1 +1,81 @@
-<p>admin works!</p>
+<div class="col-12 grid-margin">
+    <div class="card">
+        <div class="card-body" *ngFor="let compra of transacciones;let i = index;">
+            <h3 class="card-title" id="titulocategoria">TRANSACCIÓN NO.{{i+1  |number}}</h3>
+            <form class="form-sample">
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label"><strong>ID transacción: </strong></label>
+                            <label class="col-sm-6 col-form-label">{{compra.id}}</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label"><strong>Usuario No.1: </strong></label>
+                            <label class="col-sm-6 col-form-label">{{compra.usuario1}}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label"><strong>Fecha: </strong></label>
+                            <label class="col-sm-6 col-form-label">{{compra.createdAt}}</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label"><strong>Usuario No.2: </strong></label>
+                            <label class="col-sm-6 col-form-label">{{compra.usuario2}}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label"><strong>Estado: </strong></label>
+                            <label class="col-sm-6 col-form-label">{{compra.estado}}</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label"><strong>Mensaje: </strong></label>
+                            <label class="col-sm-6 col-form-label">{{compra.mensaje}}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group row">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group row">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th> Ids de Tarjetas </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Repitencia-->
+                                    <tr *ngFor="let tra of compra.tarjetas;let i = index;">
+                                        <td> {{tra.id}}</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th> </th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <hr noshade>
+            </form>
+        </div>
+    </div>
+</div>
