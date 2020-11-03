@@ -3,7 +3,8 @@ export interface Giftcard {
     displayName: String,
     imagen: String,
     id: number,
-    precio: number
+    precio: number,
+    availability: string,
 }
 
 export interface Giftcard2 {
