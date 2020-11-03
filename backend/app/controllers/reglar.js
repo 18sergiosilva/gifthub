@@ -100,7 +100,8 @@ async function guardarEnHistorial(values, acceptance, cb) {
         usuario2: values.usuario2.trim(),
         tarjetas: values.tarjetas,
         estado: acceptance.estado.trim(),
-        mensaje: acceptance.mensaje.trim()
+        mensaje: acceptance.mensaje.trim(),
+        tipo: "Regalo"
     });
 
     Transaccion.create(transaccion).then(() => { console.log("Creado"); });

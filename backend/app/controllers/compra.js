@@ -1,5 +1,7 @@
+const db = require("../models");
 const cards = require('../controllers/cards')
 const Usuario = require('../controllers/usuario');
+const Transaccion = db.transacciones;
 
 exports.cards = cards;
 
@@ -58,7 +60,7 @@ async function buscarUsuario(username) {
 }
 exports.buscarUsuario = buscarUsuario
 
-async function realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, monto, tarjetasGift, username) {
+async function realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, monto, tarjetasGift, username, tarjetaCompra) {
     let actualizarData = [];
     var actualizarUsuario = {
         send: (data) => {
@@ -77,10 +79,20 @@ async function realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, mo
             if (tarjeta.nombre != tarjetaUsuario.nombre ||
                 tarjeta.fecha != tarjetaUsuario.fecha ||
                 tarjeta.codigoSeguridad != tarjetaUsuario.codigoSeguridad) {
-                tarjetaUsuario.transaccion = "Transaccion fallida tarjeta invalida."
+                tarjetaUsuario.transaccion = "Transaccion fallida, tarjeta invalida."
                 tarjetaUsuario.totalApagar = monto;
                 tarjetaUsuario.tarjetas = tarjetasGift
+                let transacciones = []
+                for(let i=0;i<tarjetasGift.length;i++){
+                    let transaccion = {
+                        id: tarjetasGift[i].name,
+                        cantidad: tarjetaCompra[i].cantidad,
+                        availability: tarjetaCompra[i].availability
+                    }
+                    transacciones.push(transaccion)
+                }
                 userData.usuario.transacciones.push(tarjetaUsuario);
+                guardarEnHistorial(transacciones,username,"Transaccion fallida, tarjeta invalida.","fallido")
                 await Usuario.actualizarUsuario({
                     params: { username: username }, body: {
                         transacciones: userData.usuario.transacciones
@@ -96,6 +108,16 @@ async function realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, mo
                     tarjetaUsuario.totalApagar = monto;
                     tarjetaUsuario.tarjetas = tarjetasGift
                     userData.usuario.transacciones.push(tarjetaUsuario);
+                    let transacciones = []
+                    for(let i=0;i<tarjetasGift.length;i++){
+                        let transaccion = {
+                            id: tarjetasGift[i].name,
+                            cantidad: tarjetaCompra[i].cantidad,
+                            availability: tarjetaCompra[i].availability
+                        }
+                        transacciones.push(transaccion)
+                    }
+                    guardarEnHistorial(transacciones,username,"Transaccion fallida debido a la falta de fondos.","fallido")
                     await Usuario.actualizarUsuario({
                         params: { username: username }, body: {
                             transacciones: userData.usuario.transacciones
@@ -170,8 +192,19 @@ function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, giftcard,
         }
     };
 
+    
+    let transacciones = []
+    for(let i=0;i<gifcardsNews.length;i++){
+        let transaccion = {
+            id: gifcardsNews[i].name,
+            cantidad: 1,
+            availability: gifcardsNews[i].availability
+        }
+        transacciones.push(transaccion)
+    }
+    guardarEnHistorial(transacciones,usuario.username,"Transaccion realizada con exito","aceptada")
     tarjetaUsuario.transaccion = "Transaccion realizada con exito."
-    tarjetaUsuario.totalApagar = monto;
+    tarjetaUsuario.totsalApagar = monto;
     
     tarjetaUsuario.tarjetas = gifcardsNews
     usuario.transacciones.push(tarjetaUsuario);
@@ -234,7 +267,7 @@ exports.pago = async (req, res) => {
     }
 
     userData = await exports.realizarTransaccion(userData.usuario.tarjetasCredito, userData,
-        tarjetaUsuario, req.body.monto, tarjetasGift, req.body.username)
+        tarjetaUsuario, req.body.monto, tarjetasGift, req.body.username, req.body.tarjetas)
     if (userData.message != 'Usuario encontrado.') {
         return res
             .status(404)
@@ -276,4 +309,17 @@ function encriptar(numero) {
 }
 exports.encriptar = encriptar;
 
+
+async function guardarEnHistorial(tarjetas, username, mensaje, estado) {
+    const transaccion = new Transaccion({
+        usuario1: username,
+        usuario2: "XXX",
+        tarjetas: tarjetas,
+        estado: estado,
+        mensaje: mensaje,
+        tipo: "Compra"
+    });
+
+    Transaccion.create(transaccion).then(() => { console.log("Creado"); });
+}
 
