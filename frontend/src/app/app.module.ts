@@ -24,6 +24,7 @@ import { CarritoComponent } from './carrito/carrito.component';
 import { HistorialComprasComponent } from './historial-compras/historial-compras.component';
 import { DetallesCompraComponent } from './detalles-compra/detalles-compra.component';
 import { AdminComponent } from './admin/admin.component';
+import { PagarComponent } from './pagar/pagar.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,9 @@ import { AdminComponent } from './admin/admin.component';
     CarritoComponent,
     HistorialComprasComponent,
     DetallesCompraComponent,
-    AdminComponent
+    AdminComponent,
+    CarritoComponent,
+    PagarComponent
   ],
   imports: [
     BrowserModule,
