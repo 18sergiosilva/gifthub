@@ -52,7 +52,8 @@ export class VistaGiftcardsComponent implements OnInit {
                     imagen: this.giftcards[i]["image"],
                     id: this.giftcards[i]["id"],
                     precio: 10 + (10*this.giftcards[i]["chargeRate"]),
-                    displayName: this.giftcards[i]["name"] + " - $10.00"
+                    displayName: this.giftcards[i]["name"] + " - $10.00",
+                    availability: "1"
                   };
                   this.listaDeGiftcards.push(vistaGiftcard);
                   //console.log(vistaGiftcard.displayName);
@@ -63,7 +64,8 @@ export class VistaGiftcardsComponent implements OnInit {
                     imagen: this.giftcards[i]["image"],
                     id: this.giftcards[i]["id"],
                     precio: 25 + (25*this.giftcards[i]["chargeRate"]),
-                    displayName: this.giftcards[i]["name"] + " - $25.00"
+                    displayName: this.giftcards[i]["name"] + " - $25.00",
+                    availability: "2"
                   };
                   this.listaDeGiftcards.push(vistaGiftcard);
                   //console.log(vistaGiftcard.displayName);
@@ -74,7 +76,8 @@ export class VistaGiftcardsComponent implements OnInit {
                     imagen: this.giftcards[i]["image"],
                     id: this.giftcards[i]["id"],
                     precio: 50 + (50*this.giftcards[i]["chargeRate"]),
-                    displayName: this.giftcards[i]["name"] + " - $50.00"
+                    displayName: this.giftcards[i]["name"] + " - $50.00",
+                    availability: "3"
                   };
                   this.listaDeGiftcards.push(vistaGiftcard);
                   //console.log(vistaGiftcard.displayName);
@@ -85,7 +88,8 @@ export class VistaGiftcardsComponent implements OnInit {
                     imagen: this.giftcards[i]["image"],
                     precio: 100 + (100*this.giftcards[i]["chargeRate"]),
                     id: this.giftcards[i]["id"],
-                    displayName: this.giftcards[i]["name"] + " - $100.00"
+                    displayName: this.giftcards[i]["name"] + " - $100.00",
+                    availability: "4"
                   };
                   this.listaDeGiftcards.push(vistaGiftcard);
                   //console.log(vistaGiftcard.displayName);
