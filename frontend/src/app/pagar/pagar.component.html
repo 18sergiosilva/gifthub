@@ -20,6 +20,30 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group row">
+                                <label class="col col-form-label">Tipo de Moneda</label>
+                                <div class="col-sm-9">
+                                    <select [(ngModel)]="moneda" name="moneda"
+                                        class="form-control" (ngModelChange)="cambioMoneda()">
+                                        <option value = '$.'>Dolares</option>
+                                        <option value = 'Q.'>Quetzales</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group row">
+                                <label class="col col-form-label">Total a pagar</label>
+                                <div class="col-sm-9">
+                                    <label class="col col-form-label">{{moneda}} {{total_copia | number:'1.2-2'}}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <button type="submit" (click)="pagar()" class="btn btn-primary mr-2">{{texto_aux}}</button>
                 </form>
             </div>
@@ -79,6 +103,17 @@
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" [(ngModel)]="ano_expiracion"
                                                     name="ano_expiracion" placeholder="año" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group row">
+                                            <label class="col col-form-label">Codigo Seguridad</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" [(ngModel)]="codigo_nuevo"
+                                                    name="codigo_nuevo" />
                                             </div>
                                         </div>
                                     </div>

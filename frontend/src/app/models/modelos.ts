@@ -32,12 +32,13 @@ export interface Tarjeta {
     numero: String;
     nombre: String;
     fecha: String;
-    condigoSeguridad: String;
+    codigoSeguridad: String;
 }
 
 export interface Giftcard4 {
     idTarjeta: String;
     cantidad: String;
+    availability: String;
 }
 
 export interface Compra {
