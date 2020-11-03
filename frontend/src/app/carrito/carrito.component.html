@@ -32,10 +32,10 @@
                                 <td>
                                     <img class="mr-2" src={{giftcard.imagen}} alt="image" />
                                 </td>
-                                <td>
+                                <td name="nombreGiftcard">
                                     {{giftcard.nombre}}
                                 </td>
-                                <td>
+                                <td name="precioGiftcard">
                                     {{giftcard.precio | number:'1.2-2'}}
                                 </td>
                                 <td><button type="button" class="btn social-btn btn-danger  py-0 px-0 "><i
@@ -48,7 +48,7 @@
                                 <td>
                                     Total
                                 </td>
-                                <td>
+                                <td name="totalCarrito">
                                     {{total | number:'1.2-2'}}
                                 </td>
                                 <td>
