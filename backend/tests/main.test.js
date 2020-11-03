@@ -1034,7 +1034,19 @@ describe('Historia: Realizar compra', function () {
                 req.send({});
             });
 
-            let ret = await controllerCompra.realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, 200, tarjetasGift, "edgar");
+            let arjetasCompra = [
+                {
+                    "idTarjeta": "2",
+                    "cantidad": "10",
+                    "availability": "1"
+                },
+                {
+                    "idTarjeta": "3",
+                    "cantidad": "15",
+                    "availability": "2"
+                }]
+
+            let ret = await controllerCompra.realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, 200, tarjetasGift, "edgar", arjetasCompra);
 
             expect(ret.message).to.equal('Los datos de la tarjeta no coinciden.');
 
