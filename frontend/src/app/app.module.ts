@@ -21,6 +21,7 @@ import { LoginComponent } from './login/login.component';
 import { RegalarGiftcardsComponent } from './regalar-giftcards/regalar-giftcards.component';
 import { InventarioGiftcardsComponent } from './inventario-giftcards/inventario-giftcards.component';
 import { CarritoComponent } from './carrito/carrito.component';
+import { PagarComponent } from './pagar/pagar.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { CarritoComponent } from './carrito/carrito.component';
     RegalarGiftcardsComponent,
     InventarioGiftcardsComponent,
     VistaGiftcardsComponent,
-    CarritoComponent
+    CarritoComponent,
+    PagarComponent
   ],
   imports: [
     BrowserModule,

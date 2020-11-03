@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Giftcard } from '../models/modelos';
 import { Utils } from '../utils/utils';
 
@@ -10,7 +11,7 @@ import { Utils } from '../utils/utils';
 })
 export class CarritoComponent implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) { }
   user = localStorage.getItem('user');
   carrito = Utils.carrito;
   total: number;
@@ -33,12 +34,10 @@ export class CarritoComponent implements OnInit {
     console.log(foundIndex);
     this.carrito = this.carrito.filter((_, index) => index !== foundIndex);
     this.total = this.total - valor;
-    console.log(this.carrito);
   }
 
   pagar() {
-    console.log(Utils.carrito);
     Utils.carrito = this.carrito;
-    console.log(Utils.carrito);
+    this.router.navigate(['pago', this.total]);
   }
 }
