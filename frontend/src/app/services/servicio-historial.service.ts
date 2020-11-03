@@ -25,6 +25,16 @@ export class ServicioHistorialService {
         return data;
       }));
   }
+
+  getTransacciones() {
+    let apiUrl = 'http://35.239.230.8:5000/regalar?usuario=admin';
+    return this.http.get<any>(apiUrl, {})
+      .pipe(map(data => {
+        return data;
+      }));
+  }
+
+  
 }
 
 
