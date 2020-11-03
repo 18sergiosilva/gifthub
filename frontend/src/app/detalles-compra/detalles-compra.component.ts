@@ -99,12 +99,13 @@ export class DetallesCompraComponent implements OnInit {
 
           for (let index = 0; index < this.recargo.length; index++) {
             var x = this.recargo[index];
-            var xcant=x*this.cants[index];
-            this.recargos.push(xcant);
+          
             var y: number = +x;
             var xx = this.preciosReales[index];
             var yy: number = +xx;
-            let suma = y+yy;
+            let suma = y*yy;
+            var xcant=x*this.preciosReales[index];
+            this.recargos.push(xcant);
             let totalito= xx*this.cants[index]+xcant;
             this.totales.push(totalito);
             this.preciosTotales.push(suma);
