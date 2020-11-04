@@ -84,9 +84,9 @@ async function realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, mo
                 let transacciones = []
                 for(let k=0;k<tarjetasGift.length;k++){
                     let transaccion = {
-                        id: tarjetasGift[i].name,
-                        cantidad: tarjetaCompra[i].cantidad,
-                        availability: tarjetaCompra[i].availability
+                        id: tarjetasGift[k].name,
+                        cantidad: tarjetaCompra[k].cantidad,
+                        availability: tarjetaCompra[k].availability
                     }
                     transacciones.push(transaccion)
                 }
@@ -110,9 +110,9 @@ async function realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, mo
                     let transacciones = []
                     for(let k=0;k<tarjetasGift.length;k++){
                         let transaccion = {
-                            id: tarjetasGift[i].name,
-                            cantidad: tarjetaCompra[i].cantidad,
-                            availability: tarjetaCompra[i].availability
+                            id: tarjetasGift[k].name,
+                            cantidad: tarjetaCompra[k].cantidad,
+                            availability: tarjetaCompra[k].availability
                         }
                         transacciones.push(transaccion)
                     }
@@ -289,8 +289,7 @@ exports.pago = async (req, res) => {
 function generarAlfanumerico() {
     var caracteres = "abcdefghijkmnpqrtuvwxyzABCDEFGHJKMNPQRTUVWXYZ2346789";
     var id = "";
-    const val = Math.random();
-    for (let i = 0; i < 8; i++) id += caracteres.charAt(Math.floor(val * caracteres.length));
+    for (let i = 0; i < 8; i++) id += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
     return id;
 }
 exports.generarAlfanumerico = generarAlfanumerico;
