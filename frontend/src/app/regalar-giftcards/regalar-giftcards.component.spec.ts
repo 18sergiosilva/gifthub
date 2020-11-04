@@ -10,7 +10,8 @@ describe('RegalarGiftcardsComponent', () => {
   let component: RegalarGiftcardsComponent;
   let fixture: ComponentFixture<RegalarGiftcardsComponent>;
   let router: Router;
-
+  localStorage.setItem('logued', '1');
+  
   const routes: Routes = [
     { path: 'regalar', component: RegalarGiftcardsComponent }
   ];
