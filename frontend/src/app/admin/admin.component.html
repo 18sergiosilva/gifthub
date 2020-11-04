@@ -1,7 +1,19 @@
 <div class="col-12 grid-margin">
     <div class="card">
-        <div class="card-body" *ngFor="let compra of transacciones;let i = index;">
-            <h3 class="card-title" id="titulocategoria">TRANSACCIÓN NO.{{i+1  |number}}</h3>
+        <div class="card-body" *ngFor="let compra of transacciones;let i = index;" >
+            <div *ngIf="compra.usuario2!='XXX'; else elseBlock0" class="form-group row">  
+                <h1 class="card-title" id="titulocategoria">TRANSACCIÓN NO.{{i+1  |number}}   -</h1>
+                <br>
+                <h1 class="card-title" id="titulocategoria">-   TRANSACCIÓN DE COMPRA</h1>
+            </div>
+            <ng-template #elseBlock0>
+                <div  class="form-group row">
+                    <h1 class="card-title" id="titulocategoria">TRANSACCIÓN NO.{{i+1  |number}}   -</h1>
+                <br>
+                <h1 class="card-title" id="titulocategoria">-   TRANSACCIÓN DE REGALO</h1>
+                </div>        
+            </ng-template>
+            
             <form class="form-sample">
                 <br>
                 <div class="row">
@@ -12,10 +24,17 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="form-group row">
+                        <div *ngIf="compra.usuario2!='XXX'; else elseBlock1" class="form-group row">  
                             <label class="col-sm-6 col-form-label"><strong>Usuario No.1: </strong></label>
                             <label class="col-sm-6 col-form-label">{{compra.usuario1}}</label>
                         </div>
+                        <ng-template #elseBlock1 class="form-group row">
+                            <div class="form-group row">  
+                                <label class="col-sm-6 col-form-label"><strong>Usuario: </strong></label>
+                                <label class="col-sm-6 col-form-label">{{compra.usuario1}}</label>
+                            </div>
+                           
+                        </ng-template>
                     </div>
                 </div>
                 <div class="row">
@@ -26,10 +45,12 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="form-group row">
+                        <div *ngIf="compra.usuario2!='XXX'; else elseBlock2" class="form-group row">  
                             <label class="col-sm-6 col-form-label"><strong>Usuario No.2: </strong></label>
                             <label class="col-sm-6 col-form-label">{{compra.usuario2}}</label>
                         </div>
+                        <ng-template #elseBlock2  class="form-group row">
+                        </ng-template>
                     </div>
                 </div>
                 <div class="row">
@@ -56,13 +77,15 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th> Ids de Tarjetas </th>
+                                        <th> TARJETA </th>
+                                        <th> CANTIDAD </th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <!-- Repitencia-->
                                     <tr *ngFor="let tra of compra.tarjetas;let i = index;">
                                         <td> {{tra.id}}</td>
+                                        <td> {{tra.cantidad}}</td>
                                     </tr>
                                 </tbody>
                                 <tfoot>
