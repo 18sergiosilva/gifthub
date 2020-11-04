@@ -23,9 +23,9 @@ async function obtenerGiftcards(tarjetas) {
 
     let tarjetasGift = []
     for (let i = 0; i < tarjetas.length; i++) {
-        giftcard = tarjetas[i]
+        let giftcard = tarjetas[i]
         for (let j = 0; j < giftData.cards[0].Card.length; j++) {
-            gift = giftData.cards[0].Card[j]
+            let gift = giftData.cards[0].Card[j]
             if (gift.id == giftcard.idTarjeta) {
                 let newGiftCard = gift
                 newGiftCard.cantidad = parseInt(giftcard.cantidad)
@@ -61,10 +61,9 @@ async function buscarUsuario(username) {
 exports.buscarUsuario = buscarUsuario
 
 async function realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, monto, tarjetasGift, username, tarjetaCompra) {
-    let actualizarData = [];
+    
     var actualizarUsuario = {
         send: (data) => {
-            actualizarData = data;
         }
     };
 
@@ -73,7 +72,7 @@ async function realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, mo
     let existeTarjeta = true
 
     for (let i = 0; i < tarjetasCredito.length; i++) {
-        tarjeta = tarjetasCredito[i];
+        let tarjeta = tarjetasCredito[i];
         if (tarjeta.numero == tarjetaUsuario.numero) {
             existeTarjeta = false;
             if (tarjeta.nombre != tarjetaUsuario.nombre ||
@@ -83,11 +82,11 @@ async function realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, mo
                 tarjetaUsuario.totalApagar = monto;
                 tarjetaUsuario.tarjetas = tarjetasGift
                 let transacciones = []
-                for(let i=0;i<tarjetasGift.length;i++){
+                for(let k=0;k<tarjetasGift.length;k++){
                     let transaccion = {
-                        id: tarjetasGift[i].name,
-                        cantidad: tarjetaCompra[i].cantidad,
-                        availability: tarjetaCompra[i].availability
+                        id: tarjetasGift[k].name,
+                        cantidad: tarjetaCompra[k].cantidad,
+                        availability: tarjetaCompra[k].availability
                     }
                     transacciones.push(transaccion)
                 }
@@ -109,11 +108,11 @@ async function realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, mo
                     tarjetaUsuario.tarjetas = tarjetasGift
                     userData.usuario.transacciones.push(tarjetaUsuario);
                     let transacciones = []
-                    for(let i=0;i<tarjetasGift.length;i++){
+                    for(let k=0;k<tarjetasGift.length;k++){
                         let transaccion = {
-                            id: tarjetasGift[i].name,
-                            cantidad: tarjetaCompra[i].cantidad,
-                            availability: tarjetaCompra[i].availability
+                            id: tarjetasGift[k].name,
+                            cantidad: tarjetaCompra[k].cantidad,
+                            availability: tarjetaCompra[k].availability
                         }
                         transacciones.push(transaccion)
                     }
@@ -140,23 +139,21 @@ async function realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, mo
 }
 exports.realizarTransaccion = realizarTransaccion
 
-function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, giftcard, tarjetasGift, monto, availability) {
+function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, tarjetasGift, monto) {
     var gifcardsNews = []
     for (let i = 0; i < tarjetas.length; i++) {
         let giftcard = tarjetas[i]
-        let existeGift = true;
         for (let j = 0; j < usuario.tarjetas.length; j++) {
             let tarjeta = usuario.tarjetas[j]
             if (tarjeta.id == giftcard.idTarjeta && tarjeta.availability == giftcard.availability) {
-                existeGift = false;
+
                 tarjeta.cantidad += parseInt(giftcard.cantidad);
                 break;
             }
         }
-        if (true) {
             let encontroGiftcard = true
             for (let j = 0; j < card.length; j++) {
-                gift = card[j]
+                let gift = card[j]
                 if (gift.id == giftcard.idTarjeta) {
 
                     for (let k = 0; k < gift.cantidad; k++) {
@@ -189,7 +186,7 @@ function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, giftcard,
 
                 return { message: `Giftcard con id ${giftcard.idTarjeta} no encontrada` };
             }
-        }
+        
     }
 
     
@@ -274,14 +271,14 @@ exports.pago = async (req, res) => {
             .send({ message: userData.message });
     }
 
-    let usuario = exports.realizarTransaccion2(req.body.tarjetas, tarjetaUsuario, giftData.cards[0].Card, userData.usuario, giftcard, tarjetasGift, req.body.monto)
+    let usuario = exports.realizarTransaccion2(req.body.tarjetas, tarjetaUsuario, giftData.cards[0].Card, userData.usuario, tarjetasGift, req.body.monto)
     if (usuario.message) {
         return res
             .status(404)
             .send({ message: usuario.message });
     }
 
-    retorno = await exports.actualizarUsusarios(usuario, req.body.username)
+    let retorno = await exports.actualizarUsusarios(usuario, req.body.username)
     if (retorno.message == `¡No se encontro el usuario!`) {
         return res.status(404).send({ message: retorno.message });
     }
@@ -292,7 +289,7 @@ exports.pago = async (req, res) => {
 function generarAlfanumerico() {
     var caracteres = "abcdefghijkmnpqrtuvwxyzABCDEFGHJKMNPQRTUVWXYZ2346789";
     var id = "";
-    for (i = 0; i < 8; i++) id += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+    for (let i = 0; i < 8; i++) id += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
     return id;
 }
 exports.generarAlfanumerico = generarAlfanumerico;
