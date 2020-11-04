@@ -15,6 +15,7 @@ export class LoginComponent implements OnInit {
   constructor(private router: Router, private http: HttpClient, private location: Location) { }
   correo: string;
   contra: string;
+  incorrecto = false;
 
   ngOnInit() {
     if (localStorage.getItem('logued') === '1') {
@@ -90,12 +91,14 @@ export class LoginComponent implements OnInit {
       },
         (error: HttpErrorResponse) => {
           this.cancelar();
+          this.incorrecto = true;
         });
   }
 
   cancelar() {
     this.correo = '';
     this.contra = '';
+    this.incorrecto = false;
   }
 
 }
