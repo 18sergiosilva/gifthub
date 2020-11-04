@@ -122,6 +122,7 @@ export class RegalarGiftcardsComponent implements OnInit {
           );
       }
     }
+    this.router.navigate(['home']);
     return false;
   }
 

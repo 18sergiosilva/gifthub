@@ -46,9 +46,14 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('logued', '1');
         Utils.indices = [
           {
-            title: 'Giftcards Disponibles',
+            title: 'Catalogo de Giftcards',
             url: '/giftcards',
             icon: 'mdi-coin'
+          },
+          {
+            title: 'Mis Giftcards',
+            url: '/inventario',
+            icon: 'mdi-checkbox-multiple-blank'
           },
           {
             title: 'Regalar Giftcards',
@@ -56,17 +61,12 @@ export class LoginComponent implements OnInit {
             icon: 'mdi-gift'
           },
           {
-            title: 'Giftcards Adquiridas',
-            url: '/inventario',
-            icon: 'mdi-checkbox-multiple-blank'
-          },
-          {
             title: 'Historial de Compras',
             url: '/compras',
             icon: 'mdi-history'
           },
           {
-            title: 'Modificar Datos',
+            title: 'Configurar Cuenta',
             url: '/modificar',
             icon: 'mdi-pencil'
           }
