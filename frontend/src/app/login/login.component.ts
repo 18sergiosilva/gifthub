@@ -1,7 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Location } from '@angular/common';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -17,17 +18,20 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
   entrar() {
-    this.http.get('http://35.239.230.8:5000/usuario/' + this.correo)
-      .toPromise().then((data: any) => {
-        // if (data.usuario.contrasena === this.contra) {
-        if (true) {
-          localStorage.setItem('user', this.correo);
-          this.router.navigate(['home']);
-        } else {
+
+    this.http.post('http://35.239.230.8:5000/login',
+      {
+        'userOMail': this.correo,
+        'pass': this.contra
+      }).subscribe((data: any) => {
+        localStorage.setItem('user', this.correo);
+        this.router.navigate(['home']);
+      },
+        (error: HttpErrorResponse) => {
           this.cancelar();
-        }
-      });
+        });
   }
+  
   cancelar() {
     this.correo = '';
     this.contra = '';
