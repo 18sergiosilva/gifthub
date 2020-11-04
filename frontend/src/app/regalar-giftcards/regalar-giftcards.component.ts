@@ -90,6 +90,11 @@ export class RegalarGiftcardsComponent implements OnInit {
               //console.log(vistaGiftcard.displayName);
             }
           }
+
+          const primera = this.giftcards[0];
+          this.giftcard = primera.alfanumerico + " - " + primera.displayName;
+          console.log("PRIMERA: ", this.giftcard);
+
         },
         (error) => {
           this.imprimirError(error);
@@ -100,8 +105,10 @@ export class RegalarGiftcardsComponent implements OnInit {
   regalarGiftcard():boolean {
 
     let usuarioz:string = localStorage.getItem('user');
+    console.log("Giftcard actual: ", this.giftcard);
     for (var i = 0; i < this.longitud2(); i++) {
       let comparacion = this.listaDeGiftcards[i].alfanumerico + " - " + this.listaDeGiftcards[i].displayName;
+      console.log("Comparacion: ", comparacion);
       if (comparacion == this.giftcard) {
         console.log("USUARIO REGALA", usuarioz);
         console.log("USUARIO BENEFICIO", this.usuarioBeneficio);
