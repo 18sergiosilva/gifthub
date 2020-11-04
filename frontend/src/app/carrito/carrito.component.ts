@@ -17,6 +17,10 @@ export class CarritoComponent implements OnInit {
   total: number;
 
   ngOnInit() {
+    if (localStorage.getItem('logued') !== '1') {
+      localStorage.setItem('logued', '0');
+      this.router.navigate(['login']);
+    }
     this.total = this.gettotal();
   }
 

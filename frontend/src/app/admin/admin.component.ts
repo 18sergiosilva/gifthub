@@ -18,6 +18,10 @@ export class AdminComponent implements OnInit {
   tarjetas=[];
 
   ngOnInit() {
+    if (localStorage.getItem('logued') !== '1') {
+      localStorage.setItem('logued', '0');
+      this.router.navigate(['login']);
+    }
     this.getTransacciones();
   }
 

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { Utils } from '../utils/utils';
 
 @Component({
   selector: 'app-home',
@@ -8,10 +10,14 @@ import { HttpClient } from '@angular/common/http';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private http: HttpClient) { }
+  constructor(private router: Router, private http: HttpClient) { }
   cadena: any;
 
   ngOnInit() {
+    if (localStorage.getItem('logued') !== '1') {
+      localStorage.setItem('logued', '0');
+      this.router.navigate(['login']);
+    }
     this.cadena = 'No funciono';
 
     this.http.get(`http://${window.location.hostname}:5000/`, { responseType: 'text' })

@@ -15,13 +15,17 @@ export class DetallesCompraComponent implements OnInit {
   constructor(private router: Router, private http: HttpClient, private route: ActivatedRoute, private historialServ: ServicioHistorialService) { }
 
   ngOnInit() {
+    if (localStorage.getItem('logued') !== '1') {
+      localStorage.setItem('logued', '0');
+      this.router.navigate(['login']);
+    }
     this.getTransacciones();
   }
 
-  id="TGYFR";
+  //id="TGYFR";
   //no=0;
   //id = String(this.route.snapshot.params['id']); 
-  //id=localStorage.getItem("user");
+  id=localStorage.getItem("user");
   no = String(this.route.snapshot.params['no']);
   compras = [];
   detallesCompra;

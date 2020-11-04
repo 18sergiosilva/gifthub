@@ -16,7 +16,8 @@ export class ModificarComponent implements OnInit {
 
     //datos
     usuario;
-    id="EAWLL";
+    //id="EAWLL";
+    id = localStorage.getItem('user');
     //id = String(this.route.snapshot.params['id']);
     httpdata;
     httpdata1;
@@ -29,6 +30,10 @@ export class ModificarComponent implements OnInit {
     edad = null;
 
   ngOnInit() {
+    if (localStorage.getItem('logued') !== '1') {
+      localStorage.setItem('logued', '0');
+      this.router.navigate(['login']);
+    }
     this.cargarDatosUsuario();
   }
 
@@ -67,7 +72,7 @@ export class ModificarComponent implements OnInit {
     .subscribe(
       data => {
         //console.log(data);
-        this.router.navigate(['giftcards']);
+        this.router.navigate(['home']);
       },
       error => {
         console.log(error);
@@ -77,7 +82,7 @@ export class ModificarComponent implements OnInit {
   }
 
   cancelar() {
-    this.router.navigate(['giftcards']);
+    this.router.navigate(['home']);
   }
 
 }

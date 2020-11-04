@@ -20,6 +20,10 @@ export class VistaGiftcardsComponent implements OnInit {
   carritoLocal = [];
 
   ngOnInit(): void {
+    if (localStorage.getItem('logued') !== '1') {
+      localStorage.setItem('logued', '0');
+      this.router.navigate(['login']);
+    }
     this.actualizarGiftcards();
   }
 

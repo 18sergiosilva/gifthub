@@ -18,7 +18,7 @@ import { PagarComponent } from './pagar/pagar.component';
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
-  { path: 'modificar/:id', component: ModificarComponent },
+  { path: 'modificar', component: ModificarComponent },
   { path: 'giftcards', component: VistaGiftcardsComponent },
   { path: 'home', component: HomeComponent },
   { path: 'registrarse', component: RegistrarseComponent },

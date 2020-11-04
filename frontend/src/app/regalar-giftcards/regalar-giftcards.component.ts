@@ -2,6 +2,7 @@ import { Component, OnInit, ɵConsole } from "@angular/core";
 import { ServicioRegalarService } from "../services/servicio-regalar.service";
 import { first } from "rxjs/operators";
 import { Giftcard2 } from "../models/modelos";
+import { Router } from '@angular/router';
 
 @Component({
   selector: "app-regalar-giftcards",
@@ -9,7 +10,7 @@ import { Giftcard2 } from "../models/modelos";
   styleUrls: ["./regalar-giftcards.component.scss"],
 })
 export class RegalarGiftcardsComponent implements OnInit {
-  constructor(private servicioRegalarGiftcards: ServicioRegalarService) {}
+  constructor(private router: Router, private servicioRegalarGiftcards: ServicioRegalarService) {}
 
   giftcards = [];
   listaDeGiftcards = [];
@@ -19,6 +20,10 @@ export class RegalarGiftcardsComponent implements OnInit {
   usuarioBeneficio = "";
 
   ngOnInit() {
+    if (localStorage.getItem('logued') !== '1') {
+      localStorage.setItem('logued', '0');
+      this.router.navigate(['login']);
+    }
     this.getGiftcards();
   }
 
