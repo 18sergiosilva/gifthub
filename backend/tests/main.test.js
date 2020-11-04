@@ -997,6 +997,107 @@ describe('Historia: Realizar compra', function () {
             expect(ret.message).to.equal('Usuario encontrado.');
 
         });
+        it('Error si no conciden datos de la tarjeta', async () => {
+            let tarjetasCredito = [{
+                numero: "1234544",
+                nombre: "tarjeta 0",
+                fecha: "06/20",
+                codigoSeguridad: "123"
+            }]
+
+            let userData = {
+                message: 'Usuario encontrado.',
+                usuario: {
+                    tarjetas: [],
+                    transacciones: [],
+                    tarjetasCredito: [],
+                    username: 'BBCCI',
+                    correo: 'dolor@vulputate.ca',
+                    contrasena: 'UDJ84UOI4AK',
+                    nombres: 'Maxine',
+                    apellidos: 'Mckenzie',
+                    dpi: 607423428524,
+                    edad: 41,
+                }
+            }
+            sandbox.stub(controllerCompra, 'guardarEnHistorial');
+            sandbox.stub(controllerUsuario, 'actualizarUsuario');
+
+            let tarjetaUsuario = {
+                codigoSeguridad: '123',
+                fecha: '06/20',
+                nombre: 'tarjeta 1',
+                numero: '1234544'
+            }
+
+            let tarjetasGift = [{
+                name: "1",
+                cantidad: "1",
+                availability: "1"
+            }]
+
+            let tarjetaCompra = [{
+                cantidad: "1",
+                availability: "1"
+            }]
+
+            let ret = await controllerCompra.realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, 200, tarjetasGift, "edgar",tarjetaCompra);
+
+            expect(ret).to.be.an("object");
+            expect(ret.message).to.equal('Los datos de la tarjeta no coinciden.');
+
+        });
+        it('Error al realizar la compra por falta de fondos', async () => {
+            let tarjetasCredito = [{
+                numero: "1234544",
+                nombre: "tarjeta 1",
+                fecha: "06/20",
+                codigoSeguridad: "123",
+                credito: 0
+            }]
+
+            let userData = {
+                message: 'Usuario encontrado.',
+                usuario: {
+                    tarjetas: [],
+                    transacciones: [],
+                    tarjetasCredito: [],
+                    username: 'BBCCI',
+                    correo: 'dolor@vulputate.ca',
+                    contrasena: 'UDJ84UOI4AK',
+                    nombres: 'Maxine',
+                    apellidos: 'Mckenzie',
+                    dpi: 607423428524,
+                    edad: 41,
+                }
+            }
+            sandbox.stub(controllerCompra, 'guardarEnHistorial');
+            sandbox.stub(controllerUsuario, 'actualizarUsuario');
+
+            let tarjetaUsuario = {
+                codigoSeguridad: '123',
+                fecha: '06/20',
+                nombre: 'tarjeta 1',
+                numero: '1234544'
+            }
+
+            let tarjetasGift = [{
+                name: "1",
+                cantidad: "1",
+                availability: "1"
+            }]
+
+            let tarjetaCompra = [{
+                cantidad: "1",
+                availability: "1"
+            }]
+
+            let ret = await controllerCompra.realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, 200, tarjetasGift, "edgar",tarjetaCompra);
+
+            expect(ret).to.be.an("object");
+            expect(ret.message).to.equal('Imposible realizar la transaccion, fondos insuficientes');
+
+        });
         it('Guarda las transacciones fallidas si los datos de la tarjeta de credito no coinciden', async () => {
             let tarjetasCredito = [{
                 numero: "1234544",

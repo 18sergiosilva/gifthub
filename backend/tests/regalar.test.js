@@ -196,7 +196,7 @@ describe('Regalar GiftCards', () => {
         sandbox.stub(regalar, 'obtenerUsuario').returns(true);
         sandbox.stub(regalar, 'modificarInventarioTrjetasUsuario1').returns(true);
         sandbox.stub(regalar, 'modificarInventarioTrjetasUsuario2').returns(true);
-        sandbox.stub(regalar, 'actualizarUsuario').returns({ message: 'Error'});
+        sandbox.stub(regalar, 'actualizarUsuario').returns({ message: 'Error' });
 
         await regalar.regalar({ body: { usuario1: "leo", usuario2: "edgar", giftcards: [] } }, res);
 
@@ -218,9 +218,9 @@ describe('Regalar GiftCards', () => {
         });
 
         sandbox.stub(regalar, 'obtenerUsuario').returns(true);
-        sandbox.stub(regalar, 'modificarInventarioTrjetasUsuario1').returns({ username: "leo"});
+        sandbox.stub(regalar, 'modificarInventarioTrjetasUsuario1').returns({ username: "leo" });
         sandbox.stub(regalar, 'modificarInventarioTrjetasUsuario2').returns({ username: "edgar" });
-        sandbox.stub(regalar, 'actualizarUsuario').returns({ message: 'Usuario actualizado correctamente.'});
+        sandbox.stub(regalar, 'actualizarUsuario').returns({ message: 'Usuario actualizado correctamente.' });
 
         await regalar.regalar({ body: { usuario1: "leo", usuario2: "edgar", giftcards: [] } }, res);
 
@@ -241,8 +241,8 @@ describe('Regalar GiftCards', () => {
             message: "El usuario no es admin."
         });
 
-        await regalar.transacciones({query: { usuario: 'leo' }}, res);
-        
+        await regalar.transacciones({ query: { usuario: 'leo' } }, res);
+
         expect(res.status.calledOnce).to.be.true;
         expect(res.status.firstCall.calledWithExactly(403)).to.be.true;
 
@@ -277,7 +277,7 @@ describe('Regalar GiftCards', () => {
             }
         );
 
-        regalar.transacciones({query: { usuario: 'admin' }}, res);
+        regalar.transacciones({ query: { usuario: 'admin' } }, res);
     });
 
     it('Devuelve un error 500 si existe un error en la base de datos', (done) => {
@@ -294,7 +294,7 @@ describe('Regalar GiftCards', () => {
 
         sandbox.stub(regalar.Transaccion, 'find').returns(
             {
-                then: sandbox.stub().returnsThis(),                
+                then: sandbox.stub().returnsThis(),
                 catch: (callBack) => {
 
                     callBack("Error interno de la base de datos");
@@ -309,9 +309,79 @@ describe('Regalar GiftCards', () => {
             }
         );
 
-        regalar.transacciones({query: { usuario: 'admin' }}, res);
+        regalar.transacciones({ query: { usuario: 'admin' } }, res);
     });
+
+    it('Realiza modifcaciones al usuario1', (done) => {
+        const res = {
+            send: () => { },
+            status: sinon.stub().returnsThis()
+        };
+        const mock = sinon.mock(res);
+
+        mock.expects("send").once().withExactArgs({
+            transacciones: []
+        });
+
+        let usuario = {
+            tarjetas: [
+                {
+                    active: true,
+                    chargeRate: 2,
+                    id: '1',
+                    image: 'https://images-na.ssl-images-amazon.com/images/I/81GkM%2BcYs2L._SL1500_.jpg',
+                    name: 'Gamestop',
+                    availability: '2',
+                    alfanumerico: 'XnQu9qKt'
+                }
+            ],
+            transacciones: [
+                {
+                    numero: '1234567891234567',
+                    nombre: 'tarjeta 1',
+                    fecha: '06/20',
+                    codigoSeguridad: '123',
+                    numeroEncriptado: '1234XXXXXXXX4567',
+                    credito: 9950,
+                    transaccion: 'Transaccion realizada con exito.',
+                    totalApagar: '50',
+                    tarjetas: []
+                }
+            ],
+            tarjetasCredito: [
+                {
+                    numero: '1234567891234567',
+                    nombre: 'tarjeta 1',
+                    fecha: '06/20',
+                    codigoSeguridad: '123',
+                    numeroEncriptado: '1234XXXXXXXX4567',
+                    credito: 8461.5,
+                    transaccion: 'Transaccion realizada con exito.',
+                    totalApagar: '50',
+                    tarjetas: [Array]
+                }
+            ],
+            username: 'TGYFR',
+            correo: 'auctor@tempus.org',
+            contrasena: 'UGO62LRL1IV',
+            nombres: 'Cyrus',
+            apellidos: 'Travis',
+            dpi: 524330929164,
+            edad: 49,
+        }
+        let tarjeta = [{
+            availability: '1',
+            cantidad: 5,
+            id: 'XnQu9qKt'
+        }]
+        let ret = regalar.modificarInventarioTrjetasUsuario1(usuario, tarjeta);
+
+        expect(ret).to.be.an("object");
+        done()
+    });
+
 });
+
 
 
 

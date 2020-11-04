@@ -5,8 +5,6 @@ const Transaccion = db.transacciones;
 
 exports.cards = cards;
 
-let giftcard;
-
 async function obtenerGiftcards(tarjetas) {
     let giftData = [];
     var giftRequest = {
@@ -75,7 +73,7 @@ async function realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, mo
     let existeTarjeta = true
 
     for (let i = 0; i < tarjetasCredito.length; i++) {
-        let tarjeta = tarjetasCredito[i];
+        tarjeta = tarjetasCredito[i];
         if (tarjeta.numero == tarjetaUsuario.numero) {
             existeTarjeta = false;
             if (tarjeta.nombre != tarjetaUsuario.nombre ||
@@ -145,10 +143,10 @@ exports.realizarTransaccion = realizarTransaccion
 function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, giftcard, tarjetasGift, monto, availability) {
     var gifcardsNews = []
     for (let i = 0; i < tarjetas.length; i++) {
-        giftcard = tarjetas[i]
+        let giftcard = tarjetas[i]
         let existeGift = true;
         for (let j = 0; j < usuario.tarjetas.length; j++) {
-            tarjeta = usuario.tarjetas[j]
+            let tarjeta = usuario.tarjetas[j]
             if (tarjeta.id == giftcard.idTarjeta && tarjeta.availability == giftcard.availability) {
                 existeGift = false;
                 tarjeta.cantidad += parseInt(giftcard.cantidad);
@@ -189,7 +187,7 @@ function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, giftcard,
 
                 usuario.transacciones.push(tarjetaUsuario);
 
-                return { message: `Giftcard con id ${tarjeta.id} no encontrada` };
+                return { message: `Giftcard con id ${giftcard.idTarjeta} no encontrada` };
             }
         }
     }
@@ -206,7 +204,7 @@ function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, giftcard,
     }
     guardarEnHistorial(transacciones,usuario.username,"Transaccion realizada con exito","aceptada")
     tarjetaUsuario.transaccion = "Transaccion realizada con exito."
-    tarjetaUsuario.totsalApagar = monto;
+    tarjetaUsuario.totalApagar = monto;
     
     tarjetaUsuario.tarjetas = gifcardsNews
     usuario.transacciones.push(tarjetaUsuario);
@@ -325,3 +323,4 @@ async function guardarEnHistorial(tarjetas, username, mensaje, estado) {
     Transaccion.create(transaccion).then(() => { console.log("Creado"); });
 }
 
+exports.guardarEnHistorial = guardarEnHistorial
