@@ -65,8 +65,6 @@ function modificarInventarioTrjetasUsuario1(usuario, tarjetas) {
 }
 
 function modificarInventarioTrjetasUsuario2(usuario, tarjetas) {
-    listaTarjetas = []
-    let existe;
     for (const t of tarjetas) {
         usuario.tarjetas.push(t);
     }

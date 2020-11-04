@@ -5,6 +5,8 @@ const Transaccion = db.transacciones;
 
 exports.cards = cards;
 
+let giftcard;
+
 async function obtenerGiftcards(tarjetas) {
     let giftData = [];
     var giftRequest = {
@@ -32,8 +34,8 @@ async function obtenerGiftcards(tarjetas) {
                 tarjetasGift.push(newGiftCard)
                 break;
             }
-        };
-    };
+        }
+    }
 
     return { tarjetasGift: tarjetasGift, giftData: giftData }
 }
@@ -73,7 +75,7 @@ async function realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, mo
     let existeTarjeta = true
 
     for (let i = 0; i < tarjetasCredito.length; i++) {
-        tarjeta = tarjetasCredito[i];
+        let tarjeta = tarjetasCredito[i];
         if (tarjeta.numero == tarjetaUsuario.numero) {
             existeTarjeta = false;
             if (tarjeta.nombre != tarjetaUsuario.nombre ||
@@ -129,7 +131,7 @@ async function realizarTransaccion(tarjetasCredito, userData, tarjetaUsuario, mo
 
             }
         }
-    };
+    }
 
     if (existeTarjeta) {
         tarjetaUsuario.credito = 10000 - monto;
@@ -152,7 +154,7 @@ function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, giftcard,
                 tarjeta.cantidad += parseInt(giftcard.cantidad);
                 break;
             }
-        };
+        }
         if (true) {
             let encontroGiftcard = true
             for (let j = 0; j < card.length; j++) {
@@ -176,7 +178,7 @@ function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, giftcard,
                     }
                     break;
                 }
-            };
+            }
             if (encontroGiftcard) {
                 tarjetaUsuario.transaccion = "Transaccion fallida, giftcard no encontrada ."
                 tarjetaUsuario.totalApagar = monto;
@@ -190,7 +192,7 @@ function realizarTransaccion2(tarjetas, tarjetaUsuario, card, usuario, giftcard,
                 return { message: `Giftcard con id ${tarjeta.id} no encontrada` };
             }
         }
-    };
+    }
 
     
     let transacciones = []
