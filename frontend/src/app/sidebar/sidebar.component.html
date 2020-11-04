@@ -1,41 +1,12 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <ul class="nav">
 
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/login" routerLinkActive="active">
-        <i class="menu-icon mdi mdi-settings-box"></i>
-        <span class="menu-title">Ingresar</span>
-      </a>
-      <a class="nav-link" routerLink="/registrarse" routerLinkActive="active">
-        <i class="menu-icon mdi mdi-account-multiple-plus"></i>
-        <span class="menu-title">Registrarse</span>
+    <li class="nav-item" *ngFor="let indice of indices">
+      <a class="nav-link" routerLink="{{indice.url}}" routerLinkActive="active">
+        <i class="menu-icon mdi {{indice.icon}}"></i>
+        <span class="menu-title">{{indice.title}}</span>
       </a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/giftcards" routerLinkActive="active">
-        <i class="menu-icon mdi mdi-coin"></i>
-        <span class="menu-title">Giftcards Disponibles</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/regalar" routerLinkActive="active">
-        <i class="menu-icon mdi mdi-gift"></i>
-        <span class="menu-title">Regalar Giftcards</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/inventario" routerLinkActive="active">
-        <i class="menu-icon mdi mdi-checkbox-multiple-blank"></i>
-        <span class="menu-title">Giftcards Adquiridas</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" routerLink="/compras" routerLinkActive="active">
-        <i class="menu-icon mdi mdi-history"></i>
-        <span class="menu-title">Historial de Transacciones</span>
-      </a>
-    </li>
-   
 
   </ul>
 </nav>

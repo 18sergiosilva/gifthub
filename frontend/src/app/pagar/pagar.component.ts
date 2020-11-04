@@ -28,6 +28,10 @@ export class PagarComponent implements OnInit {
   moneda = '$.';
 
   ngOnInit() {
+    if (localStorage.getItem('logued') !== '1') {
+      localStorage.setItem('logued', '0');
+      this.router.navigate(['login']);
+    }
     this.getData();
   }
   getData() {

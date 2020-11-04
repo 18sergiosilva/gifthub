@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { Utils } from './utils/utils';
 
 @Component({
   selector: 'app-root',
@@ -13,5 +14,6 @@ export class AppComponent implements OnInit {
   title = 'star-admin-angular';
 
   ngOnInit() {
+    
   }
 }
