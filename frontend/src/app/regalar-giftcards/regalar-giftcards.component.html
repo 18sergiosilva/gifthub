@@ -18,9 +18,7 @@
                             <label class="col-sm-3 col-form-label" id="tipo">Giftcard</label>
                             <div class="col-sm-9">
                                 <select [(ngModel)]="giftcard" name="giftcard" class="form-control">
-                                    <ng-container *ngFor="let item of listaDeGiftcards;let indice=index">
-                                    <option>{{item.alfanumerico}} - {{item.displayName}}</option>
-                                    </ng-container>
+                                    <option *ngFor="let item of listaDeGiftcards;let indice=index" name="gcNombreCompleto">{{item.alfanumerico}} - {{item.displayName}}</option>
                                 </select>
                             </div>
                         </div>
@@ -30,7 +28,7 @@
                             <label class="col-sm-3 col-form-label" id="filtro">Cantidad</label>
                             <div class="col-sm-9">
                                 <select [(ngModel)]="cantidad" name="cantidad" class="form-control">
-                                    <option>1</option>
+                                    <option selected>1</option>
                                 </select>
                             </div>
                         </div>
