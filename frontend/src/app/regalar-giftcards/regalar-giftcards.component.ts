@@ -92,9 +92,9 @@ export class RegalarGiftcardsComponent implements OnInit {
           }
 
           const primera = this.giftcards[0];
-          this.giftcard = primera.alfanumerico + " - " + primera.displayName;
-          console.log("PRIMERA: ", this.giftcard);
-
+          if (primera){
+            this.giftcard = primera.alfanumerico + " - " + primera.displayName;
+          }
         },
         (error) => {
           this.imprimirError(error);
