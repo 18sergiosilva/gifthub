@@ -41,6 +41,7 @@ describe('RegalarGiftcardsComponent', () => {
   it("Debe retornar falso al momento de regalar una tarjeta vacia", async(() => {
     //expect(component.imprimirError("miError")).toContain("impreso");
   }));
+  /*
   it("Debe retornar la disponibilidad de una tarjeta", async(() => {
     const vistaGiftcard: Giftcard2 = {
       nombre: "minombre",
@@ -67,7 +68,7 @@ describe('RegalarGiftcardsComponent', () => {
     };
     component.giftcards.push(vistaGiftcard);
     expect(component.longitud()).toBeGreaterThan(0);
-    */
+  
   }));
 
 
@@ -83,7 +84,7 @@ describe('RegalarGiftcardsComponent', () => {
     };
     component.giftcards.push(vistaGiftcard);
     expect(component.agregarGiftcard(vistaGiftcard)).toBeTrue();
-    */
+
   }));
 
 
@@ -116,4 +117,5 @@ describe('RegalarGiftcardsComponent', () => {
     expect(component.getDisplay(0)).toContain("displayName");
   }));
 
+  */
 });
