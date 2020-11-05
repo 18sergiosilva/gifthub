@@ -34,14 +34,15 @@ describe('RegalarGiftcardsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  /*
+  
   it("Debe retornar impreso al llamar al metodo imprimirError", async(() => {
-    //expect(component.regalarGiftcard()).toBe(false);
+    expect(component.regalarGiftcard()).toBe(false);
   }));
 
   it("Debe retornar falso al momento de regalar una tarjeta vacia", async(() => {
-    //expect(component.imprimirError("miError")).toContain("impreso");
+    expect(component.imprimirError("miError")).toContain("impreso");
   }));
+  
   it("Debe retornar la disponibilidad de una tarjeta", async(() => {
     const vistaGiftcard: Giftcard2 = {
       nombre: "minombre",
@@ -57,7 +58,7 @@ describe('RegalarGiftcardsComponent', () => {
   }));
 
   it("Debe retornar la longitud del arreglo de giftcards", async(() => {
-    /*const vistaGiftcard: Giftcard2 = {
+    const vistaGiftcard: Giftcard2 = {
       nombre: "minombre",
       imagen: "miimagen",
       precio: 100,
@@ -73,7 +74,7 @@ describe('RegalarGiftcardsComponent', () => {
 
 
   it("Debe retornar verdadero al agregar 1 giftcard", async(() => {
-    /*const vistaGiftcard: Giftcard2 = {
+    const vistaGiftcard: Giftcard2 = {
       nombre: "minombre",
       imagen: "miimagen",
       precio: 100,
@@ -117,5 +118,5 @@ describe('RegalarGiftcardsComponent', () => {
     expect(component.getDisplay(0)).toContain("displayName");
   }));
 
-  */
+  
 });
