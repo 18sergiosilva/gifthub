@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
         'userOMail': this.correo,
         'pass': this.contra
       }).subscribe((data: any) => {
-        localStorage.setItem('user', this.correo);
+        localStorage.setItem('user', data.usuario.username);
         localStorage.setItem('logued', '1');
         Utils.indices = [
           {
