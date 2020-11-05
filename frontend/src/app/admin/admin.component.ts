@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { ServicioHistorialService } from '../services/servicio-historial.service';
 import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
+import { Utils } from '../utils/utils';
 
 @Component({
   selector: 'app-admin',
@@ -21,6 +22,42 @@ export class AdminComponent implements OnInit {
     if (localStorage.getItem('logued') !== '1') {
       localStorage.setItem('logued', '0');
       this.router.navigate(['login']);
+    }
+    if (localStorage.getItem('user') !== 'admin') {
+      Utils.indices = [
+        {
+          title: 'Catalogo de Giftcards',
+          url: '/giftcards',
+          icon: 'mdi-coin'
+        },
+        {
+          title: 'Mis Giftcards',
+          url: '/inventario',
+          icon: 'mdi-checkbox-multiple-blank'
+        },
+        {
+          title: 'Regalar Giftcards',
+          url: '/regalar',
+          icon: 'mdi-gift'
+        },
+        {
+          title: 'Historial de Compras',
+          url: '/compras',
+          icon: 'mdi-history'
+        },
+        {
+          title: 'Configurar Cuenta',
+          url: '/modificar',
+          icon: 'mdi-pencil'
+        }
+        ,
+        {
+          title: 'Cerrar Sesión',
+          url: '',
+          icon: 'mdi-exit-to-app'
+        }
+      ];
+      this.router.navigate(['home']);
     }
     this.getTransacciones();
   }
