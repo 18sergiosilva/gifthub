@@ -36,8 +36,8 @@ export class LoginComponent implements OnInit {
     ];
   }
   entrar() {
-
-    this.http.post('http://35.239.230.8:5000/login',
+    // -----------------------------------------------------------------------------------------------------------------------------------------------------
+    this.http.post('http://100.26.35.98:5000/login',    
       {
         'userOMail': this.correo,
         'pass': this.contra
@@ -46,24 +46,14 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('logued', '1');
         Utils.indices = [
           {
-            title: 'Catalogo de Giftcards',
+            title: 'Catalogo de Juegos',
             url: '/giftcards',
-            icon: 'mdi-coin'
+            icon: 'mdi-gamepad-variant'
           },
           {
-            title: 'Mis Giftcards',
+            title: 'Juegos Descargados',
             url: '/inventario',
-            icon: 'mdi-checkbox-multiple-blank'
-          },
-          {
-            title: 'Regalar Giftcards',
-            url: '/regalar',
-            icon: 'mdi-gift'
-          },
-          {
-            title: 'Historial de Compras',
-            url: '/compras',
-            icon: 'mdi-history'
+            icon: 'mdi-download'
           },
           {
             title: 'Configurar Cuenta',
@@ -71,15 +61,6 @@ export class LoginComponent implements OnInit {
             icon: 'mdi-pencil'
           }
         ];
-        if (this.correo === 'admin') {
-          Utils.indices.push(
-            {
-              title: 'Detalle Transacciones',
-              url: '/admin',
-              icon: 'mdi-crown'
-            }
-          );
-        }
         Utils.indices.push(
           {
             title: 'Cerrar Sesión',

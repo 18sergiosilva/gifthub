@@ -10,21 +10,21 @@ export class ServicioVistaGiftcardsService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
+  // -----------------------------------------------------------------------------------------------------------------------------------------------------
   actualizarGiftcards(){
-    let apiUrl = 'http://35.239.230.8:5000/cards';
+    let apiUrl = 'http://100.26.35.98:5000/cards';
     return this.http.get<any>(apiUrl, {})
       .pipe(map(data => {
         return data;
       }));
   }
 
+// -----------------------------------------------------------------------------------------------------------------------------------------------------
   getGiftcardsLocales(){
-
-    let apiUrl = 'http://35.239.230.8:5000/cards/mongo';
+    let apiUrl = 'http://100.26.35.98:5000/cards/mongo';
     return this.http.get<any>(apiUrl, {})
       .pipe(map(data => {
         return data;
       }));
-
   }
 }

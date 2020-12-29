@@ -76,6 +76,7 @@ export class PagarComponent implements OnInit {
     console.log(compra);
     this.comprarService.realizarCompra(compra).subscribe((data: any) => {
       console.log(data);
+      Utils.carrito = [];
       this.router.navigate(['home']);
     });
   }

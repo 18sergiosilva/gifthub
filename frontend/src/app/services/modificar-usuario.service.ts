@@ -10,16 +10,18 @@ export class ModificarUsuarioService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
+  // -----------------------------------------------------------------------------------------------------------------------------------------------------
   obtenerDatosUsuario(id) {
-    let apiUrl = 'http://35.239.230.8:5000/usuario/' + id;
+    let apiUrl = 'http://100.26.35.98:5000/usuario/' + id;
     return this.http.get<any>(apiUrl, {})
       .pipe(map(data => {
         return data;
       }));
   }
 
+  // -----------------------------------------------------------------------------------------------------------------------------------------------------
   modificarDatosUser(id,correo,contra,nombres,apellidos,dpi,edad){
-    let apiUrl = 'http://35.239.230.8:5000/usuario/'+id;
+    let apiUrl = 'http://100.26.35.98:5000/usuario/'+id;
     return this.http.put<any>(apiUrl, {
         'correo': correo,
         'contrasena': contra,

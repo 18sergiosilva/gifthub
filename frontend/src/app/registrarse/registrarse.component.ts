@@ -31,7 +31,8 @@ export class RegistrarseComponent implements OnInit {
     console.log("dpi->"+this.dpi);
     console.log("edad->"+this.edad);
 
-    this.http.post('http://35.239.230.8:5000/usuario',
+    // -----------------------------------------------------------------------------------------------------------------------------------------------------
+    this.http.post('http://100.26.35.98:5000/usuario',
       {
         'username': this.username,
         'correo': this.correo,
