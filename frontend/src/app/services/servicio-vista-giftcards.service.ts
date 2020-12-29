@@ -12,7 +12,7 @@ export class ServicioVistaGiftcardsService {
 
   // -----------------------------------------------------------------------------------------------------------------------------------------------------
   actualizarGiftcards(){
-    let apiUrl = 'http://100.26.35.98:5000/cards';
+    let apiUrl = 'http://35.202.137.102:5000/cards';
     return this.http.get<any>(apiUrl, {})
       .pipe(map(data => {
         return data;
@@ -21,7 +21,7 @@ export class ServicioVistaGiftcardsService {
 
 // -----------------------------------------------------------------------------------------------------------------------------------------------------
   getGiftcardsLocales(){
-    let apiUrl = 'http://100.26.35.98:5000/cards/mongo';
+    let apiUrl = 'http://35.202.137.102:5000/cards/mongo';
     return this.http.get<any>(apiUrl, {})
       .pipe(map(data => {
         return data;

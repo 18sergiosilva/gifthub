@@ -12,7 +12,7 @@ export class ModificarUsuarioService {
 
   // -----------------------------------------------------------------------------------------------------------------------------------------------------
   obtenerDatosUsuario(id) {
-    let apiUrl = 'http://100.26.35.98:5000/usuario/' + id;
+    let apiUrl = 'http://35.202.137.102:5000/usuario/' + id;
     return this.http.get<any>(apiUrl, {})
       .pipe(map(data => {
         return data;
@@ -21,7 +21,7 @@ export class ModificarUsuarioService {
 
   // -----------------------------------------------------------------------------------------------------------------------------------------------------
   modificarDatosUser(id,correo,contra,nombres,apellidos,dpi,edad){
-    let apiUrl = 'http://100.26.35.98:5000/usuario/'+id;
+    let apiUrl = 'http://35.202.137.102:5000/usuario/'+id;
     return this.http.put<any>(apiUrl, {
         'correo': correo,
         'contrasena': contra,

@@ -11,7 +11,7 @@ export class ServicioHistorialService {
   constructor(private http: HttpClient, private router: Router) { }
 
   obtener(id) {
-    let apiUrl = 'http://35.239.230.8:5000/usuario/' + id;
+    let apiUrl = 'http://35.202.137.102:5000/usuario/' + id;
     return this.http.get<any>(apiUrl, {})
       .pipe(map(data => {
         return data;
@@ -27,7 +27,7 @@ export class ServicioHistorialService {
   }
 
   getTransacciones() {
-    let apiUrl = 'http://35.239.230.8:5000/regalar?usuario=admin';
+    let apiUrl = 'http://35.202.137.102:5000/regalar?usuario=admin';
     return this.http.get<any>(apiUrl, {})
       .pipe(map(data => {
         return data;

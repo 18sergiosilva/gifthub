@@ -43,7 +43,7 @@ describe('ServicioVistaGiftcardsService', () => {
 
         });
 
-    const req = httpTestingController.expectOne('http://35.239.230.8:5000/cards');
+    const req = httpTestingController.expectOne('http://35.202.137.102:5000/cards');
 
     expect(req.request.method).toEqual("GET");
 
@@ -62,7 +62,7 @@ describe('ServicioVistaGiftcardsService', () => {
 
         });
 
-    const req = httpTestingController.expectOne('http://35.239.230.8:5000/cards/mongo');
+    const req = httpTestingController.expectOne('http://35.202.137.102:5000/cards/mongo');
 
     expect(req.request.method).toEqual("GET");
 

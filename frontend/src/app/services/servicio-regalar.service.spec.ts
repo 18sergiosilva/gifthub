@@ -46,7 +46,7 @@ describe('ServicioRegalarService', () => {
 
         });
 
-    const req = httpTestingController.expectOne('http://35.239.230.8:5000/usuario/MKJLW');
+    const req = httpTestingController.expectOne('http://35.202.137.102:5000/usuario/MKJLW');
 
     expect(req.request.method).toEqual("GET");
 
@@ -67,7 +67,7 @@ describe('ServicioRegalarService', () => {
 
         });
 
-    const req = httpTestingController.expectOne('http://35.239.230.8:5000/regalar');
+    const req = httpTestingController.expectOne('http://35.202.137.102:5000/regalar');
 
     expect(req.request.method).toEqual("POST");
 

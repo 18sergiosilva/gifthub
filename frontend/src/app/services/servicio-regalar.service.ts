@@ -12,7 +12,7 @@ export class ServicioRegalarService {
 
 
   obtenerGiftcards(usuario:string){
-    let apiUrl = 'http://100.26.35.98:5000/usuario/'+usuario;
+    let apiUrl = 'http://35.202.137.102:5000/usuario/'+usuario;
     return this.http.get<any>(apiUrl, {})
       .pipe(map(data => {
         return data;
@@ -21,7 +21,7 @@ export class ServicioRegalarService {
 
 
   regalarTarjeta(usuarioRegala: string, usuarioBeneficio: string, cantidad: number, availability: string, id: string){
-    let apiUrl = 'http://100.26.35.98:5000/regalar';
+    let apiUrl = 'http://35.202.137.102:5000/regalar';
     return this.http.post(apiUrl,{
       "usuario1":usuarioRegala,
       "usuario2":usuarioBeneficio,
