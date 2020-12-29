@@ -8,19 +8,18 @@ exports.axios = axios;
 // Actualiiza las giftcards en la base de datos
 exports.actualizar = (req, res) => {
     CardsValueTasaCambio.deleteMany({}, () => { });
-
-    axios.get('https://my-json-server.typicode.com/CoffeePaw/AyD1API/db')
+    axios.get('https://my-json-server.typicode.com/18sergiosilva/so2juegos/db')
         .then(resp => {
             CardsValueTasaCambio.insertMany(resp.data)
                 .then(() => { })
             return res
                 .status(200)
-                .send({ message: "giftcards actualizadas" });
+                .send({ message: "juegos actualizados" });
         })
         .catch(err => {
             return res
                 .status(500)
-                .send({ message: `Error al actualizar las giftcards` });
+                .send({ message: `Error al actualizar los juegos` });
         });
 };
 
@@ -29,12 +28,12 @@ function obtenerDatos(res){
         .then((data) => {
             return res
                 .status(200)
-                .send({ message: "Se devolvieron las giftcards.", cards: data });
+                .send({ message: "Se devolvieron los juegos.", cards: data });
         })
         .catch(err => {
             return res
                 .status(500)
-                .send({ message: `Error de la base de datos al devolver las giftcards.` });
+                .send({ message: `Error de la base de datos al devolver los juegos.` });
         });
 }
 exports.obtenerDatos = obtenerDatos;
